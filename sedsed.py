@@ -1,9 +1,15 @@
 #!/usr/bin/python
 # sedsed
-# 20011127 <aurelio@verde666.org> ** 1a versão
+# 20011127 <aurelio@verde666.org> ** debut
+# 20011221 v0.1 ** 1st public release on the sed list
+# 20011227 v0.2 <> fixed t status problem (tks bonzini!)
 
-#TODO name: sedsed - sed S...E...Debugger
 import sys, re, os, getopt
+
+# program self data
+myname = 'sedsed'
+myversion = 0.3
+myhome = 'http://sedsed.sf.net'
 
 # default config
 color = 1                     # colored output? (it's nice)
@@ -35,14 +41,17 @@ OPTIONS:
      -t, --tokenize      script tokenizer, prints extensive
                          command by command information
 
+     -v, --version       prints the program version and exit
      -h, --help          prints this help message and exit
 """
+	print "homepage: %s\n"%myhome
 	sys.exit(exitcode)
 
 # get cmdline options
 errormsg = 'bad option or missing argument. try --help.'
-try: (opt, args) = getopt.getopt(sys.argv[1:], 'hfdit',
-     ['debug', 'hide=', 'nocolor', 'indent', 'prefix=','tokenize','help', 
+try: (opt, args) = getopt.getopt(sys.argv[1:], 'hfditv',
+     ['debug', 'hide=', 'nocolor', 'indent', 'prefix=', 'tokenize',
+      'version', 'help', 
       '_debuglevel=', '_diffdebug', '_stdout-only', 'dumpcute'])      # admin hidden opts
 except getopt.GetoptError: error(errormsg)
 
@@ -52,6 +61,9 @@ for o in opt:
 	elif o[0] in ('-i', '--indent')  : action = 'indent'; color = 0
 	elif o[0] in ('-t', '--tokenize'): action = 'token' ; color = 0
 	elif o[0] in ('-h', '--help')    : printUsage(0)
+	elif o[0] in ('-v', '--version') :
+		print '%s v%s'%(myname,myversion)
+		sys.exit(0)
 	elif o[0] == '--nocolor'    : color = 0
 	elif o[0] == '--hide':                            # get hide options
 		for hide in o[1].split(','):                  # save as no<OPT>
@@ -774,3 +786,4 @@ elif action == 'debug' : doDebug(ZZ)
 #zzcep - cool example
 #TODO commenter
 #TODO ignore l command line break?
+#TODO accept oneliners also
