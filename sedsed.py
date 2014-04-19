@@ -53,6 +53,13 @@ html_colors = {
   'VLINK'    : '#ff00ff'
 }
 
+# The identifier recognized by sed as STDIN
+if os.name == 'nt':
+	# Windows do not have /dev/stdin, maybe '-' is supported by sed
+	stdin_id = '-'
+else:
+	# BSD sed fails for '-', use /dev/stdin as the default in Unix
+	stdin_id = '/dev/stdin'
 
 #-------------------------------------------------------------------------------
 #                              General Functions
@@ -108,7 +115,7 @@ def Debug(msg, level=1):
 
 def read_file(file):
 	"Reads a file into a list, removing line breaks"
-	if file == '-':
+	if file in (stdin_id, '-'):
 		try: data = sys.stdin.readlines()
 		except: Error('I was expecting data on STDIN!')
 	else:
@@ -216,8 +223,8 @@ if not sedscript:
 	else:             # :(
 		Error("there's no SED script to parse! (try --help)")
 
-# Get all text files, if none, use STDIN (-)
-textfiles = args or ['-']
+# Get all text files, if none, use STDIN
+textfiles = args or [stdin_id]
 
 # On --debug, check the given script syntax, running SED with it.
 # We will not debug a broken script.
@@ -1264,7 +1271,7 @@ class emuSed:
 		self.rewindScript()
 		
 		# getting input data location (stdin or file)
-		if textfile == '-': self.f_stdin = 1
+		if textfile in (stdin_id, '-'): self.f_stdin = 1
 		else: self.inlist.extend(read_file(textfile))
 		
 		# wipe null commands, save labels and block info
