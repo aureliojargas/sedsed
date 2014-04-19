@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 # sedsed - the SED mastering scrpit
-# 20011127 <aurelio@verde666.org> ** debut
-# ChangeLog: see http://sedsed.sf.net/README file
+# Since 27 November 2001 <aurelio@verde666.org>
+# ChangeLog: see README file at http://sedsed.sf.net
 
 import sys, re, os, getopt, string, tempfile
 
 # program self data
 myname = 'sedsed'
-myversion = 0.6
+myversion = 0.7
 myhome = 'http://sedsed.sf.net'
 
 # default config
@@ -29,11 +29,9 @@ def readFile(file):
 	txt = string.rstrip(txt)  # remove \n or \r\n
 	return string.split(txt, '\n')
 def writeFile(file, list=[]):
-	EOL =  '\n'
-	if os.name == 'nt': EOL = '\r\n'
 	if list:
 		for i in range(len(list)): # ensuring line break
-			list[i] = string.rstrip(list[i])+EOL
+			list[i] = string.rstrip(list[i])+'\n'
 	f = open(file,'w'); f.writelines(list); f.close()
 def runCommand(cmd): # Returns a (#exit_code, program_output[]) tuple
 	list = [] ; fd = os.popen(cmd)
@@ -79,12 +77,19 @@ NOTE: --emu and --emudebug options are still INCOMPLETE and must
 	print "homepage: %s\n"%myhome
 	sys.exit(exitcode)
 
+# turn color OFF on windows because ANSI.SYS is not default
+# windows users can disable this with the --color option
+#   http://www.evergreen.edu/biophysics/technotes/program/ansi_esc.htm#notes
+#   http://www3.sympatico.ca/rhwatson/dos7/v-ansi-escseq.html
+if os.name == 'nt': color = 0
+
 # get cmdline options
 errormsg = 'bad option or missing argument. try --help.'
 try: (opt, args) = getopt.getopt(sys.argv[1:], 'he:f:ditV',
-     ['debug', 'hide=', 'nocolor', 'indent', 'prefix=', 'emu', 'emudebug',
-      'tokenize', 'htmlize', 'version', 'help', 'file=', 'expression=',
-      '_debuglevel=','_emudebuglevel=','_stdout-only', 'dumpcute'])      # admin hidden opts
+     ['debug', 'tokenize', 'htmlize', 'indent',
+      'nocolor', 'color', 'hide=', 'prefix=', 'emu', 'emudebug',
+      'version', 'help', 'file=', 'expression=',
+      '_debuglevel=','_emudebuglevel=','_stdout-only', 'dumpcute'])  # admin
 except getopt.GetoptError: error(errormsg)
 
 actionopts = []
@@ -104,6 +109,7 @@ for o in opt:
 	elif o[0] == '--emu'     : action = 'emu'
 	elif o[0] == '--emudebug': action = 'emudebug'
 	elif o[0] == '--nocolor' : color = 0
+	elif o[0] == '--color'   : color = 1
 	elif o[0] == '--hide':                            # get hide options
 		for hide in string.split(o[1], ','):          # save as no<OPT>
 			actionopts.append('no'+string.lower(string.strip(hide)))
@@ -131,8 +137,6 @@ if action == 'debug':
 	ret, msg = runCommand("sed -f '%s' /dev/null"%tmpfile)
 	if ret: error('#%d: syntax error on your sed script, please fix it before.'%ret)
 	os.remove(tmpfile)
-# turn color OFF on windows (how to do it?)
-if os.name == 'nt': color = 0
 
 # color is nice
 color_YLW = color_NO = color_RED = color_REV = ''     # no color
@@ -586,7 +590,7 @@ class SedAddress:
 
 ### global view of the parser:
 #
-# - load the original sed script to a list, then free script file (if -f)
+# - load the original sed script to a list, then let the file free
 # - scan the list (line by line)
 # - as user can do more than one sed command on the same line, we split
 #   "possible valid commands" by ; (brute force method)
