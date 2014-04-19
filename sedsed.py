@@ -6,7 +6,7 @@
 import sys, re, os, getopt, string, tempfile
 
 myname    = 'sedsed'
-myversion = '0.8'
+myversion = '1.0'
 myhome    = 'http://sedsed.sf.net'
 
 
@@ -15,11 +15,14 @@ myhome    = 'http://sedsed.sf.net'
 #-------------------------------------------------------------------------------
 
 # Default config - Changeable, but you won't need to do it
-color = 1                     # colored output or not? (see --nocolor also)
+sedbin = 'sed'                # name (or full path) of the sed program
+color = 1                     # colored output or not? (--color, --nocolor)
+dump_debug = 0                # dump debug script to screen? (--dump-debug)
+indent_prefix = ' '*4         # default indent prefix for blocks (--prefix)
+debug_prefix = '\t\t'         # default prefix for debug commands
+action = 'indent'             # default action if none specified (-d,-i,-t,-H)
 DEBUG = 0                     # set developper's debug level [0-3]
 EMUDEBUG = 0                  # emulator have it's own debug [0-3]
-indent_prefix = '  '          # default --indent prefix for blocks (2 spaces)
-action = 'indent'             # default action if no specified
 
 # HTML colors for --htmlize
 # You may edit here to change the default colors
@@ -57,7 +60,7 @@ html_colors = {
 
 def printUsage(exitcode=1):
 	print """
-usage: sedsed OPTION [-e sedscript] [-f sedscriptfile] [inputfile]
+Usage: sedsed OPTION [-e sedscript] [-f sedscriptfile] [inputfile]
 
 OPTIONS:
 
@@ -66,16 +69,18 @@ OPTIONS:
      -n, --quiet         suppress automatic printing of pattern space
          --silent        alias to --quiet
 
-     -d, --debug         DEBUG the sed script
-         --nocolor       no colors on debug output
+     -d, --debug         debug the sed script
          --hide          hide some debug info (options: PATT,HOLD,COMM)
+         --color         shows debug output in colors (default: ON)
+         --nocolor       no colors on debug output
+         --dump-debug    dumps to screen the debugged sed script
 
          --emu           emulates GNU sed (INCOMPLETE)
          --emudebug      emulates GNU sed debugging the sed script (INCOMPLETE)
 
      -i, --indent        script beautifier, prints indented and
                          one-command-per-line output do STDOUT
-         --prefix        indent prefix string (default: 2 spaces)
+         --prefix        indent prefix string (default: 4 spaces)
 
      -t, --tokenize      script tokenizer, prints extensive
                          command by command information
@@ -85,16 +90,18 @@ OPTIONS:
      -h, --help          prints this help message and exit
 
 
-NOTE: --emu and --emudebug options are still INCOMPLETE and must
-      be used with care. mainly regexes and address $ (last line)
+NOTE: The --emu and --emudebug options are still INCOMPLETE and must
+      be used with care. Mainly regexes and address $ (last line)
       are not handled right by the emulator.
 """
-	print "homepage: %s\n"%myhome
+	print "Homepage: %s\n"%myhome
 	sys.exit(exitcode)
 
 def Error(msg):
 	"All error messages are handled by me"
 	print 'ERROR:',msg ; sys.exit(1)
+
+def echo(msg): print "\033[33;1m%s\033[m"%msg
 
 def Debug(msg, level=1):
 	if DEBUG and DEBUG >= level: print '+++ DEBUG%d: %s'%(level,msg)
@@ -136,8 +143,9 @@ def runCommand(cmd): # Returns a (#exit_code, program_output[]) tuple
 short_options = 'he:f:ditVHn'
 long_options = [
   'debug', 'tokenize', 'htmlize', 'indent',                     # actions
-  'nocolor', 'color', 'hide=', 'prefix=', 'emu', 'emudebug',    # misc
   'version', 'help', 'file=', 'expression=', 'silent', 'quiet', # sed-like
+  'nocolor', 'color', 'hide=', 'prefix=', 'emu', 'emudebug',    # misc
+  'dump-debug',                                                 # other
   '_debuglevel=','_emudebuglevel=','_stdout-only', 'dumpcute']  # admin
 
 # Check it!
@@ -172,10 +180,11 @@ for o in opt:
 	elif o[0] in ('-V', '--version')   :
 		print '%s v%s'%(myname,myversion)
 		sys.exit(0)
-	elif o[0] == '--emu'     : action = 'emu'
-	elif o[0] == '--emudebug': action = 'emudebug'
-	elif o[0] == '--nocolor' : color = 0
-	elif o[0] == '--color'   : color = 1
+	elif o[0] == '--emu'       : action = 'emu'
+	elif o[0] == '--emudebug'  : action = 'emudebug'
+	elif o[0] == '--dump-debug': action = 'debug' ; dump_debug=1 ; color=0
+	elif o[0] == '--nocolor'   : color = 0
+	elif o[0] == '--color'     : color = 1
 	elif o[0] == '--hide':                        # get hide options
 		for hide in string.split(o[1], ','):  # save as no<OPT>
 			hide_me = string.lower(string.strip(hide))
@@ -218,7 +227,7 @@ textfiles = args or ['-']
 if action == 'debug' and os.name != 'nt':
 	tmpfile = tempfile.mktemp()
 	write_file(tmpfile, sedscript)
-	ret, msg = runCommand("sed -f '%s' /dev/null"%tmpfile)
+	ret, msg = runCommand("%s -f '%s' /dev/null"%(sedbin,tmpfile))
 	if ret:
 		msg = 'syntax error on your SED script, please fix it before.'
 		Error('#%d: %s' % (ret,msg))
@@ -257,23 +266,19 @@ else:
 #
 # 2. Show HOLD SPACE contents:
 #    Similar to PATTERN SPACE, but use the 'x' command to access and
-#    restore the HOLD buffer contents.
+#    restore the HOLD buffer contents. The prefix used is 'HOLD:'.
 #
 # 3. Show current SED COMMAND:
-#    Using PATTERN SPACE buffer, add the 'COMM:' prefix, followed by
-#    the '\a' char, and a line break. This char will be replaced by
-#    the current SED command. This char is also surrounded by the
-#    color codes (if using colors). As the line break was added, the
-#    'P' command is used to show this recently added prefix on screen.
-#    Then a 's///' remove the prefix and PATTERN SPACE is back to it's
-#    original contents.
+#    Uses a single 'i' command to show the full 'COMM:' line, as it
+#    does not depend on execution data. The color codes are added or
+#    not, depending on user options.
 #
 # 4. 'Last Address' trick:
 #    On SED, the empty address // refers to the last address matched.
 #    As this behaviour can be affected when several DEBUG lines are
 #    inserted before the command, sedsed uses a trick to force it.
-#    the empty block {;} is used as a NULL command, and the last
-#    command address is used for it. This way sedsed repeat the
+#    The last address used on the original script is repeated with a
+#    null command (/last-address/ y/!/!/). This way sedsed repeat the
 #    addressing, ensuring the next command will have it as the right
 #    'last' address.
 #
@@ -289,34 +294,53 @@ else:
 #    between *any* command and fake 't' commands to jump to them:
 #
 #        <last command, possibly s///>
-#        t wasset001
+#        t zzset001
 #        ... debug commands ...
-#        t wasclear001
-#        : wasset001
+#        t zzclr001
+#        : zzset001
 #        ... debug commands ...
-#        : wasclear001
+#        : zzclr001
 #        <next command, possibly t>
 #
 #    The DEBUG commands are repeated and placed into two distinct
-#    blocks: 'wasset' and 'wasclear', which represents the 't' status
+#    blocks: 'zzset' and 'zzclr', which represents the 't' status
 #    of the last command. The execution order follows:
 #
-#       wasset  : 1st jump (t), then debug (s///), t status is ON
-#       wasclear: 1st debug (s///), then jump (t), t status is OFF
+#       zzset: 1st jump (t), then debug (s///), t status is ON
+#       zzclr: 1st debug (s///), then jump (t), t status is OFF
 #
 #    The 001 count is incremented on each command to have unique
 #    labels.
 #
-#                   --- THANK YOU VERY MUCH ---
-#    Paolo Bonzini (GNU sed 4.x maintainer) for the idea on this trick
 #
-highlighted_command = color_YLW + '\a' + color_NO
-showpatt = '  s/^/PATT:/;l;s/^PATT://   ;# show pattern space\n'
-showhold = 'x;s/^/HOLD:/;l;s/^HOLD://;x ;# show hold space\n'
-showcomm = '  s@^@COMM:%s\\\n   @;P;s/^[^\\n]*\\n   //     ;# show command\n'%\
-           highlighted_command
-nullcomm = '{;} ;# null command to restore last address\n'
-save_t = 't wasset\a\n#DEBUG#\nt wasclear\a\n: wasset\a\n#DEBUG#\n: wasclear\a\n'
+#                   --- THANK YOU VERY MUCH ---
+#
+# - Paolo Bonzini (GNU sed 4.x maintainer) for the idea of the
+#   't status' trick.
+#
+# - Thobias Salazar Trevisan for the idea of using the 'i'
+#   command for the COMM: lines.
+#
+
+# show pattern space, show hold space, show sed command
+# null sed command to restore last address, 't' status trick
+showpatt = [     's/^/PATT:/', 'l', 's/^PATT://'     ]
+showhold = ['x', 's/^/HOLD:/', 'l', 's/^HOLD://', 'x']
+showcomm = ['i\\','COMM:%s\a%s'%(color_YLW, color_NO)]
+nullcomm = ['y/!/!/']
+save_t   = ['t zzset\a\n#DEBUG#', 't zzclr\a',
+            ':zzset\a\n#DEBUG#' , ':zzclr\a' ]
+
+def format_debugcmds(cmds):
+	"One per line, with prefix (spaces)"
+	return debug_prefix + string.join(cmds, '\n'+debug_prefix) + '\n'
+
+showpatt = format_debugcmds(showpatt)
+showhold = format_debugcmds(showhold)
+save_t   = format_debugcmds(save_t  )
+showcomm = debug_prefix+string.join(showcomm, '\n')+'\n'
+nullcomm = nullcomm[0]
+
 
 # If user specified --hide, unset DEBUG commands for them
 if action_modifiers.count('nopatt'): showpatt = ''    # don't show!
@@ -386,10 +410,8 @@ cmdfields = [
 #                         Auxiliar Functions - Tools
 #-------------------------------------------------------------------------------
 
-def esc_RS_EspecialChars(str):
+def escapeTextCommandsSpecials(str):
 	str = string.replace(str, '\\', '\\\\')         # escape escape
-	str = string.replace(str, '&', r'\&')           # matched pattern
-	str = string.replace(str, '@', r'\@')           # delimiter
 	return str
 
 def isOpenBracket(str):
@@ -501,7 +523,8 @@ class SedCommand:
 			self.isok = 1
 		elif id in sedcmds['text']:
 			Debug('type: text',3)
-			if self.junk[-1] != '\\': # ensuring \^M at start
+			if self.junk[-1] != '\\': # if not \ at end, finished
+				# ensure \LineSep at begining
 				self.content = re.sub(
 				               r'^\\%s'%linesep, '', self.junk)
 				self.content = '\\%s%s'%(linesep,self.content)
@@ -755,7 +778,9 @@ def composeSedCommand(dict):
 				cmd = '%s %s'%(cmd, painted)
 	else:
 		idsep=''
-		spaceme = sedcmds['file']+sedcmds['jump']+sedcmds['text']
+		# spacer on r,w,b,t commands only
+		spaceme = sedcmds['file']+sedcmds['jump']
+		spaceme = string.replace(spaceme,':','') # : label (no space!)
 		if dict['id'] in spaceme: idsep=' '
 		cmd = '%s%s%s%s'%(
 		      dict['modifier'],
@@ -918,8 +943,8 @@ def doDebug(datalist):
 	# the t command status between debug commands. As they perform
 	# s/// commands, the t status of the "last substitution" is lost.
 	# So, we save the status doing a nice loop trick before *every*
-	# command (necessary overhead). This loops uses the :wassetNNN and
-	# wasclearNNN labels, where NNN is the label count.
+	# command (necessary overhead). This loops uses the :zzsetNNN and
+	# zzclrNNN labels, where NNN is the label count.
 	# TIP: t status resets: line read, t call
 	if datalist[0]['has_t']: t_count = 1
 	
@@ -934,7 +959,7 @@ def doDebug(datalist):
 			
 			cmdshow = string.replace(cmd, '\n',
 			                         newlineshow+color_YLW)
-			cmdshow = esc_RS_EspecialChars(addr+cmdshow)
+			cmdshow = escapeTextCommandsSpecials(addr+cmdshow)
 			showsedcmd = string.replace(showcomm, '\a', cmdshow)
 			
 			registers = showpatt + showhold
@@ -942,19 +967,21 @@ def doDebug(datalist):
 			
 			showall = '%s%s'%(registers,showsedcmd)
 			
-			# TODO not put t status on read-next-line commands:
-			#  - n,d,q,b <nothing>,t <nothing>
+			# Add the 't status' trick to commands.
+			# Exception: read-next-line commands (n,d,q)
+			# Exception: no PATT/HOLD registers to show (no s///)
 			if t_count and showall:
-				if data['id'] not in 'ndq':
+				if data['id'] not in 'ndq' and registers:
 					tmp = string.replace(save_t, '\a',
 					                     '%03d'%t_count)
 					showall = string.replace(tmp, '#DEBUG#',
 					                         showall)
 					t_count = t_count + 1
 			
-			# null cmd to restore last addr: /addr/{;}
+			# null cmd to restore last addr: /addr/y/!/!/
 			if data['lastaddr']:
-				showall = showall+data['lastaddr']+nullcomm+'\n'
+				showall = showall+debug_prefix+\
+					data['lastaddr']+nullcomm+'\n'
 			
 			# after jump or block commands don't show
 			# registers, because they're not affected.
@@ -973,15 +1000,20 @@ def doDebug(datalist):
 	# executing sed script
 	cmdextra = inputfiles = ''
 	if action_modifiers.count('_stdout-only'):
-		cmdextra = "| egrep -v 'PATT|HOLD|COMM|\$$|\\$'"
+		#cmdextra = "| egrep -v '^PATT|^HOLD|^COMM|\$$|\\$'"  # sed
+		cmdextra = "-l 5000 | egrep -v '^PATT|^HOLD|^COMM'"   # gsed
 	for file in textfiles: inputfiles = '%s %s'%(inputfiles,file)
-	tmpfile = tempfile.mktemp()
-	write_file(tmpfile, outlist)
-	os.system("sed -%s %s %s %s"%(cmdlineopts,
-	                              tmpfile,
-	                              inputfiles,
-	                              cmdextra))
-	os.remove(tmpfile)
+	if dump_debug:
+		for line in map(lambda x:re.sub('\n$','',x), outlist):
+			print line
+		print "\n# Debugged SED script generated by %s-%s (%s)"%(
+			myname, myversion, myhome)
+	else:
+		tmpfile = tempfile.mktemp()
+		write_file(tmpfile, outlist)
+		os.system("%s -%s %s %s %s"%(
+		           sedbin, cmdlineopts, tmpfile, inputfiles, cmdextra))
+		os.remove(tmpfile)
 
 
 
@@ -1046,8 +1078,12 @@ for line in sedscript:
 	
 	if DEBUG: print ; Debug('line:%d: %s'%(linenr,line))
 	
+	# bruteforce: split lines in ; char
+	# exceptions: comments and a,c,i text
 	if string.lstrip(line)[0] == '#':
-		linesplit = [string.lstrip(line)] # trick 2 bypass comment lines
+		linesplit = [string.lstrip(line)]           # comments
+	elif string.lstrip(line)[0] in sedcmds['text']:
+		linesplit = [line]                          # a, c, i
 	else:
 		linesplit = string.split(line, cmdsep)      # split lines at ;
 	
