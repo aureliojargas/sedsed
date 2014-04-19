@@ -2,11 +2,14 @@
 # sedsed - the SED mastering script
 # Since 27 November 2001, by Aurelio Marinho Jargas
 # For ChangeLog and Documentation, see http://sedsed.sf.net
+# For the latest svn version, see http://code.google.com/p/sedsed/
 
 import sys, re, os, getopt, string, tempfile
+import subprocess as sub
+import errno
 
 myname    = 'sedsed'
-myversion = '1.0'
+myversion = '1.01'
 myhome    = 'http://sedsed.sf.net'
 
 
@@ -17,6 +20,7 @@ myhome    = 'http://sedsed.sf.net'
 # Default config - Changeable, but you won't need to do it
 sedbin = 'sed'                # name (or full path) of the sed program
 color = 1                     # colored output or not? (--color, --nocolor)
+colorextra = 0                # additional colors in debug output (--color-extra)
 dump_debug = 0                # dump debug script to screen? (--dump-debug)
 indent_prefix = ' '*4         # default indent prefix for blocks (--prefix)
 debug_prefix = '\t\t'         # default prefix for debug commands
@@ -73,6 +77,7 @@ OPTIONS:
          --hide          hide some debug info (options: PATT,HOLD,COMM)
          --color         shows debug output in colors (default: ON)
          --nocolor       no colors on debug output
+         --color-extra   additional colors in debug output (default: OFF)
          --dump-debug    dumps to screen the debugged sed script
 
          --emu           emulates GNU sed (INCOMPLETE)
@@ -145,6 +150,7 @@ long_options = [
   'debug', 'tokenize', 'htmlize', 'indent',                     # actions
   'version', 'help', 'file=', 'expression=', 'silent', 'quiet', # sed-like
   'nocolor', 'color', 'hide=', 'prefix=', 'emu', 'emudebug',    # misc
+  'color-extra',                                                # more misc
   'dump-debug',                                                 # other
   '_debuglevel=','_emudebuglevel=','_stdout-only', 'dumpcute']  # admin
 
@@ -185,6 +191,7 @@ for o in opt:
 	elif o[0] == '--dump-debug': action = 'debug' ; dump_debug=1 ; color=0
 	elif o[0] == '--nocolor'   : color = 0
 	elif o[0] == '--color'     : color = 1
+	elif o[0] == '--color-extra'     : colorextra = 1
 	elif o[0] == '--hide':                        # get hide options
 		for hide in string.split(o[1], ','):  # save as no<OPT>
 			hide_me = string.lower(string.strip(hide))
@@ -242,14 +249,25 @@ if action == 'debug' and os.name != 'nt':
 if quiet_flag: sedscript.insert(0, '#n')
 
 # Add the terminal escapes for color (or not)
+color_NO  = '\033[m'      # back to default
 if color:
 	color_YLW = '\033[33;1m'  # yellow text
 	color_RED = '\033[31;1m'  # red text
 	color_REV = '\033[7m'     # reverse video
-	color_NO  = '\033[m'      # back to default
 else:
-	color_YLW = color_RED = color_REV = color_NO = ''
+	color_YLW = color_RED = color_REV = ''
 
+if colorextra:
+    color_CYA = '\033[36;1m'  # cyan text
+    color_BLU = '\033[34;1m'  # blue text
+    color_HLD = '\033[31;1m'  # red text for HOLD
+    color_MAG = '\033[35;1m'  # magenta text
+    color_GRE = '\033[32;1m'  # green text
+else:
+    color_CYA = color_BLU = color_HLD = color_MAG = color_GRE = ''
+
+if not color and not colorextra:
+    color_NO = ''
 
 ### The SED debugger magic lines
 #
@@ -324,8 +342,8 @@ else:
 
 # show pattern space, show hold space, show sed command
 # null sed command to restore last address, 't' status trick
-showpatt = [     's/^/PATT:/', 'l', 's/^PATT://'     ]
-showhold = ['x', 's/^/HOLD:/', 'l', 's/^HOLD://', 'x']
+showpatt = [     's/^/PATT:^/', 'l', 's/^PATT:^//'     ]
+showhold = ['x', 's/^/HOLD:^/', 'l', 's/^HOLD:^//', 'x']
 showcomm = ['i\\','COMM:%s\a%s'%(color_YLW, color_NO)]
 nullcomm = ['y/!/!/']
 save_t   = ['t zzset\a\n#DEBUG#', 't zzclr\a',
@@ -1011,8 +1029,33 @@ def doDebug(datalist):
 	else:
 		tmpfile = tempfile.mktemp()
 		write_file(tmpfile, outlist)
-		os.system("%s -%s %s %s %s"%(
-		           sedbin, cmdlineopts, tmpfile, inputfiles, cmdextra))
+
+        p = sub.Popen("%s -%s %s %s %s"%(
+                    sedbin, cmdlineopts, tmpfile, inputfiles, cmdextra),
+                    shell=True, stdout=sub.PIPE).stdout
+
+        prevlastchar = ''
+        for line in p:
+            if not line: break
+            line = line.strip()
+            if re.match("^PATT|^HOLD|^COMM", line) or prevlastchar == '\\':
+                if not re.match("^COMM", line) and colorextra:
+                    line = string.replace(line, '\\n', newlineshow)
+                line = re.sub('^(PATT):(\^)', '%s\\1%s:%s\\2%s'%(color_GRE, color_NO, color_MAG,color_NO), line)
+                line = re.sub('^(HOLD):(\^)', '%s\\1%s:%s\\2%s'%(color_HLD, color_NO, color_MAG,color_NO), line)
+                line = re.sub('^(COMM):', '%s\\1%s:'%(color_BLU, color_NO), line)
+                line = re.sub('\$$', '%s$%s'%(color_MAG,color_NO), line)
+                prevlastchar = line[-1]     # save last char to check for line continuation
+            else:
+                line = "%s%s%s"%(color_CYA,line,color_NO)
+                prevlastchar = ''           # don't care
+            try:
+                print line
+            except IOError, e:
+                if e.errno == errno.EPIPE:
+                    sys.exit()
+                    os.remove(tmpfile)
+
 		os.remove(tmpfile)
 
 
