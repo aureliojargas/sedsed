@@ -8,7 +8,7 @@ import sys, re, os, getopt
 
 # program self data
 myname = 'sedsed'
-myversion = 0.3
+myversion = 0.4
 myhome = 'http://sedsed.sf.net'
 
 # default config
@@ -40,6 +40,7 @@ OPTIONS:
 
      -t, --tokenize      script tokenizer, prints extensive
                          command by command information
+         --htmlize       converts sed script to a colorful HTML page					 
 
      -v, --version       prints the program version and exit
      -h, --help          prints this help message and exit
@@ -50,8 +51,8 @@ OPTIONS:
 # get cmdline options
 errormsg = 'bad option or missing argument. try --help.'
 try: (opt, args) = getopt.getopt(sys.argv[1:], 'hfditv',
-     ['debug', 'hide=', 'nocolor', 'indent', 'prefix=', 'tokenize',
-      'version', 'help', 
+     ['debug', 'hide=', 'nocolor', 'indent', 'prefix=',
+      'tokenize', 'htmlize', 'version', 'help', 
       '_debuglevel=', '_diffdebug', '_stdout-only', 'dumpcute'])      # admin hidden opts
 except getopt.GetoptError: error(errormsg)
 
@@ -60,10 +61,10 @@ for o in opt:
 	if o[0] in ('-d', '--debug')     : action = 'debug'
 	elif o[0] in ('-i', '--indent')  : action = 'indent'; color = 0
 	elif o[0] in ('-t', '--tokenize'): action = 'token' ; color = 0
+	elif o[0] == '--htmlize'         : action = 'html'  ; color = 0
 	elif o[0] in ('-h', '--help')    : printUsage(0)
 	elif o[0] in ('-v', '--version') :
-		print '%s v%s'%(myname,myversion)
-		sys.exit(0)
+		print '%s v%s'%(myname,myversion); sys.exit(0)
 	elif o[0] == '--nocolor'    : color = 0
 	elif o[0] == '--hide':                            # get hide options
 		for hide in o[1].split(','):                  # save as no<OPT>
@@ -100,7 +101,6 @@ showhold = 'x;s/^/HOLD:/;l;s/^HOLD://;x ;# show hold space\n'
 showcomm = '  s@^@COMM:%s\a%s\\\n   @;P;s/^[^\\n]*\\n   //'%(color_YLW,color_NO)
 showcomm = showcomm +'     ;# show command\n'
 restaddr = '{;} ;# restoring last address\n'
-#reset_t  = 't:::::\a;::::::\a         ;# reseting t status\n'
 save_t = 't wasset\a\n#DEBUG#\nt wasclear\a\n: wasset\a\n#DEBUG#\n: wasclear\a\n'
 
 # t wasset\a
@@ -118,6 +118,7 @@ if actionopts.count('nocomm'): showcomm = ''          # don't show!
 #---------------------------------- patterns -----------------------------------
 patt = {}
 sedcmds = {}
+html = {}
 
 sedcmds['file']  = 'rw'
 sedcmds['addr']  = '/$0123456789\\'
@@ -133,8 +134,42 @@ patt['filename']   = r'[^\s]+'                # _any_ not blank char (strange...
 patt['flag']       = r'[%s]+'%sedcmds['flag'] # list of all flags
 patt['topopts'] = r'#!\s*/[^\s]+\s+-([nf]+)'  # options on #!/bin/sed header
 
-cmdfields = ['linenr', 'addr1', 'addr1flag', 'addr2', 'addr2flag', 'lastaddr', 'modifier',
-       'id', 'content', 'delimiter', 'pattern', 'replace', 'flag', 'extrainfo', 'comment']
+# HTML colors for --htmlize
+html['addr1']     = '#8080ff'
+html['addr1flag'] = '#ff6060'
+html['addr2']     = '#8080ff'
+html['addr2flag'] = '#ff6060'
+html['lastaddr']  = ''
+html['modifier']  = '#ff6060'
+html['id']        = '#ffff00'
+html['content']   = '#ff00ff'
+html['delimiter'] = '#ff6060'
+html['pattern']   = '#8080ff'
+html['replace']   = ''
+html['flag']      = '#00ff00'
+html['extrainfo'] = ''
+html['comment']   = '#00ffff'
+html['escape']    = '#ff6060'
+html['special']   = '#00ff00'
+html['pattmeta']  = '#ff00ff'
+html['plaintext'] = ''
+html['branch']    = ''
+# open HTML page with defined page colors
+html['htmlheader'] = """\
+<html>\n<head><meta name="Generator" content="sedsed --htmlize">
+<title>Colorized %s</title></head><body bgcolor="#000000" text="#ffffff"
+link="#ff00ff" alink="#ff00ff" vlink="#ff00ff">
+<pre>\n"""%os.path.basename(infile)
+# final comment about sedsed and close HTML
+html['htmlfooter'] = """
+<font color="%s"><b>### colorized by <a href="http://sedsed.sf.net">sedsed</a>\
+, a sed script debugger/indenter/tokenizer/HTMLizer</b></font>\n
+</pre></body></html>"""%html['comment']
+
+cmdfields = ['linenr',
+  'addr1', 'addr1flag', 'addr2', 'addr2flag', 'lastaddr', 'modifier',
+  'id', 'content', 'delimiter', 'pattern', 'replace', 'flag',
+  'extrainfo', 'comment']
 
 #-------------------------------------------------------------------------------
 
@@ -185,29 +220,83 @@ def isOpenBracket(str):
 	
 	return isis
 
+def paintHtml(id, txt):
+	if txt:  # escaping HTML
+		txt = txt.replace('&', '&amp;')
+		txt = txt.replace('>', '&gt;')
+		txt = txt.replace('<', '&lt;')
+	# some color adjustments and emphasis
+	if   id == 'id' and txt in sedcmds['block']: id = 'delimiter'
+	elif id == 'id' and txt == ':': id = 'content'
+	elif id == 'replace':   # highlight \n, & and \$
+		txt = txt.replace('\\'+linesep, paintHtml('special', '\\'+linesep)) 
+		txt = re.sub('(\\\\[1-9]|&amp;)', paintHtml('special', '\\1'), txt)
+	elif id == 'pattern':   # highlight group open ( and or |
+		txt = re.sub('(\\\\)([(|])', '\\1'+paintHtml('pattmeta', '\\2'), txt)
+	elif id == 'plaintext': # highlight \$
+		txt = txt.replace('\\'+linesep, paintHtml('special', '\\'+linesep)) 
+	elif id == 'branch':    # nice link to the label!
+		txt = '<a href="#%s">%s</a>'%(txt,txt)
+	elif id == 'target':    # link target
+		txt = '<a name="%s">%s</a>'%(txt,txt); id = 'content'
+	
+	if html[id] and txt: txt = '<font color="%s"><b>%s</b></font>'%(html[id], txt)
+	return txt
+
 #-------------------------------------------------------------------------------
 
 def composeSedAddress(dict):
-	addr = '%s%s'%(dict['addr1'],dict['addr1flag'])
-	if dict['addr2']: addr = '%s,%s%s'%(addr,dict['addr2'],dict['addr2flag'])
-	#if addr and dict['id'] not in 'btN':
+	addr1 = ''
+	if action == 'html':
+		if dict['addr1']: addr1 = dict['addr1html']
+		if dict['addr2']: addr2 = dict['addr2html']
+	else:
+		addr1 = '%s%s'%(dict['addr1'],dict['addr1flag'])
+		if dict['addr2']: addr2 = '%s%s'%(dict['addr2'],dict['addr2flag'])
+	
+	if dict['addr2']: addr = '%s,%s'%(addr1,addr2)
+	else: addr = addr1
+	
 	if addr: addr = '%s '%(addr)  # visual addr/cmd separation
 	return addr
 
 def composeSedCommand(dict):
-	if dict['delimiter']:                             # s///
-		cmd = '%s%s%s%s%s%s%s%s'%(
-		    dict['modifier'] ,dict['id'],
-		    dict['delimiter'],dict['pattern'],
-		    dict['delimiter'],dict['replace'],
-		    dict['delimiter'],dict['flag'])
-		if dict['content']:
-			cmd = cmd+' '+dict['content']             # s///w filename
+	if dict['delimiter']:         # s///
+		if action != 'html':
+			cmd = '%s%s%s%s%s%s%s%s'%(
+			    dict['modifier'] ,dict['id'],
+			    dict['delimiter'],dict['pattern'],
+			    dict['delimiter'],dict['replace'],
+			    dict['delimiter'],dict['flag'])
+			if dict['content']:   # s///w filename
+				cmd = cmd+' '+dict['content']
+		else:
+			cmd = """%s%s%s%s%s%s%s%s"""%(
+			    paintHtml('modifier' , dict['modifier'] ),
+			    paintHtml('id'       , dict['id']       ),
+			    paintHtml('delimiter', dict['delimiter']),
+			    paintHtml('pattern'  , dict['pattern']  ),
+			    paintHtml('delimiter', dict['delimiter']),
+			    paintHtml('replace'  , dict['replace']  ),
+			    paintHtml('delimiter', dict['delimiter']),
+			    paintHtml('flag'     , dict['flag']     ))
+			if dict['content']:   # s///w filename
+				cmd = '%s %s'%(cmd,paintHtml('content', dict['content']))
 	else:
 		idsep=''
 		spaceme = sedcmds['file']+sedcmds['jump']+sedcmds['text']
 		if dict['id'] in spaceme: idsep=' '
 		cmd = '%s%s%s%s'%(dict['modifier'],dict['id'],idsep,dict['content'])
+		if action == 'html':
+			if   dict['id'] in sedcmds['text']: content_type = 'plaintext'
+			elif dict['id'] in 'bt': content_type = 'branch'
+			elif dict['id'] == ':': content_type = 'target'
+			else: content_type = 'content';
+			
+			cmd = '%s%s%s%s'%(
+			       paintHtml('modifier'  , dict['modifier']),
+			       paintHtml('id'        , dict['id']      ), idsep,
+			       paintHtml(content_type, dict['content'] ))
 	cmd = cmd.replace(linesep, '\n')
 	return cmd
 
@@ -292,12 +381,12 @@ class SedCommand:
 			ps = SedAddress(self.junk)
 			hs = ''
 			if ps.isok:
-				self.pattern = ps.content
+				self.pattern = ps.pattern
 				self.junk = ps.rest
 				# 'replace' opt is to avoid openbracket check (s/bla/[/ is ok)
 				hs = SedAddress(self.delimiter+self.junk, 'replace')
 				if hs.isok:
-					self.replace = hs.content
+					self.replace = hs.pattern
 					self.junk = hs.rest.lstrip()
 					
 					### great s/patt/rplc/ sucessfully taken 
@@ -347,9 +436,10 @@ class SedCommand:
 class SedAddress:
 	def __init__(self, string, context='addr'):
 		self.delimiter = ''
-		self.content = ''
+		self.pattern = ''
 		self.flag = ''
 		self.full = ''
+		self.html = ''
 		
 		self.isline = 0
 		self.isok = 0
@@ -368,7 +458,13 @@ class SedAddress:
 		else          : self.setPattAddr()
 		
 		if self.isok:
-			self.full = '%s%s%s%s'%(self.escape,self.delimiter,self.content,self.delimiter)
+			self.full = '%s%s%s%s'%(self.escape,self.delimiter,self.pattern,self.delimiter)
+			if action == 'html':
+				self.html = '%s%s%s%s'%(
+				   paintHtml('escape'   , self.escape   ),
+				   paintHtml('delimiter', self.delimiter),
+				   paintHtml('pattern'  , self.pattern  ),
+				   paintHtml('delimiter', self.delimiter))
 			debug('FOUND addr: %s'%self.full)
 			
 			cutlen = len(self.full)+len(self.flag)
@@ -392,7 +488,7 @@ class SedAddress:
 	
 	def setLineAddr(self):
 		m = re.match(r'[0-9]+|\$', self.junk)
-		self.content = m.group(0)
+		self.pattern = m.group(0)
 		self.isok = 1
 	
 	def setPattAddr(self):
@@ -444,7 +540,7 @@ class SedAddress:
 				if m:                                 # yes, a flag!
 					self.flag = m.group()             # set addr flag
 					debug('FOUND addr flag: %s'%self.flag.strip())
-			self.content = possiblepatt
+			self.pattern = possiblepatt
 			self.isok = 1
 
 
@@ -552,12 +648,14 @@ for line in list:
 					cmddict['linenr'] = linenr
 					cmddict['addr1'] = addr.full
 					cmddict['addr1flag'] = addr.flag
-					if addr.content: lastaddr = addr.full
+					cmddict['addr1html'] = addr.html
+					if addr.pattern: lastaddr = addr.full
 					else: cmddict['lastaddr'] = lastaddr
 				else:
 					cmddict['addr2'] = addr.full
 					cmddict['addr2flag'] = addr.flag
-					if addr.content: lastaddr = addr.full
+					cmddict['addr2html'] = addr.html
+					if addr.pattern: lastaddr = addr.full
 					else: cmddict['lastaddr'] = lastaddr
 				rest = addr.rest
 			else:
@@ -679,13 +777,19 @@ def dumpScript(datalist, indentprefix):
 	adsep = indfmt['addrsep']
 	indent = indfmt['initlevel']
 	
+	if action == 'html': outlist.append(html['htmlheader'])
+	
 	for data in datalist[1:]:                         # skip headers at 0
 		if not data['id']:
 			outlist.append('\n')
 			continue                                  # blank line
 		if data['id'] == '#' :
 			indentstr = indfmt['string']*indent
-			outlist.append('%s%s\n'%(indentstr,data['comment']))
+			if action != 'html':
+				outlist.append('%s%s\n'%(indentstr,data['comment']))
+			else: 
+				outlist.append('%s%s\n'%(indentstr,
+				                paintHtml('comment', data['comment'])))
 		else:
 			if data['id'] == '}': indent = indent - 1
 			indentstr = indfmt['string']*indent # only indent++ after open { 
@@ -699,7 +803,9 @@ def dumpScript(datalist, indentprefix):
 			if data['comment']: comm = ';'+data['comment']
 			cmd = '%s%s%s'%(indentstr,addr,cmd)
 			outlist.append('%-39s%s\n'%(cmd,comm))
-			#outlist.append('%s%s%s%s\n'%(indentstr,addr,cmd,comm))
+	
+	if action == 'html':
+		outlist.append(html['htmlfooter'])
 	
 	for line in outlist: print line,                  # print the result
 
@@ -775,15 +881,15 @@ def doDebug(datalist):
 ################################################################################
 
 # printing results format
-dumptype = 1
 if action == 'dumpcute': dumpCute(ZZ)
 elif action == 'token' : dumpKeyValuePair(ZZ)
 elif action == 'indent': dumpScript(ZZ, indentprefix)
 elif action == 'debug' : doDebug(ZZ) 
+elif action == 'html'  : dumpScript(ZZ, indentprefix)
 # dumpOneliner(data)
 #print '#BLANK lines: %s'%blanklines
 
-#zzcep - cool example
 #TODO commenter
 #TODO ignore l command line break?
 #TODO accept oneliners also
+#TODO accept \n as addr delimiter
