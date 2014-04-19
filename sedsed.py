@@ -1,13 +1,13 @@
-#!/usr/bin/python
-# sedsed
+#!/usr/bin/env python
+# sedsed - the SED mastering scrpit
 # 20011127 <aurelio@verde666.org> ** debut
-# ChangeLog: see README file at http://sedsed.sf.net
+# ChangeLog: see http://sedsed.sf.net/README file
 
-import sys, re, os, getopt, string
+import sys, re, os, getopt, string, tempfile
 
 # program self data
 myname = 'sedsed'
-myversion = 0.5
+myversion = 0.6
 myhome = 'http://sedsed.sf.net'
 
 # default config
@@ -23,20 +23,18 @@ def error(msg):
 	print 'ERROR:',msg ; sys.exit(1)
 
 # OS/system functions
-def readFile(file):            # remove \n$
+def readFile(file):
 	if not os.path.isfile(file): error('file not found: %s'%file)
 	f = open(file); txt = f.read(); f.close
-	txt = re.sub('\n$','',txt) ; return string.split(txt, '\n')
+	txt = string.rstrip(txt)  # remove \n or \r\n
+	return string.split(txt, '\n')
 def writeFile(file, list=[]):
+	EOL =  '\n'
+	if os.name == 'nt': EOL = '\r\n'
 	if list:
 		for i in range(len(list)): # ensuring line break
-			list[i] = string.rstrip(list[i])+'\n'
+			list[i] = string.rstrip(list[i])+EOL
 	f = open(file,'w'); f.writelines(list); f.close()
-def mkTmpFile(list=[]):
-	from time import time
-	file = '/tmp/sedsed.%s'%str(time())
-	writeFile(file, list)
-	return file
 def runCommand(cmd): # Returns a (#exit_code, program_output[]) tuple
 	list = [] ; fd = os.popen(cmd)
 	for line in fd.readlines():
@@ -100,7 +98,7 @@ for o in opt:
 	elif o[0] in ('-f', '--file')      :
 		sedscript.extend(readFile(o[1])) ; infile = o[1]
 	elif o[0] in ('-h', '--help')      : printUsage(0)
-	elif o[0] in ('-v', '--version')   :
+	elif o[0] in ('-V', '--version')   :
 		print '%s v%s'%(myname,myversion); sys.exit(0)
 	elif o[0] == '--htmlize' : action = 'html'  ; color = 0
 	elif o[0] == '--emu'     : action = 'emu'
@@ -128,10 +126,13 @@ textfiles = args
 if not textfiles: textfiles = ['-']
 # the sed script is syntax-error free?
 if action == 'debug':
-	tmpfile = mkTmpFile(sedscript)
+	tmpfile = tempfile.mktemp()
+	writeFile(tmpfile, sedscript)
 	ret, msg = runCommand("sed -f '%s' /dev/null"%tmpfile)
 	if ret: error('#%d: syntax error on your sed script, please fix it before.'%ret)
 	os.remove(tmpfile)
+# turn color OFF on windows (how to do it?)
+if os.name == 'nt': color = 0
 
 # color is nice
 color_YLW = color_NO = color_RED = color_REV = ''     # no color
@@ -585,7 +586,7 @@ class SedAddress:
 
 ### global view of the parser:
 #
-# - load the original sed script to a list, left the file free
+# - load the original sed script to a list, then free script file (if -f)
 # - scan the list (line by line)
 # - as user can do more than one sed command on the same line, we split
 #   "possible valid commands" by ; (brute force method)
@@ -906,7 +907,8 @@ def doDebug(datalist):
 	if actionopts.count('_stdout-only'):
 		cmdextra = "| egrep -v 'PATT|HOLD|COMM|\$$|\\$'"
 	for file in textfiles: inputfiles = '%s %s'%(inputfiles,file)
-	tmpfile = mkTmpFile(outlist)
+	tmpfile = tempfile.mktemp()
+	writeFile(tmpfile, outlist)
 	os.system("sed -%s %s %s %s"%(cmdlineopts, tmpfile, inputfiles, cmdextra))
 	os.remove(tmpfile)
 
