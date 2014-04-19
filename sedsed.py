@@ -1051,7 +1051,6 @@ has_t = 0
 cmdsep = ';'
 linesep = '@#linesep#@'
 newlineshow = '%s\\N%s'%(color_RED,color_NO)
-newlinemark = r']]\([\)'
 blanklines= []
 ZZ = []
 ZZ.append({})  #for header
