@@ -21,8 +21,8 @@ dump_debug = 0                # dump debug script to screen? (--dump-debug)
 indent_prefix = ' '*4         # default indent prefix for blocks (--prefix)
 debug_prefix = '\t\t'         # default prefix for debug commands
 action = 'indent'             # default action if none specified (-d,-i,-t,-H)
-DEBUG = 0                     # set developper's debug level [0-3]
-EMUDEBUG = 0                  # emulator have it's own debug [0-3]
+DEBUG = 0                     # set developer's debug level [0-3]
+EMUDEBUG = 0                  # emulator has its own debug [0-3]
 
 # HTML colors for --htmlize
 # You may edit here to change the default colors
@@ -126,7 +126,7 @@ def write_file(file, lines=[]):
 	f.writelines(lines); f.close()
 
 def runCommand(cmd): # Returns a (#exit_code, program_output[]) tuple
-	#TODO dont use popen()
+	#TODO don't use popen()
 	list = [] ; fd = os.popen(cmd)
 	for line in fd.readlines():
 		list.append(string.rstrip(line))  # stripping \s*\n
@@ -153,9 +153,9 @@ try: opt, args = getopt.getopt(sys.argv[1:], short_options, long_options)
 except getopt.error, errmsg: Error("%s (try --help)"%errmsg)
 
 # Turn color OFF on Windows because ANSI.SYS is not installed by default.
-# Windows users who have ANSY.SYS configured, can use the --color option
+# Windows users who have ANSI.SYS configured, can use the --color option
 # or comment the following line.
-# ANSY.SYS ressources:
+# ANSI.SYS resources:
 #   http://www.evergreen.edu/biophysics/technotes/program/ansi_esc.htm#notes
 #   http://www3.sympatico.ca/rhwatson/dos7/v-ansi-escseq.html
 if os.name == 'nt': color = 0
@@ -202,11 +202,11 @@ for o in opt:
 	elif o[0] == '--dumpcute':
 		action = 'dumpcute'; DEBUG = 0; color = 1
 
-# Now all Command Line options were sucessfuly parsed
+# Now all Command Line options were successfully parsed
 
 
 #-------------------------------------------------------------------------------
-#                              Sanity Checkings  
+#                              Sanity Checks  
 #-------------------------------------------------------------------------------
 
 # There's a SED script?
@@ -219,10 +219,10 @@ if not sedscript:
 # Get all text files, if none, use STDIN (-)
 textfiles = args or ['-']
 
-# On --debug, check the given script syntax, runnig SED with it.
+# On --debug, check the given script syntax, running SED with it.
 # We will not debug a broken script.
 #XXX there is a problem with popen() and win9x machines
-#    so i'm skipping this check for those machines
+#    so I'm skipping this check for those machines
 #TODO redo this check using !runCommand
 if action == 'debug' and os.name != 'nt':
 	tmpfile = tempfile.mktemp()
@@ -254,7 +254,7 @@ else:
 ### The SED debugger magic lines
 #
 # Here is where the 'magic' lives. The heart of this program are the
-# following lines, which are the special SED commands responsable for
+# following lines, which are the special SED commands responsible for
 # the DEBUG behaviour. For *each* command of the original script,
 # several commands are added before, to show buffers and command
 # contents. Some tricks are needed to preserve script's original
@@ -407,7 +407,7 @@ cmdfields = [
 
 
 #-------------------------------------------------------------------------------
-#                         Auxiliar Functions - Tools
+#                         Auxiliary Functions - Tools
 #-------------------------------------------------------------------------------
 
 def escapeTextCommandsSpecials(str):
@@ -524,7 +524,7 @@ class SedCommand:
 		elif id in sedcmds['text']:
 			Debug('type: text',3)
 			if self.junk[-1] != '\\': # if not \ at end, finished
-				# ensure \LineSep at begining
+				# ensure \LineSep at beginning
 				self.content = re.sub(
 				               r'^\\%s'%linesep, '', self.junk)
 				self.content = '\\%s%s'%(linesep,self.content)
@@ -566,7 +566,7 @@ class SedCommand:
 					self.replace = hs.pattern
 					self.junk = string.lstrip(hs.rest)
 					
-					# great, s/patt/rplc/ sucessfully taken
+					# great, s/patt/rplc/ successfully taken
 			
 			if hs and hs.isok and self.junk:    # there are flags?
 				Debug('possible s/// flag: %s'%self.junk,3)
@@ -702,7 +702,7 @@ class SedAddress:
 				incompleteaddr = ''
 			Debug('possiblepatt: '+possiblepatt,2)
 			
-			# maybe splitted at a (valid) escaped delimiter?
+			# maybe split at a (valid) escaped delimiter?
 			if re.search(r'\\+$', possiblepatt):
 				m = re.search(r'\\+$', possiblepatt)
 				if len(m.group(0))%2:
@@ -711,9 +711,9 @@ class SedAddress:
 					continue
 			
 			if self.context != 'replace':
-				# maybe splitted at a delimiter inside
+				# maybe split at a delimiter inside
 				# char class []?
-				# BUG: []/[] is not catched - WONTFIX
+				# BUG: []/[] is not caught - WONTFIX
 				if isOpenBracket(possiblepatt):
 					Debug('address INCOMPLETE! - open bracket')
 					incompleteaddr = possiblepatt
@@ -864,7 +864,7 @@ def dumpCute(datalist):
 			print 'cmd: %s%s%s   [%s]'%(r,cmd,n,data['comment'])
 
 # dumpScript: This is a handy function, used by --indent AND --htmlize
-# It formats the SED script in a humam-friendly way, with one command
+# It formats the SED script in a human-friendly way, with one command
 # per line and adding spaces on the right places. If --htmlize, it
 # also adds the HTML code to the script.
 #
@@ -923,11 +923,11 @@ def dumpScript(datalist, indent_prefix):
 # This function performs the --debug action.
 #
 # After the SED script was parsed by the parsed (below), this function
-# is called with the script data found. It loops, shouts and screems,
+# is called with the script data found. It loops, shouts and screams,
 # inserting the nice DEBUG lines between the SED script commands.
 #
 # After all lines are composed, it call the system's SED to run the
-# script, and SED will do it's job, but this time showing you all the
+# script, and SED will do its job, but this time showing you all the
 # secrets that the PATTERN SPACE and HOLD SPACE buffers holds.
 #
 def doDebug(datalist):
@@ -1031,12 +1031,12 @@ def doDebug(datalist):
 # - Scan the list (line by line)
 # - As user can do more than one sed command on the same line, we split
 #   "possible valid commands" by ; (brute force method)
-# - Validate each splitted command
+# - Validate each split command
 # - If not valid, join next, and try to validate again (loop here)
 # - If hit EOL and still not valid, join next line, validate (loop here)
 # - Hit EOF, we've got all info at hand
 # - Generate a result list with all sed command found and its data, each
-#   command having it's own dictionary: {addr1: '', addr2: '', cmd: ''}
+#   command having its own dictionary: {addr1: '', addr2: '', cmd: ''}
 # - ZZ is the list
 ###
 
@@ -1117,7 +1117,7 @@ for line in sedscript:
 		# To handle ranges, match addresses one by one:
 		# - Matched addr at ^   ? Get it and set addr1.
 		# - Next char is a comma? It's a range. Get & set addr2.
-		# - Addresses are cutted from command, continue.
+		# - Addresses are cut from command, continue.
 		#
 		# We're not using split cause it fails at /bla[,]bla/ address
 		#
@@ -1232,7 +1232,7 @@ ZZ[0]['has_t'] = has_t
 #                                                                              #
 ################################################################################
 #
-# The emulator still don't support complex regexes and '$' as line address.
+# The emulator still doesn't support complex regexes and '$' as line address.
 # Use the --emu command line option to run the emulator.
 # If you don't have SED on your system, you can use --emu to have a SED-like
 # program!
@@ -1294,7 +1294,7 @@ class emuSed:
 	
 	def readNextLine(self):
 		self.linenr = self.linenr +1
-		#TODO $ matches everyline.
+		#TODO $ matches every line.
 		#TODO GNUsed retains stdout until next only if there is a $ addr
 		if self.f_stdin:                 # reading STDIN interactively
 			inputline = sys.stdin.readline()
@@ -1305,7 +1305,7 @@ class emuSed:
 		next = self.inlist[self.linenr]
 		if self.f_joinme: self.line = self.line+'\n'+next
 		else            : self.line = next
-		Debug('line readed:%d:%s'%(self.linenr,`self.line`), 1)
+		Debug('line read:%d:%s'%(self.linenr,`self.line`), 1)
 	
 	def _getAddress(self, fulladdr):
 		addr = fulladdr                          # number
@@ -1377,13 +1377,13 @@ class emuSed:
 			PS = string.translate(PS, trtab)
 		elif cmd['id'] == 'l': print self._makeRawString(PS)
 		elif cmd['id'] == 'd':
-			self.f_delme = 1 ; self.EOS = 1   # d) forces next cicle
-		elif cmd['id'] == 'D':             # D) del till \n, next cicle
+			self.f_delme = 1 ; self.EOS = 1   # d) forces next cycle
+		elif cmd['id'] == 'D':             # D) del till \n, next cycle
 			cutted = re.sub('^.*?\n', '', PS) # del till the 1st \n
 			if cutted == PS: cutted = ''      # if no \n, del all
 			PS = cutted
 			self.rewindScript()               # D forces rewind
-			if not PS:                    # no PS, start next cicle
+			if not PS:                    # no PS, start next cycle
 				self.f_delme = 1 ; self.EOS = 1
 			print '------',PS
 		elif cmd['id'] == 'n':             # n) print patt, read line
