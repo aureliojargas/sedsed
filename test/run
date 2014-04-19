@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# Always run the tests from this script's folder
+cd $(dirname "$0") || exit 1
+
+for file in */run; do
+	echo "---- Running $file..."
+	$file
+done
