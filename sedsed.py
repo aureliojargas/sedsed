@@ -43,7 +43,7 @@ OPTIONS:
 errormsg = 'bad option or missing argument. try --help.'
 try: (opt, args) = getopt.getopt(sys.argv[1:], 'hfdit',
      ['debug', 'hide=', 'nocolor', 'indent', 'prefix=','tokenize','help', 
-      '_debuglevel=', '_diffdebug', 'dumpcute'])      # admin hidden opts
+      '_debuglevel=', '_diffdebug', '_stdout-only', 'dumpcute'])      # admin hidden opts
 except getopt.GetoptError: error(errormsg)
 
 actionopts = []
@@ -64,6 +64,7 @@ for o in opt:
 	elif o[0] == '--_debuglevel': DEBUG = int(o[1])
 	elif o[0] == '--dumpcute'   : DEBUG = 0; color = 1; action = 'dumpcute'
 	elif o[0] == '--_diffdebug'  : action = 'debug' ; actionopts.append(o[0][2:])
+	elif o[0] == '--_stdout-only': action = 'debug' ; actionopts.append(o[0][2:])
 
 if not args: printUsage(1)                            # infile sanity checks
 infile = args[0];
@@ -82,12 +83,20 @@ if color:
 	color_NO='\033[m' ; color_REV='\033[7m'           # default, reverse
 
 # the sed debug magic lines
-showpatt = '  s/^/PATT:/;l;s/^PATT://   ;# show pattern space'
-showhold = 'x;s/^/HOLD:/;l;s/^HOLD://;x ;# show hold space'
-showcomm = '  s@^@COMM:%s\a%s\\\n@;P;s/^[^\\n]*\\n//'%(color_YLW,color_NO)
-showcomm = showcomm +'           ;# show command'
-restaddr = '{;} ;# restoring last address'
-reset_t  = 't:::::\a;::::::\a         ;# reseting t status'
+showpatt = '  s/^/PATT:/;l;s/^PATT://   ;# show pattern space\n'
+showhold = 'x;s/^/HOLD:/;l;s/^HOLD://;x ;# show hold space\n'
+showcomm = '  s@^@COMM:%s\a%s\\\n   @;P;s/^[^\\n]*\\n   //'%(color_YLW,color_NO)
+showcomm = showcomm +'     ;# show command\n'
+restaddr = '{;} ;# restoring last address\n'
+#reset_t  = 't:::::\a;::::::\a         ;# reseting t status\n'
+save_t = 't wasset\a\n#DEBUG#\nt wasclear\a\n: wasset\a\n#DEBUG#\n: wasclear\a\n'
+
+# t wasset\a
+# #DEBUG#
+# t wasclear\a
+# : wasset\a
+# #DEBUG#
+# : wasclear\a
 
 if actionopts.count('nopatt'): showpatt = ''          # don't show!
 if actionopts.count('nohold'): showhold = ''          # don't show!
@@ -457,7 +466,7 @@ incompletecmdline = ''
 addr1 = addr2 = ''
 lastaddr = ''
 lastsubref = ''
-t_subs = []
+has_t = 0
 cmdsep = ';'
 linesep = '§§§'
 newlineshow = '%s\\N%s'%(color_RED,color_NO)
@@ -580,7 +589,7 @@ for line in list:
 			if cmd.id == 's': lastsubref = len(ZZ)    # saving s/// position
 			if cmd.id == 't':
 				cmddict['extrainfo'] = lastsubref     # related s/// reference
-				t_subs.append(lastsubref)             # saving to future scan
+				has_t = 1
 			
 			ZZ.append(cmddict)                        # saving full cmd entry
 			debug('FULL entry: %s'%cmddict,3)
@@ -600,6 +609,7 @@ for line in list:
 # populating list header
 ZZ[0]['blanklines'] = blanklines
 ZZ[0]['fields'] = cmdfields
+ZZ[0]['has_t'] = has_t
 
 ################################################################################
 
@@ -685,15 +695,20 @@ def dumpScript(datalist, indentprefix):
 
 def doDebug(datalist):
 	outlist = []
-	firstshowdone = 0
 	cmdlineopts = 'f'
-	joinuntilt = []
-	joinlastaddr = ''
-	joincount = 0
-	joinsep = ' ; '
+	t_count = 0
+	hideregisters = 0
 	
 	if datalist[0].has_key('topopts'):
 		cmdlineopts = datalist[0]['topopts']
+	
+	# if we have one or more t commands on the script, we need to save the t
+	# command status between debug commands. as they perform s/// commands, the
+	# t status of the "last substitution" is lost. so, we save the status doing
+	# a nice loop trick before *every* command (necessary overhead). this loops
+	# uses the :wassetNNN and wasclearNNN labels, where NNN is the label count.
+	#TIP: t status resets: line read, t call
+	if datalist[0]['has_t']: t_count = 1
 	
 	for i in range(len(datalist)):
 		if i == 0: continue                           # skip headers at 0
@@ -701,78 +716,48 @@ def doDebug(datalist):
 		if not data['id']: continue                   # ignore blank line
 		if data['id'] == '#': outlist.append('%s\n'%(data['comment']))
 		else:
-			# show initial PATT & HOLD status (before any command)
-			# it's only here to let header comments alone
-			if not firstshowdone:
-				outlist.append("%s\n%s\n#%s\n"%(showpatt,showhold,'-'*50))
-				firstshowdone = 1
-			
 			cmd = composeSedCommand(data)
 			addr = composeSedAddress(data)
+			
 			cmdshow = cmd.replace('\n', newlineshow+color_YLW)
-			
-			registers = "%s\n%s\n"%(showpatt,showhold)
-			# after jump or block commands don't show registers, because
-			# they're not affected. exception: t when in s///; t loop
-			#TODO show after b w/out target?
-			if data['id'] in sedcmds['jump']:
-				if not (data['id'] == 't' and t_subs): registers = ''
-			if data['id'] in sedcmds['block']: registers = ''
-			
-			# here we treat the s/// ; t sequence.
-			# because debug commands perform s/// commands, the t status
-			# of the "last substitution" is lost. so, we reset the t status
-			# by making a "t LABEL; : LABEL" null command. LABEL is defined
-			# on the reset_t variable and have a count (for more than one t
-			# at the sed script).
-			#
-			# the bad part is that the debug information between the s/// and
-			# the relative t command is lost. so far, i've not found a nice
-			# way to store the t status between commands and preserving the
-			# patt/hold space registers. anyone?
-			#
-			if t_subs.count(i) or joinuntilt:         # s/// related to next t
-				if t_subs.count(i): joincount = joincount + 1
-				joinuntilt.append(addr+cmd)           # join commands
-				debug('FOUND s///;t sequence: %s %s'%(t_subs,i),1)
-				debug('joining: %s'%joinuntilt, 2)
-				if data['lastaddr']:                  # save lastaddr contents
-					joinlastaddr = data['lastaddr']
-				if data['id'] == 't':                 # end of exception!
-					# separate all commands by \n to avoid problems
-					cmd = '\n'.join(joinuntilt)
-					# on the screen, they're separated by ; (joinsep)
-					cmdshow = joinsep.join(joinuntilt)
-					#... and newlines are visual
-					cmdshow = cmdshow.replace('\n', newlineshow+color_YLW)
-					# store last lastaddr found for the future check
-					if joinlastaddr: data['lastaddr'] = joinlastaddr
-					# reset join status and we're back to default behaviour
-					joinlastaddr = ''
-				else:
-					# this loop ends on the next t command
-					continue
-			
 			cmdshow = esc_RS_EspecialChars(addr+cmdshow)
 			showsedcmd = showcomm.replace('\a', cmdshow)
 			
-			if joinuntilt:
-				showsedcmd = showsedcmd+'\n'+reset_t.replace('\a', '%03d'%joincount)
-				addr = '' # already got
-				joinuntilt = []
+			registers = showpatt + showhold
+			if hideregisters: registers = ''
+			
+			showall = '%s%s'%(registers,showsedcmd)
+			
+			# TODO not put t status on read-next-line commands:
+			#  - n,d,q,b <nothing>,t <nothing> 
+			if t_count and showall:
+				if data['id'] not in 'ndq':
+					tmp = save_t.replace('\a', '%03d'%t_count)
+					showall = tmp.replace('#DEBUG#', showall)
+					t_count = t_count + 1
 			
 			if data['lastaddr']: # null cmd to restore last addr: /addr/{;}
-				showsedcmd = showsedcmd+'\n'+data['lastaddr']+restaddr
+				showall = showall+data['lastaddr']+restaddr+'\n'
 			
-			outlist.append("%s\n%s\n%s#%s\n"%(showsedcmd,addr+cmd,registers,'-'*50))
+			# after jump or block commands don't show registers, because
+			# they're not affected. exception: after b or t without target
+			# (read next line)
+			hideregisters = 0
+			if data['id'] in sedcmds['jump'] and data['content']: hideregisters = 1
+			elif data['id'] in sedcmds['block']: hideregisters = 1
+			
+			outlist.append("%s#%s\n%s\n"%(showall,'-'*50,addr+cmd))
 	
-	outlist.append('\n')                          # for the last line
+	outlist.append(showpatt + showhold)           # last line status 
 	
 	# writing to outfile
 	f = open(outfile,'w'); f.writelines(outlist); f.close()
 	
 	# executing sed script
-	os.system("sed -%s %s"%(cmdlineopts, outfile))
+	cmdextra = ''
+	if actionopts.count('_stdout-only'):
+		cmdextra = "| egrep -v 'PATT|HOLD|COMM|\$$|\\$'"
+	os.system("sed -%s %s%s"%(cmdlineopts, outfile, cmdextra))
 	#print "-------------------- sed -%s %s"%(cmdlineopts, outfile)
 
 ################################################################################
