@@ -1152,9 +1152,9 @@ for line in sedscript:
 				break                        # join more cmds
 			
 			# it's a range!
-			if not cmddict.has_key('addr2') and rest[0] == ',':
+			if not cmddict.has_key('addr2') and string.lstrip(rest)[0] == ',':
 				# del comma and blanks
-				possiblecmd = string.lstrip(rest[1:])
+				possiblecmd = re.sub(r'^\s*,\s*', '', rest)
 				continue                     # process again
 			else:
 				incompleteaddr = ''
