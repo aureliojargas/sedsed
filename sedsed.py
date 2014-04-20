@@ -66,7 +66,7 @@ else:
 #-------------------------------------------------------------------------------
 
 def printUsage(exitcode=1):
-	print """
+	print("""
 Usage: sedsed OPTION [-e sedscript] [-f sedscriptfile] [inputfile]
 
 OPTIONS:
@@ -100,18 +100,18 @@ OPTIONS:
 NOTE: The --emu and --emudebug options are still INCOMPLETE and must
       be used with care. Mainly regexes and address $ (last line)
       are not handled right by the emulator.
-"""
-	print "Homepage: %s\n"%myhome
+""")
+	print("Homepage: %s\n"%myhome)
 	sys.exit(exitcode)
 
 def Error(msg):
 	"All error messages are handled by me"
-	print 'ERROR:',msg ; sys.exit(1)
+	print('ERROR:',msg) ; sys.exit(1)
 
-def echo(msg): print "\033[33;1m%s\033[m"%msg
+def echo(msg): print("\033[33;1m%s\033[m"%msg)
 
 def Debug(msg, level=1):
-	if DEBUG and DEBUG >= level: print '+++ DEBUG%d: %s'%(level,msg)
+	if DEBUG and DEBUG >= level: print('+++ DEBUG%d: %s'%(level,msg))
 
 def read_file(file):
 	"Reads a file into a list, removing line breaks"
@@ -121,7 +121,7 @@ def read_file(file):
 	else:
 		try: f = open(file); data = f.readlines() ; f.close()
 		except: Error("Cannot read file: %s"%file)
-	return map(lambda x:re.sub('[\n\r]+$','',x), data)
+	return [re.sub('[\n\r]+$','',x) for x in data]
 
 def write_file(file, lines=[]):
 	"Writes a list contents into file, adding correct line breaks" 
@@ -129,7 +129,7 @@ def write_file(file, lines=[]):
 	except: Error("Cannot open file for writing: %s"%file)
 	#TODO maybe use os.linesep? - all this is really necessary?
 	# ensuring line break
-	lines = map(lambda x:re.sub('\n$','',x)+'\n', lines)
+	lines = [re.sub('\n$','',x)+'\n' for x in lines]
 	f.writelines(lines); f.close()
 
 def runCommand(cmd): # Returns a (#exit_code, program_output[]) tuple
@@ -157,7 +157,7 @@ long_options = [
 
 # Check it!
 try: opt, args = getopt.getopt(sys.argv[1:], short_options, long_options)
-except getopt.error, errmsg: Error("%s (try --help)"%errmsg)
+except getopt.error as errmsg: Error("%s (try --help)"%errmsg)
 
 # Turn color OFF on Windows because ANSI.SYS is not installed by default.
 # Windows users who have ANSI.SYS configured, can use the --color option
@@ -185,7 +185,7 @@ for o in opt:
 		script_file = o[1]
 	elif o[0] in ('-h', '--help')      : printUsage(0)
 	elif o[0] in ('-V', '--version')   :
-		print '%s v%s'%(myname,myversion)
+		print('%s v%s'%(myname,myversion))
 		sys.exit(0)
 	elif o[0] == '--emu'       : action = 'emu'
 	elif o[0] == '--emudebug'  : action = 'emudebug'
@@ -827,8 +827,8 @@ def dumpKeyValuePair(datalist):
 				            data[key],
 				            linesep,
 				            newlineshow)
-			print "%10s:%s"%(key,data[key])
-		print
+			print("%10s:%s"%(key,data[key]))
+		print('')
 
 # Format: line:ad1:ad1f:ad2:ad2f:mod:cmd:content:delim:patt:rplc:flag:comment
 def dumpOneliner(datalist, fancy=0):
@@ -840,16 +840,16 @@ def dumpOneliner(datalist, fancy=0):
 		if data['id']:
 			for key in datalist[0]['fields'][1:]:     # skip linenr
 				outline = '%s:%s%s%s'%(outline,r,data[key],n)
-		print outline
+		print(outline)
 
 def dumpCute(datalist):
 	"Shows a strange representation of SED commands. Use --dumpcute."
 	r = color_REV; n = color_NO
 	for data in datalist[1:]:                         # skip headers at 0
 		if not data['id']:
-			print '%40s'%'[blank]'
+			print('%40s'%'[blank]')
 		elif data['id'] == '#' :
-			print data['comment']
+			print(data['comment'])
 		else:
 			idsep=''
 			if data['id'] in 'bt': idsep=' '
@@ -864,11 +864,11 @@ def dumpCute(datalist):
 				    data['delimiter'],data['replace'],
 				    data['delimiter'],data['flag'])
 			cmd = string.replace(cmd, linesep, n+newlineshow+r)
-			print '%s'%'-'*40
-			print 'adr: %s%s%s%s  :::  %s%s%s%s'%(
+			print('%s'%'-'*40)
+			print('adr: %s%s%s%s  :::  %s%s%s%s'%(
 			       r,data['addr1'],data['addr1flag'],n,
-			       r,data['addr2'],data['addr2flag'],n)
-			print 'cmd: %s%s%s   [%s]'%(r,cmd,n,data['comment'])
+			       r,data['addr2'],data['addr2flag'],n))
+			print('cmd: %s%s%s   [%s]'%(r,cmd,n,data['comment']))
 
 # dumpScript: This is a handy function, used by --indent AND --htmlize
 # It formats the SED script in a human-friendly way, with one command
@@ -918,7 +918,7 @@ def dumpScript(datalist, indent_prefix):
 	if action == 'html':
 		outlist.append(html_data['footer'])
 	
-	print '\n'.join(outlist)                          # print the result
+	print('\n'.join(outlist))                          # print the result
 
 
 #-------------------------------------------------------------------------------
@@ -943,7 +943,7 @@ def doDebug(datalist):
 	t_count = 0
 	hideregisters = 0
 	
-	if datalist[0].has_key('topopts'):
+	if 'topopts' in datalist[0]:
 		cmdlineopts = datalist[0]['topopts']
 	
 	# If we have one or more t commands on the script, we need to save
@@ -1011,10 +1011,10 @@ def doDebug(datalist):
 		cmdextra = "-l 5000 | egrep -v '^PATT|^HOLD|^COMM'"   # gsed
 	for file in textfiles: inputfiles = '%s %s'%(inputfiles,file)
 	if dump_debug:
-		for line in map(lambda x:re.sub('\n$','',x), outlist):
-			print line
-		print "\n# Debugged SED script generated by %s-%s (%s)"%(
-			myname, myversion, myhome)
+		for line in [re.sub('\n$','',x) for x in outlist]:
+			print(line)
+		print("\n# Debugged SED script generated by %s-%s (%s)"%(
+			myname, myversion, myhome))
 	else:
 		tmpfile = tempfile.mktemp()
 		write_file(tmpfile, outlist)
@@ -1082,7 +1082,7 @@ for line in sedscript:
 		ZZ.append({'linenr': linenr, 'id': ''})
 		continue
 	
-	if DEBUG: print ; Debug('line:%d: %s'%(linenr,line))
+	if DEBUG: print('') ; Debug('line:%d: %s'%(linenr,line))
 	
 	# bruteforce: split lines in ; char
 	# exceptions: comments and a,c,i text
@@ -1127,13 +1127,13 @@ for line in sedscript:
 		#
 		# We're not using split cause it fails at /bla[,]bla/ address
 		#
-		while 1:
+		while True:
 			if not possiblecmd[0] in sedcmds['addr']: break # NOaddr
 			
 			addr = SedAddress(possiblecmd, 'address')  # get data
 			
 			if addr.isok:
-				if not cmddict.has_key('addr1'):
+				if 'addr1' not in cmddict:
 					cmddict['linenr'] = linenr
 					cmddict['addr1'] = addr.full
 					cmddict['addr1flag'] = addr.flag
@@ -1152,7 +1152,7 @@ for line in sedscript:
 				break                        # join more cmds
 			
 			# it's a range!
-			if not cmddict.has_key('addr2') and string.lstrip(rest)[0] == ',':
+			if 'addr2' not in cmddict and string.lstrip(rest)[0] == ',':
 				# del comma and blanks
 				possiblecmd = re.sub(r'^\s*,\s*', '', rest)
 				continue                     # process again
@@ -1163,7 +1163,7 @@ for line in sedscript:
 		
 		if incompleteaddr: continue                   # need more cmds!
 		for key in cmdfields[:6]:  # filling not set addr fields
-			if not cmddict.has_key(key): cmddict[key] = ''
+			if key not in cmddict: cmddict[key] = ''
 		
 		###-------------------------------------------------
 		### from here, address is no more
@@ -1311,7 +1311,7 @@ class emuSed:
 		next = self.inlist[self.linenr]
 		if self.f_joinme: self.line = self.line+'\n'+next
 		else            : self.line = next
-		Debug('line read:%d:%s'%(self.linenr,`self.line`), 1)
+		Debug('line read:%d:%s'%(self.linenr,repr(self.line)), 1)
 	
 	def _getAddress(self, fulladdr):
 		addr = fulladdr                          # number
@@ -1326,7 +1326,7 @@ class emuSed:
 		elif addr == '$':                        # last line
 			if self.linenr == len(self.inlist)-1: ok = 1
 		elif re.search(addr,self.line): ok = 1   # pattern
-		if ok: Debug('MATCHed addr:%s'%`addr`,2)
+		if ok: Debug('MATCHed addr:%s'%repr(addr),2)
 		return ok
 	
 	def testAddress(self):
@@ -1381,7 +1381,7 @@ class emuSed:
 		elif cmd['id'] == 'y':
 			trtab = string.maketrans(cmd['pattern'], cmd['replace'])
 			PS = string.translate(PS, trtab)
-		elif cmd['id'] == 'l': print self._makeRawString(PS)
+		elif cmd['id'] == 'l': print(self._makeRawString(PS))
 		elif cmd['id'] == 'd':
 			self.f_delme = 1 ; self.EOS = 1   # d) forces next cycle
 		elif cmd['id'] == 'D':             # D) del till \n, next cycle
@@ -1391,7 +1391,7 @@ class emuSed:
 			self.rewindScript()               # D forces rewind
 			if not PS:                    # no PS, start next cycle
 				self.f_delme = 1 ; self.EOS = 1
-			print '------',PS
+			print('------',PS)
 		elif cmd['id'] == 'n':             # n) print patt, read line
 			print(PS)
 			self.readNextLine(); PS = self.line
@@ -1420,7 +1420,7 @@ class emuSed:
 			if 'g' in cmd['flag']: times = 0           # global
 			if 'i' in cmd['flag']: patt = '(?i)'+patt  # ignore case
 			new = re.sub(patt, repl, PS, times)
-			if 'p' in cmd['flag'] and new != PS: print new
+			if 'p' in cmd['flag'] and new != PS: print(new)
 			if 'w' in cmd['flag']:
 				text = [new]   # w) open file truncating anyway
 				# write patt only if s/// was ok
@@ -1433,12 +1433,12 @@ class emuSed:
 			fullcmd = "%s%s"%(composeSedAddress(cmd),
 			   string.replace(composeSedCommand(cmd), '\n',
 			                  newlineshow+color_YLW))
-			print commid+color_YLW+fullcmd+color_NO
+			print(commid+color_YLW+fullcmd+color_NO)
 			if cmd['id'] in ':bt' and cmd['content']: showreg = 0
 			if cmd['id'] in '{}': showreg = 0
 			if showreg:
-				print pattid+self._makeRawString(PS)
-				print holdid+self._makeRawString(HS)
+				print(pattid+self._makeRawString(PS))
+				print(holdid+self._makeRawString(HS))
 		
 		self.line = PS ; self.holdspace = HS # save registers
 	
@@ -1450,8 +1450,8 @@ class emuSed:
 			if self.EOF: break
 			
 			if self.linenr == 1 and self.f_debug:   # debug info
-				print pattid+self._makeRawString(self.line)
-				print holdid+self._makeRawString(self.holdspace)
+				print(pattid+self._makeRawString(self.line))
+				print(holdid+self._makeRawString(self.holdspace))
 			
 			while not self.EOS:
 				if self.cmdnr == -1:  # 1st position
@@ -1467,7 +1467,7 @@ class emuSed:
 				if self.cmdnr > len(self.cmdlist)-1: break
 			
 			# default print pattern behaviour
-			if not self.f_delme: print self.line
+			if not self.f_delme: print(self.line)
 
 
 #-------------------------------------------------------------------------------
