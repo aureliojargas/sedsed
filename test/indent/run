@@ -10,7 +10,7 @@ for file_path in ${@:-../scripts/*.sed}; do
 
 	output_file=$(basename $file_path)
 
-	# Generate the HTML version
+	# Generate the indented version
 	echo "Generating $output_file"
 	$sedsed --indent -f $file_path > $output_file
 done
