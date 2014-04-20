@@ -560,7 +560,7 @@ class SedCommand:
 		elif id in sedcmds['multi']:                  # s/// & y///
 			Debug('type: multi',3)
 			self.delimiter = self.junk[0]
-			ps = SedAddress(self.junk)
+			ps = SedAddress(self.junk, 'pattern')
 			hs = ''
 			if ps.isok:
 				self.pattern = ps.pattern
@@ -625,7 +625,7 @@ class SedCommand:
 
 #TIP an address is NOT multiline
 class SedAddress:
-	def __init__(self, abcde, context='addr'):
+	def __init__(self, abcde, context='address'):
 		self.delimiter = ''
 		self.pattern = ''
 		self.flag = ''
@@ -636,7 +636,7 @@ class SedAddress:
 		self.isok = 0
 		self.escape = ''
 		self.rest = self.junk = abcde
-		self.context = context
+		self.context = context  # address, pattern, replace
 		
 		self.setType()                           # numeric or pattern?
 		self.doItAll()
@@ -729,7 +729,7 @@ class SedAddress:
 			break                          # it's an address!
 		
 		if patterns:                      # must have something left
-			if patterns[0]:                # the rest is a flag?
+			if patterns[0] and self.context == 'address':  # the rest is a flag?
 				Debug('possible addr flag: %s'%patterns[0],3)
 				m = re.match('\s*I\s*', patterns[0])
 				if m:                       # yes, a flag!
@@ -1130,7 +1130,7 @@ for line in sedscript:
 		while 1:
 			if not possiblecmd[0] in sedcmds['addr']: break # NOaddr
 			
-			addr = SedAddress(possiblecmd)            # get data
+			addr = SedAddress(possiblecmd, 'address')  # get data
 			
 			if addr.isok:
 				if not cmddict.has_key('addr1'):
