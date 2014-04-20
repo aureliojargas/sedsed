@@ -1,0 +1,135 @@
+<html>
+<head><meta name="Generator" content="sedsed --htmlize">
+<title>Colorized sort.gnu.sed</title></head>
+<body bgcolor="#000000" text="#ffffff"
+      link="#ff00ff" alink="#ff00ff" vlink="#ff00ff">
+<pre>
+<font color="#00ffff"><b>#! /bin/sed -f</b></font>
+
+<font color="#00ffff"><b># sort.sed -- implementing selection sort with sed</b></font>
+<font color="#00ffff"><b># </b></font>
+<font color="#00ffff"><b># $Id: sort.sed,v 1.3 1998/07/07 12:31:49 cdua Exp cdua $</b></font>
+<font color="#00ffff"><b># Carlos Duarte, 970529</b></font>
+
+<font color="#00ffff"><b># How does this work?</b></font>
+<font color="#00ffff"><b># </b></font>
+<font color="#00ffff"><b># o first all lines are joined in this format</b></font>
+<font color="#00ffff"><b># </b></font>
+<font color="#00ffff"><b># \na line_a \nA</b></font>
+<font color="#00ffff"><b># \nb line_b \nB</b></font>
+<font color="#00ffff"><b># \nl next_line \nL</b></font>
+<font color="#00ffff"><b># \nl next_line \nL</b></font>
+<font color="#00ffff"><b># ...</b></font>
+<font color="#00ffff"><b># </b></font>
+<font color="#00ffff"><b># o general markers are of the form \n&lt;letter&gt; (and a \n can not appear alone)</b></font>
+<font color="#00ffff"><b># </b></font>
+<font color="#00ffff"><b># o the following algorithm is used: </b></font>
+<font color="#00ffff"><b># </b></font>
+<font color="#00ffff"><b>#       start at 2</b></font>
+<font color="#00ffff"><b>#       1. a = a+1</b></font>
+<font color="#00ffff"><b>#       2. a at end? yes: exit, no: continue</b></font>
+<font color="#00ffff"><b>#       3. make b = a+1</b></font>
+<font color="#00ffff"><b>#       4. sort a vs b </b></font>
+<font color="#00ffff"><b>#       5. b at end? yes: goto 1; no: continue</b></font>
+<font color="#00ffff"><b>#       6. b = b+1; goto 4</b></font>
+<font color="#00ffff"><b># </b></font>
+<font color="#00ffff"><b># o the sorting by itself is done this way: </b></font>
+<font color="#00ffff"><b>#       </b></font>
+<font color="#00ffff"><b>#       . after isolating the line a and b, add a table, with order we want</b></font>
+<font color="#00ffff"><b>#       . then match the initial common part of both lines, for instance</b></font>
+<font color="#00ffff"><b>#               line_a: xxxx1</b></font>
+<font color="#00ffff"><b>#               line_b: xxx22</b></font>
+<font color="#00ffff"><b>#         it would store xxx x1 22, i.e. common rest_of_a rest_of_b </b></font>
+<font color="#00ffff"><b>#       . if the RE \(first_char_of_a\) \(first_char_of_b\) \1.*\2 exist</b></font>
+<font color="#00ffff"><b>#         then the line is sorted already, do nothing</b></font>
+<font color="#00ffff"><b>#       . else swap them</b></font>
+<font color="#00ffff"><b># </b></font>
+<font color="#00ffff"><b>#       (for instance, "a" is \1 "g" is \2, then \1.*\2 exist, because table</b></font>
+<font color="#00ffff"><b>#       is abcdefg..., but if \1 was "k", then \1.*\2 do not exit on table)</b></font>
+<font color="#00ffff"><b># </b></font>
+<font color="#00ffff"><b># </b></font>
+
+<font color="#00ffff"><b># setup </b></font>
+<font color="#ffff00"><b>H</b></font>  
+<font color="#8080ff"><b>$</b></font> <font color="#ff6060"><b>!</b></font><font color="#ffff00"><b>d</b></font>
+<font color="#ffff00"><b>g</b></font>  
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\n</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>&amp;</b></font>L<font color="#00ff00"><b>&amp;</b></font>l<font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>g</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>a<font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\nL</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>A<font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>$</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>L<font color="#ff6060"><b>/</b></font>
+
+<font color="#00ffff"><b># have now: \na ln1 \nA \nl ln2 \nL \nl ln3 \nL ... </b></font>
+
+<font color="#ffff00"><b>b</b></font> <a href="#start">start</a>
+
+<font color="#00ffff"><b># advance \na .. \nA to next line</b></font>
+<font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="inca">inca</a></b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>\na\)\<font color="#ff00ff"><b>(</b></font>.*\)\<font color="#ff00ff"><b>(</b></font>\nA\)\<font color="#ff00ff"><b>(</b></font>\n[lb]\)\<font color="#ff00ff"><b>(</b></font>[^\n]*\)\<font color="#ff00ff"><b>(</b></font>\n[LB]\)</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\4</b></font><font color="#00ff00"><b>\2</b></font><font color="#00ff00"><b>\6</b></font><font color="#00ff00"><b>\1</b></font><font color="#00ff00"><b>\5</b></font><font color="#00ff00"><b>\3</b></font><font color="#ff6060"><b>/</b></font>
+
+<font color="#00ffff"><b># ln_a is at the end, then sort is over</b></font>
+<font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="start">start</a></b></font>
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\nA$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ffff00"><b>b</b></font> <a href="#exit">exit</a>
+
+<font color="#00ffff"><b># b = a+1</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\nb</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>l<font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\nB</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>L<font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>\na.*\nA\)\nl\<font color="#ff00ff"><b>(</b></font>[^\n]*\)\nL</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\1</b></font><font color="#00ff00"><b>\
+</b></font>b<font color="#00ff00"><b>\2</b></font><font color="#00ff00"><b>\
+</b></font>B<font color="#ff6060"><b>/</b></font>
+
+<font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="sort">sort</a></b></font>
+<font color="#ffff00"><b>h</b></font>  
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*\na\<font color="#ff00ff"><b>(</b></font>.*\)\nA.*\nb\<font color="#ff00ff"><b>(</b></font>.*\)\nB.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\1</b></font><font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\2</b></font><font color="#00ff00"><b>\
+</b></font>         !"#$%\<font color="#00ff00"><b>&amp;</b></font>()*+,-.\/0123456789:;&lt;=&gt;?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~<font color="#ff6060"><b>/</b></font>
+
+<font color="#00ffff"><b># work on a temp space: common \n rest_a \n rest_b \n table </b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^\<font color="#ff00ff"><b>(</b></font>.*\)\<font color="#ff00ff"><b>(</b></font>.*\n\)\1\<font color="#ff00ff"><b>(</b></font>.*\n.*\)</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\1</b></font><font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\2</b></font><font color="#00ff00"><b>\3</b></font><font color="#ff6060"><b>/</b></font>
+
+<font color="#00ffff"><b># a is empty and b not: keep this order</b></font>
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*\n\n..*\n</b></font><font color="#ff6060"><b>/</b></font> <font color="#ffff00"><b>b</b></font> <a href="#keep">keep</a>
+
+<font color="#00ffff"><b># a is not empty and b is: swap order</b></font>
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*\n..*\n\n</b></font><font color="#ff6060"><b>/</b></font> <font color="#ffff00"><b>b</b></font> <a href="#swap">swap</a>
+
+<font color="#00ffff"><b># if RE fail, swap, else keep order.. </b></font>
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*\n\<font color="#ff00ff"><b>(</b></font>.\).*\n\<font color="#ff00ff"><b>(</b></font>.\).*\n.*\1.*\2</b></font><font color="#ff6060"><b>/</b></font> <font color="#ffff00"><b>b</b></font> <a href="#keep">keep</a>
+
+<font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="swap">swap</a></b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>\n.*\)\<font color="#ff00ff"><b>(</b></font>\n.*\)\n</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\2</b></font><font color="#00ff00"><b>\1</b></font><font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+
+<font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="keep">keep</a></b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>.*\)\n\<font color="#ff00ff"><b>(</b></font>.*\)\n\<font color="#ff00ff"><b>(</b></font>.*\)\n.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\1</b></font><font color="#00ff00"><b>\2</b></font><font color="#00ff00"><b>\
+</b></font>c<font color="#00ff00"><b>\1</b></font><font color="#00ff00"><b>\3</b></font><font color="#00ff00"><b>\
+</b></font>d<font color="#ff6060"><b>/</b></font>
+
+<font color="#00ffff"><b># merge with main buffer</b></font>
+<font color="#ffff00"><b>G</b></font>  
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^\<font color="#ff00ff"><b>(</b></font>.*\)\nc\<font color="#ff00ff"><b>(</b></font>.*\na\)\<font color="#ff00ff"><b>(</b></font>.*\)\<font color="#ff00ff"><b>(</b></font>\nA\)</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\2</b></font><font color="#00ff00"><b>\1</b></font><font color="#00ff00"><b>\4</b></font><font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^\<font color="#ff00ff"><b>(</b></font>.*\)\nd\n\<font color="#ff00ff"><b>(</b></font>.*\nb\)\<font color="#ff00ff"><b>(</b></font>.*\)\<font color="#ff00ff"><b>(</b></font>\nB\)</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\2</b></font><font color="#00ff00"><b>\1</b></font><font color="#00ff00"><b>\4</b></font><font color="#ff6060"><b>/</b></font>
+
+<font color="#00ffff"><b># b at end? </b></font>
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\nB$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ffff00"><b>b</b></font> <a href="#inca">inca</a>
+
+<font color="#00ffff"><b># nope, then make b = b+1</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>\nb\)\<font color="#ff00ff"><b>(</b></font>.*\)\<font color="#ff00ff"><b>(</b></font>\nB\)\<font color="#ff00ff"><b>(</b></font>\nl\)\<font color="#ff00ff"><b>(</b></font>[^\n]*\)\<font color="#ff00ff"><b>(</b></font>\nL\)</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\4</b></font><font color="#00ff00"><b>\2</b></font><font color="#00ff00"><b>\6</b></font><font color="#00ff00"><b>\1</b></font><font color="#00ff00"><b>\5</b></font><font color="#00ff00"><b>\3</b></font><font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>b</b></font> <a href="#sort">sort</a>
+
+<font color="#00ffff"><b># here: ^ \nl..\nL...\na..\nA $</b></font>
+<font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="exit">exit</a></b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\n[ablA]</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>g</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\n[BL]</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>g</b></font>
+
+
+<font color="#00ffff"><b>### colorized by <a href="http://sedsed.sf.net">sedsed</a>, a SED script debugger/indenter/tokenizer/HTMLizer</b></font>
+
+</pre></body></html>

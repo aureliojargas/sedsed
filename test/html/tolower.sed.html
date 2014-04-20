@@ -1,0 +1,42 @@
+<html>
+<head><meta name="Generator" content="sedsed --htmlize">
+<title>Colorized tolower.sed</title></head>
+<body bgcolor="#000000" text="#ffffff"
+      link="#ff00ff" alink="#ff00ff" vlink="#ff00ff">
+<pre>
+<font color="#00ffff"><b>#n</b></font>
+<font color="#00ffff"><b>#! /bin/sed -f</b></font>
+
+<font color="#00ffff"><b># remove all trailing /s</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\/*$</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font>
+
+<font color="#00ffff"><b># add ./ if there are no path, only filename</b></font>
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\/</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>!</b></font><font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^</b></font><font color="#ff6060"><b>/</b></font>.\/<font color="#ff6060"><b>/</b></font>
+
+<font color="#00ffff"><b># save path+filename</b></font>
+<font color="#ffff00"><b>h</b></font>  
+
+<font color="#00ffff"><b># remove path</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*\/</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font>
+
+<font color="#00ffff"><b># do conversion only on filename</b></font>
+<font color="#ffff00"><b>y</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>ABCDEFGHIJKLMNOPQRSTUVWXYZ</b></font><font color="#ff6060"><b>/</b></font>abcdefghijklmnopqrstuvwxyz<font color="#ff6060"><b>/</b></font>
+
+<font color="#00ffff"><b># swap, now line contains original path+file, hold space contains conv filename</b></font>
+<font color="#ffff00"><b>x</b></font>  
+
+<font color="#00ffff"><b># add converted file name to line, which now contains something like</b></font>
+<font color="#00ffff"><b># path/file-name\nconverted-file-name</b></font>
+<font color="#ffff00"><b>G</b></font>  
+
+<font color="#00ffff"><b># check if converted file name is equal to original file name, if it is, do</b></font>
+<font color="#00ffff"><b># not print nothing</b></font>
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^.*\/\<font color="#ff00ff"><b>(</b></font>.*\)\n\1</b></font><font color="#ff6060"><b>/</b></font> <font color="#ffff00"><b>b</b></font> <a href="#"></a>
+
+<font color="#00ffff"><b># now, transform path/fromfile\ntofile, into mv path/fromfile path/tofile</b></font>
+<font color="#00ffff"><b># and print it</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^\<font color="#ff00ff"><b>(</b></font>.*\/\)\<font color="#ff00ff"><b>(</b></font>.*\)\n\<font color="#ff00ff"><b>(</b></font>.*\)$</b></font><font color="#ff6060"><b>/</b></font>mv <font color="#00ff00"><b>\1</b></font><font color="#00ff00"><b>\2</b></font> <font color="#00ff00"><b>\1</b></font><font color="#00ff00"><b>\3</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>p</b></font>
+
+<font color="#00ffff"><b>### colorized by <a href="http://sedsed.sf.net">sedsed</a>, a SED script debugger/indenter/tokenizer/HTMLizer</b></font>
+
+</pre></body></html>

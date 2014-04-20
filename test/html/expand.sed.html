@@ -1,0 +1,42 @@
+<html>
+<head><meta name="Generator" content="sedsed --htmlize">
+<title>Colorized expand.sed</title></head>
+<body bgcolor="#000000" text="#ffffff"
+      link="#ff00ff" alink="#ff00ff" vlink="#ff00ff">
+<pre>
+<font color="#00ffff"><b>#!/bin/sed -f</b></font>
+<font color="#00ffff"><b>#  @(#)14apr89/31aug01 expand.sed by Greg Ubben</b></font>
+
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>	</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>!</b></font><font color="#ffff00"><b>b</b></font> <a href="#"></a>
+
+<font color="#00ffff"><b># Change the text before a tab to</b></font>
+<font color="#00ffff"><b>#   text&lt;MARKER&gt;text&lt;TAB&gt;&lt;8 blanks&gt;&lt;TAB&gt;</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>[^	]*\)	</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\1</b></font><font color="#00ff00"><b>&amp;</b></font>        	<font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>g</b></font>
+
+<font color="#00ffff"><b># Reduce the text between the marker and the tab to less</b></font>
+<font color="#00ffff"><b># than eight characters.  We have to put in 8-(length MOD 8)</b></font>
+<font color="#00ffff"><b># blanks, and this effectively does the modulo operation.</b></font>
+<font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="a">a</a></b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>[^	]\{8\}</b></font><font color="#ff6060"><b>/</b></font>\a<font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>g</b></font>
+<font color="#ffff00"><b>t</b></font> <a href="#a">a</a>
+
+<font color="#00ffff"><b># The buffer is now:</b></font>
+<font color="#00ffff"><b>#   text&lt;MARKER&gt;&lt;(length MOD 8) characters&gt;&lt;TAB&gt;&lt;expansion&gt;&lt;extra blanks&gt;&lt;TAB&gt;</b></font>
+<font color="#00ffff"><b>#               `-----------------------------------------'</b></font>
+<font color="#00ffff"><b># Notice that the expansion is 8-(length MOD 8), so the </b></font>
+<font color="#00ffff"><b># underlined part is exactly nine characters.  That's how</b></font>
+<font color="#00ffff"><b># we discard the extra blanks and the tabs.</b></font>
+<font color="#00ffff"><b>#                	</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>.\{9\}\) *	</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>g</b></font>
+
+<font color="#00ffff"><b># We have now:</b></font>
+<font color="#00ffff"><b>#         text&lt;MARKER&gt;&lt;(length MOD 8) characters&gt;&lt;TAB&gt;&lt;expansion&gt;</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b># so we discard everything between the marker and the tab</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>[^	]*	</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>g</b></font>
+
+<font color="#00ffff"><b>### colorized by <a href="http://sedsed.sf.net">sedsed</a>, a SED script debugger/indenter/tokenizer/HTMLizer</b></font>
+
+</pre></body></html>

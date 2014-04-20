@@ -1,0 +1,2313 @@
+<html>
+<head><meta name="Generator" content="sedsed --htmlize">
+<title>Colorized sokoban.sed</title></head>
+<body bgcolor="#000000" text="#ffffff"
+      link="#ff00ff" alink="#ff00ff" vlink="#ff00ff">
+<pre>
+<font color="#00ffff"><b>#n</b></font>
+<font color="#00ffff"><b>#!/bin/sed -nf</b></font>
+<font color="#00ffff"><b># sokoban.sed  &lt;http://aurelio.net/sed/sokoban&gt;</b></font>
+<font color="#00ffff"><b>#   by Aurelio Marinho Jargas &lt;verde (a) aurelio net&gt;</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b># Motivated by reading the amazing Adventure (Colossal Cave) history</b></font>
+<font color="#00ffff"><b>#      &lt;http://www.rickadams.org/adventure/a_history.html&gt;</b></font>
+<font color="#00ffff"><b># GPL levels took from Mike Sharpe's sokoban.vim &lt;http://vim.sourceforge.net&gt;</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b># IMPORTANT</b></font>
+<font color="#00ffff"><b># This script has terminal control chars, so you must DOWNLOAD this</b></font>
+<font color="#00ffff"><b># file. Just copy/paste or printing it to a file (lynx) will NOT work.</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b># THE GAME</b></font>
+<font color="#00ffff"><b># You know sokoban. Everybody knows sokoban.</b></font>
+<font color="#00ffff"><b># Right, if you don't, it's a box pushing game. You have a mess, boxes</b></font>
+<font color="#00ffff"><b># all over the room and must place them on the boxes place. To move a</b></font>
+<font color="#00ffff"><b># box you must push it. You can only push a box if the path is clear</b></font>
+<font color="#00ffff"><b># with no wall or other box on the way (You are not that strong).</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b>#   COMMANDS                       MOVING AROUND</b></font>
+<font color="#00ffff"><b>#     :q   quit                      h or &lt;left-arrow&gt;  - move left</b></font>
+<font color="#00ffff"><b>#     :r   restart level             j or &lt;down-arrow&gt;  - move down</b></font>
+<font color="#00ffff"><b>#     :z   refresh screen            k or &lt;up-arrow&gt;    - move up</b></font>
+<font color="#00ffff"><b>#     :gN  go to level N             l or &lt;right-arrow&gt; - move right</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b>#   ACTORS</b></font>
+<font color="#00ffff"><b>#     o box                  % wall</b></font>
+<font color="#00ffff"><b>#     . box place            @ you</b></font>
+<font color="#00ffff"><b>#     O box placed right     ! you over a box place</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b># RUNNING</b></font>
+<font color="#00ffff"><b># prompt$ ./sokoban.sed &lt;enter&gt;</b></font>
+<font color="#00ffff"><b># &lt;enter&gt;</b></font>
+<font color="#00ffff"><b># 1</b></font>
+<font color="#00ffff"><b># Now just move! (:q quits)</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b># DETAILS</b></font>
+<font color="#00ffff"><b># It's all written in SED, so we've got some limitations:</b></font>
+<font color="#00ffff"><b># - As a line-oriented editor, you MUST hit &lt;ENTER&gt; after *any* move.</b></font>
+<font color="#00ffff"><b>#   Yes, that sucks. But you can accumulate various movements and hit</b></font>
+<font color="#00ffff"><b>#   &lt;ENTER&gt; just once.</b></font>
+<font color="#00ffff"><b># - When you run sokoban.sed, you must first press any key to feed SED</b></font>
+<font color="#00ffff"><b>#   and then you'll see the welcome message.</b></font>
+<font color="#00ffff"><b># - If your sed is not on /bin, edit the first line of this script,</b></font>
+<font color="#00ffff"><b>#   or call it as: sed -nf sokoban.sed </b></font>
+<font color="#00ffff"><b># - This script is 'sedcheck' &lt;http://lvogel.free.fr/sed/sedcheck.sed&gt;</b></font>
+<font color="#00ffff"><b>#   compliant, so it must run fine in *any* SED version</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b># And always remember, it's cool because it's SED. If you don't like it</b></font>
+<font color="#00ffff"><b># you can try xsokoban instead &lt;http://www.cs.cornell.edu/andru/xsokoban.html&gt;</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b># CHANGES</b></font>
+<font color="#00ffff"><b># 20020315 v0.0 debut release</b></font>
+<font color="#00ffff"><b># 20020321 v0.1 clear screen, download note, fancy victory, sound ^G, lvl0</b></font>
+<font color="#00ffff"><b>#               fixed * on map bug, added :g, :r and :z commands</b></font>
+<font color="#00ffff"><b>#               pseudo-functions (now it's faster!)</b></font>
+<font color="#00ffff"><b># 20020709 v0.2 comments prefix '#r' changed to plain '#'. dummy me.</b></font>
+<font color="#00ffff"><b># 20031011 v0.3 now sokoban is 'sedcheck' compliant, so it will run in</b></font>
+<font color="#00ffff"><b>#               most (all?) SED versions out there (thanks Laurent!)</b></font>
+
+
+<font color="#00ffff"><b># skip functions</b></font>
+<font color="#ffff00"><b>b</b></font> <a href="#zero">zero</a>
+
+<font color="#00ffff"><b># function welcome</b></font>
+<font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="welcome">welcome</a></b></font>
+<font color="#ffff00"><b>i</b></font><font color="#00ff00"><b>\
+</b></font>       Welcome to the SED Sokoban<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>Please select a level to begin [1-90]:
+<font color="#ffff00"><b>d</b></font>  
+
+<font color="#00ffff"><b># function loadmap</b></font>
+<font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="loadmap">loadmap</a></b></font>
+
+<font color="#00ffff"><b># clear screen</b></font>
+<font color="#ffff00"><b>i</b></font><font color="#00ff00"><b>\
+</b></font>[2J
+
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^0$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 0 (victory test)<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>     %%%%%            <font color="#00ff00"><b>\
+</b></font>     %@o.%            <font color="#00ff00"><b>\
+</b></font>     %%%%%            <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^1$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 1<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>     %%%%%            <font color="#00ff00"><b>\
+</b></font>     %   %            <font color="#00ff00"><b>\
+</b></font>     %o  %            <font color="#00ff00"><b>\
+</b></font>   %%%  o%%           <font color="#00ff00"><b>\
+</b></font>   %  o o %           <font color="#00ff00"><b>\
+</b></font> %%% % %% %   %%%%%%  <font color="#00ff00"><b>\
+</b></font> %   % %% %%%%%  ..%  <font color="#00ff00"><b>\
+</b></font> % o  o          ..%  <font color="#00ff00"><b>\
+</b></font> %%%%% %%% %@%%  ..%  <font color="#00ff00"><b>\
+</b></font>     %     %%%%%%%%%  <font color="#00ff00"><b>\
+</b></font>     %%%%%%%          <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^2$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 2<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%         <font color="#00ff00"><b>\
+</b></font> %..  %     %%%       <font color="#00ff00"><b>\
+</b></font> %..  % o  o  %       <font color="#00ff00"><b>\
+</b></font> %..  %o%%%%  %       <font color="#00ff00"><b>\
+</b></font> %..    @ %%  %       <font color="#00ff00"><b>\
+</b></font> %..  % %  o %%       <font color="#00ff00"><b>\
+</b></font> %%%%%% %%o o %       <font color="#00ff00"><b>\
+</b></font>   % o  o o o %       <font color="#00ff00"><b>\
+</b></font>   %    %     %       <font color="#00ff00"><b>\
+</b></font>   %%%%%%%%%%%%       <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^3$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 3<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>         %%%%%%%%     <font color="#00ff00"><b>\
+</b></font>         %     @%     <font color="#00ff00"><b>\
+</b></font>         % o%o %%     <font color="#00ff00"><b>\
+</b></font>         % o  o%      <font color="#00ff00"><b>\
+</b></font>         %%o o %      <font color="#00ff00"><b>\
+</b></font> %%%%%%%%% o % %%%    <font color="#00ff00"><b>\
+</b></font> %....  %% o  o  %    <font color="#00ff00"><b>\
+</b></font> %%...    o  o   %    <font color="#00ff00"><b>\
+</b></font> %....  %%%%%%%%%%    <font color="#00ff00"><b>\
+</b></font> %%%%%%%%             <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^4$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 4<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>            %%%%%%%%  <font color="#00ff00"><b>\
+</b></font>            %  ....%  <font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%  ....%  <font color="#00ff00"><b>\
+</b></font> %    %  o o   ....%  <font color="#00ff00"><b>\
+</b></font> % ooo%o  o %  ....%  <font color="#00ff00"><b>\
+</b></font> %  o     o %  ....%  <font color="#00ff00"><b>\
+</b></font> % oo %o o o%%%%%%%%  <font color="#00ff00"><b>\
+</b></font> %  o %     %         <font color="#00ff00"><b>\
+</b></font> %% %%%%%%%%%         <font color="#00ff00"><b>\
+</b></font> %    %    %%         <font color="#00ff00"><b>\
+</b></font> %     o   %%         <font color="#00ff00"><b>\
+</b></font> %  oo%oo  @%         <font color="#00ff00"><b>\
+</b></font> %    %    %%         <font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%          <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^5$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 5<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>         %%%%%        <font color="#00ff00"><b>\
+</b></font>         %   %%%%%    <font color="#00ff00"><b>\
+</b></font>         % %o%%  %    <font color="#00ff00"><b>\
+</b></font>         %     o %    <font color="#00ff00"><b>\
+</b></font> %%%%%%%%% %%%   %    <font color="#00ff00"><b>\
+</b></font> %....  %% o  o%%%    <font color="#00ff00"><b>\
+</b></font> %....    o oo %%     <font color="#00ff00"><b>\
+</b></font> %....  %%o  o @%     <font color="#00ff00"><b>\
+</b></font> %%%%%%%%%  o  %%     <font color="#00ff00"><b>\
+</b></font>         % o o  %     <font color="#00ff00"><b>\
+</b></font>         %%% %% %     <font color="#00ff00"><b>\
+</b></font>           %    %     <font color="#00ff00"><b>\
+</b></font>           %%%%%%     <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^6$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 6<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font> %%%%%%  %%%          <font color="#00ff00"><b>\
+</b></font> %..  % %%@%%         <font color="#00ff00"><b>\
+</b></font> %..  %%%   %         <font color="#00ff00"><b>\
+</b></font> %..     oo %         <font color="#00ff00"><b>\
+</b></font> %..  % % o %         <font color="#00ff00"><b>\
+</b></font> %..%%% % o %         <font color="#00ff00"><b>\
+</b></font> %%%% o %o  %         <font color="#00ff00"><b>\
+</b></font>    %  o% o %         <font color="#00ff00"><b>\
+</b></font>    % o  o  %         <font color="#00ff00"><b>\
+</b></font>    %  %%   %         <font color="#00ff00"><b>\
+</b></font>    %%%%%%%%%         <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^7$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 7<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>        %%%%%         <font color="#00ff00"><b>\
+</b></font>  %%%%%%%   %%        <font color="#00ff00"><b>\
+</b></font> %% % @%% oo %        <font color="#00ff00"><b>\
+</b></font> %    o      %        <font color="#00ff00"><b>\
+</b></font> %  o  %%%   %        <font color="#00ff00"><b>\
+</b></font> %%% %%%%%o%%%        <font color="#00ff00"><b>\
+</b></font> % o  %%% ..%         <font color="#00ff00"><b>\
+</b></font> % o o o ...%         <font color="#00ff00"><b>\
+</b></font> %    %%%...%         <font color="#00ff00"><b>\
+</b></font> % oo % %...%         <font color="#00ff00"><b>\
+</b></font> %  %%% %%%%%         <font color="#00ff00"><b>\
+</b></font> %%%%                 <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^8$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 8<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>   %%%%               <font color="#00ff00"><b>\
+</b></font>   %  %%%%%%%%%%%     <font color="#00ff00"><b>\
+</b></font>   %    o   o o %     <font color="#00ff00"><b>\
+</b></font>   % o% o %  o  %     <font color="#00ff00"><b>\
+</b></font>   %  o o  %    %     <font color="#00ff00"><b>\
+</b></font> %%% o% %  %%%% %     <font color="#00ff00"><b>\
+</b></font> %@%o o o  %%   %     <font color="#00ff00"><b>\
+</b></font> %    o %o%   % %     <font color="#00ff00"><b>\
+</b></font> %   o    o o o %     <font color="#00ff00"><b>\
+</b></font> %%%%%  %%%%%%%%%     <font color="#00ff00"><b>\
+</b></font>   %      %           <font color="#00ff00"><b>\
+</b></font>   %      %           <font color="#00ff00"><b>\
+</b></font>   %......%           <font color="#00ff00"><b>\
+</b></font>   %......%           <font color="#00ff00"><b>\
+</b></font>   %......%           <font color="#00ff00"><b>\
+</b></font>   %%%%%%%%           <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^9$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 9<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>           %%%%%%%    <font color="#00ff00"><b>\
+</b></font>           %  ...%    <font color="#00ff00"><b>\
+</b></font>       %%%%%  ...%    <font color="#00ff00"><b>\
+</b></font>       %      . .%    <font color="#00ff00"><b>\
+</b></font>       %  %%  ...%    <font color="#00ff00"><b>\
+</b></font>       %% %%  ...%    <font color="#00ff00"><b>\
+</b></font>      %%% %%%%%%%%    <font color="#00ff00"><b>\
+</b></font>      % ooo %%        <font color="#00ff00"><b>\
+</b></font>  %%%%%  o o %%%%%    <font color="#00ff00"><b>\
+</b></font> %%   %o o   %   %    <font color="#00ff00"><b>\
+</b></font> %@ o  o    o  o %    <font color="#00ff00"><b>\
+</b></font> %%%%%% oo o %%%%%    <font color="#00ff00"><b>\
+</b></font>      %      %        <font color="#00ff00"><b>\
+</b></font>      %%%%%%%%        <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^10$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 10<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>  %%%  %%%%%%%%%%%%%  <font color="#00ff00"><b>\
+</b></font> %%@%%%%       %   %  <font color="#00ff00"><b>\
+</b></font> % oo   oo  o o ...%  <font color="#00ff00"><b>\
+</b></font> %  ooo%    o  %...%  <font color="#00ff00"><b>\
+</b></font> % o   % oo oo %...%  <font color="#00ff00"><b>\
+</b></font> %%%   %  o    %...%  <font color="#00ff00"><b>\
+</b></font> %     % o o o %...%  <font color="#00ff00"><b>\
+</b></font> %    %%%%%% %%%...%  <font color="#00ff00"><b>\
+</b></font> %% %  %  o o  %...%  <font color="#00ff00"><b>\
+</b></font> %  %% % oo o o%%..%  <font color="#00ff00"><b>\
+</b></font> % ..% %  o      %.%  <font color="#00ff00"><b>\
+</b></font> % ..% % ooo ooo %.%  <font color="#00ff00"><b>\
+</b></font> %%%%% %       % %.%  <font color="#00ff00"><b>\
+</b></font>     % %%%%%%%%% %.%  <font color="#00ff00"><b>\
+</b></font>     %           %.%  <font color="#00ff00"><b>\
+</b></font>     %%%%%%%%%%%%%%%  <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^11$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 11<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>           %%%%       <font color="#00ff00"><b>\
+</b></font>      %%%% %  %       <font color="#00ff00"><b>\
+</b></font>    %%% @%%%o %       <font color="#00ff00"><b>\
+</b></font>   %%      o  %       <font color="#00ff00"><b>\
+</b></font>  %%  o oo%% %%       <font color="#00ff00"><b>\
+</b></font>  %  %o%%     %       <font color="#00ff00"><b>\
+</b></font>  % % o oo % %%%      <font color="#00ff00"><b>\
+</b></font>  %   o %  % o %%%%%  <font color="#00ff00"><b>\
+</b></font> %%%%    %  oo %   %  <font color="#00ff00"><b>\
+</b></font> %%%% %% o         %  <font color="#00ff00"><b>\
+</b></font> %.    %%%  %%%%%%%%  <font color="#00ff00"><b>\
+</b></font> %.. ..% %%%%         <font color="#00ff00"><b>\
+</b></font> %...%.%              <font color="#00ff00"><b>\
+</b></font> %.....%              <font color="#00ff00"><b>\
+</b></font> %%%%%%%              <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^12$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 12<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%     <font color="#00ff00"><b>\
+</b></font> %              %     <font color="#00ff00"><b>\
+</b></font> % % %%%%%%     %     <font color="#00ff00"><b>\
+</b></font> % %  o o o o%  %     <font color="#00ff00"><b>\
+</b></font> % %   o@o   %% %%    <font color="#00ff00"><b>\
+</b></font> % %  o o o%%%...%    <font color="#00ff00"><b>\
+</b></font> % %   o o  %%...%    <font color="#00ff00"><b>\
+</b></font> % %%%ooo o %%...%    <font color="#00ff00"><b>\
+</b></font> %     % %% %%...%    <font color="#00ff00"><b>\
+</b></font> %%%%%   %% %%...%    <font color="#00ff00"><b>\
+</b></font>     %%%%%     %%%    <font color="#00ff00"><b>\
+</b></font>         %     %      <font color="#00ff00"><b>\
+</b></font>         %%%%%%%      <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^13$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 13<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>    %%%%%%%%%         <font color="#00ff00"><b>\
+</b></font>   %%   %%  %%%%%     <font color="#00ff00"><b>\
+</b></font> %%%     %  %    %%%  <font color="#00ff00"><b>\
+</b></font> %  o %o %  %  ... %  <font color="#00ff00"><b>\
+</b></font> % % o%@o%% % %.%. %  <font color="#00ff00"><b>\
+</b></font> %  % %o  %    . . %  <font color="#00ff00"><b>\
+</b></font> % o    o % % %.%. %  <font color="#00ff00"><b>\
+</b></font> %   %%  %%o o . . %  <font color="#00ff00"><b>\
+</b></font> % o %   %  %o%.%. %  <font color="#00ff00"><b>\
+</b></font> %% o  o   o  o... %  <font color="#00ff00"><b>\
+</b></font>  %o %%%%%%    %%  %  <font color="#00ff00"><b>\
+</b></font>  %  %    %%%%%%%%%%  <font color="#00ff00"><b>\
+</b></font>  %%%%                <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^14$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 14<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>        %%%%%%%       <font color="#00ff00"><b>\
+</b></font>  %%%%%%%     %       <font color="#00ff00"><b>\
+</b></font>  %     % o@o %       <font color="#00ff00"><b>\
+</b></font>  %oo %   %%%%%%%%%   <font color="#00ff00"><b>\
+</b></font>  % %%%......%%   %   <font color="#00ff00"><b>\
+</b></font>  %   o......%% % %   <font color="#00ff00"><b>\
+</b></font>  % %%%......     %   <font color="#00ff00"><b>\
+</b></font> %%   %%%% %%% %o%%   <font color="#00ff00"><b>\
+</b></font> %  %o   %  o  % %    <font color="#00ff00"><b>\
+</b></font> %  o ooo  % o%% %    <font color="#00ff00"><b>\
+</b></font> %   o o %%%oo % %    <font color="#00ff00"><b>\
+</b></font> %%%%%     o   % %    <font color="#00ff00"><b>\
+</b></font>     %%% %%%   % %    <font color="#00ff00"><b>\
+</b></font>       %     %   %    <font color="#00ff00"><b>\
+</b></font>       %%%%%%%%  %    <font color="#00ff00"><b>\
+</b></font>              %%%%    <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^15$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 15<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>    %%%%%%%%          <font color="#00ff00"><b>\
+</b></font>    %   %  %          <font color="#00ff00"><b>\
+</b></font>    %  o   %          <font color="#00ff00"><b>\
+</b></font>  %%% %o   %%%%       <font color="#00ff00"><b>\
+</b></font>  %  o  %%o   %       <font color="#00ff00"><b>\
+</b></font>  %  % @ o % o%       <font color="#00ff00"><b>\
+</b></font>  %  %      o %%%%    <font color="#00ff00"><b>\
+</b></font>  %% %%%%o%%     %    <font color="#00ff00"><b>\
+</b></font>  % o%.....% %   %    <font color="#00ff00"><b>\
+</b></font>  %  o..OO. o% %%%    <font color="#00ff00"><b>\
+</b></font> %%  %.....%   %      <font color="#00ff00"><b>\
+</b></font> %   %%% %%%%%%%      <font color="#00ff00"><b>\
+</b></font> % oo  %  %           <font color="#00ff00"><b>\
+</b></font> %  %     %           <font color="#00ff00"><b>\
+</b></font> %%%%%%   %           <font color="#00ff00"><b>\
+</b></font>      %%%%%           <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^16$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 16<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font> %%%%%                <font color="#00ff00"><b>\
+</b></font> %   %%               <font color="#00ff00"><b>\
+</b></font> %    %  %%%%         <font color="#00ff00"><b>\
+</b></font> % o  %%%%  %         <font color="#00ff00"><b>\
+</b></font> %  oo o   o%         <font color="#00ff00"><b>\
+</b></font> %%%@ %o    %%        <font color="#00ff00"><b>\
+</b></font>  %  %%  o o %%       <font color="#00ff00"><b>\
+</b></font>  % o  %% %% .%       <font color="#00ff00"><b>\
+</b></font>  %  %o%%o  %.%       <font color="#00ff00"><b>\
+</b></font>  %%%   o..%%.%       <font color="#00ff00"><b>\
+</b></font>   %    %.O...%       <font color="#00ff00"><b>\
+</b></font>   % oo %.....%       <font color="#00ff00"><b>\
+</b></font>   %  %%%%%%%%%       <font color="#00ff00"><b>\
+</b></font>   %  %               <font color="#00ff00"><b>\
+</b></font>   %%%%               <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^17$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 17<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>    %%%%%%%%%%        <font color="#00ff00"><b>\
+</b></font>    %..  %   %        <font color="#00ff00"><b>\
+</b></font>    %..      %        <font color="#00ff00"><b>\
+</b></font>    %..  %  %%%%      <font color="#00ff00"><b>\
+</b></font>   %%%%%%%  %  %%     <font color="#00ff00"><b>\
+</b></font>   %            %     <font color="#00ff00"><b>\
+</b></font>   %  %  %%  %  %     <font color="#00ff00"><b>\
+</b></font> %%%% %%  %%%% %%     <font color="#00ff00"><b>\
+</b></font> %  o  %%%%% %  %     <font color="#00ff00"><b>\
+</b></font> % % o  o  % o  %     <font color="#00ff00"><b>\
+</b></font> % @o  o   %   %%     <font color="#00ff00"><b>\
+</b></font> %%%% %% %%%%%%%      <font color="#00ff00"><b>\
+</b></font>    %    %            <font color="#00ff00"><b>\
+</b></font>    %%%%%%            <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^18$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 18<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>      %%%%%%%%%%%     <font color="#00ff00"><b>\
+</b></font>      %  .  %   %     <font color="#00ff00"><b>\
+</b></font>      % %.    @ %     <font color="#00ff00"><b>\
+</b></font>  %%%%% %%..% %%%%    <font color="#00ff00"><b>\
+</b></font> %%  % ..%%%     %%%  <font color="#00ff00"><b>\
+</b></font> % o %...   o %  o %  <font color="#00ff00"><b>\
+</b></font> %    .. %%  %% %% %  <font color="#00ff00"><b>\
+</b></font> %%%%o%%o% o %   % %  <font color="#00ff00"><b>\
+</b></font>   %% %    %o oo % %  <font color="#00ff00"><b>\
+</b></font>   %  o % %  % o%% %  <font color="#00ff00"><b>\
+</b></font>   %               %  <font color="#00ff00"><b>\
+</b></font>   %  %%%%%%%%%%%  %  <font color="#00ff00"><b>\
+</b></font>   %%%%         %%%%  <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^19$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 19<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>   %%%%%%             <font color="#00ff00"><b>\
+</b></font>   %   @%%%%          <font color="#00ff00"><b>\
+</b></font> %%%%% o   %          <font color="#00ff00"><b>\
+</b></font> %   %%    %%%%       <font color="#00ff00"><b>\
+</b></font> % o %  %%    %       <font color="#00ff00"><b>\
+</b></font> % o %  %%%%% %       <font color="#00ff00"><b>\
+</b></font> %% o  o    % %       <font color="#00ff00"><b>\
+</b></font> %% o o %%% % %       <font color="#00ff00"><b>\
+</b></font> %% %  o  % % %       <font color="#00ff00"><b>\
+</b></font> %% % %o%   % %       <font color="#00ff00"><b>\
+</b></font> %% %%%   % % %%%%%%  <font color="#00ff00"><b>\
+</b></font> %  o  %%%% % %....%  <font color="#00ff00"><b>\
+</b></font> %    o    o   ..%.%  <font color="#00ff00"><b>\
+</b></font> %%%%o  o% o   ....%  <font color="#00ff00"><b>\
+</b></font> %       %  %% ....%  <font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%  <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^20$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 20<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>     %%%%%%%%%%       <font color="#00ff00"><b>\
+</b></font> %%%%%        %%%%    <font color="#00ff00"><b>\
+</b></font> %     %   o  %@ %    <font color="#00ff00"><b>\
+</b></font> % %%%%%%%o%%%%  %%%  <font color="#00ff00"><b>\
+</b></font> % %    %% %  %o ..%  <font color="#00ff00"><b>\
+</b></font> % % o     %  %  %.%  <font color="#00ff00"><b>\
+</b></font> % % o  %     %o ..%  <font color="#00ff00"><b>\
+</b></font> % %  %%% %%     %.%  <font color="#00ff00"><b>\
+</b></font> % %%%  %  %  %o ..%  <font color="#00ff00"><b>\
+</b></font> % %    %  %%%%  %.%  <font color="#00ff00"><b>\
+</b></font> % %o   o  o  %o ..%  <font color="#00ff00"><b>\
+</b></font> %    o % o o %  %.%  <font color="#00ff00"><b>\
+</b></font> %%%% o%%%    %o ..%  <font color="#00ff00"><b>\
+</b></font>    %    oo %%%....%  <font color="#00ff00"><b>\
+</b></font>    %      %% %%%%%%  <font color="#00ff00"><b>\
+</b></font>    %%%%%%%%          <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^21$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 21<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font> %%%%%%%%%            <font color="#00ff00"><b>\
+</b></font> %       %            <font color="#00ff00"><b>\
+</b></font> %       %%%%         <font color="#00ff00"><b>\
+</b></font> %% %%%% %  %         <font color="#00ff00"><b>\
+</b></font> %% %@%%    %         <font color="#00ff00"><b>\
+</b></font> % ooo o  oo%         <font color="#00ff00"><b>\
+</b></font> %  % %% o  %         <font color="#00ff00"><b>\
+</b></font> %  % %%  o %%%%      <font color="#00ff00"><b>\
+</b></font> %%%%  ooo o%  %      <font color="#00ff00"><b>\
+</b></font>  %   %%   ....%      <font color="#00ff00"><b>\
+</b></font>  % %   % %.. .%      <font color="#00ff00"><b>\
+</b></font>  %   % % %%...%      <font color="#00ff00"><b>\
+</b></font>  %%%%% o  %...%      <font color="#00ff00"><b>\
+</b></font>      %%   %%%%%      <font color="#00ff00"><b>\
+</b></font>       %%%%%          <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^22$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 22<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font> %%%%%%     %%%%      <font color="#00ff00"><b>\
+</b></font> %    %%%%%%%  %%%%%  <font color="#00ff00"><b>\
+</b></font> %   o%  %  o  %   %  <font color="#00ff00"><b>\
+</b></font> %  o  o  o % o o  %  <font color="#00ff00"><b>\
+</b></font> %%o o   % @% o    %  <font color="#00ff00"><b>\
+</b></font> %  o %%%%%%%%%%% %%  <font color="#00ff00"><b>\
+</b></font> % %   %.......% o%   <font color="#00ff00"><b>\
+</b></font> % %%  % ......%  %   <font color="#00ff00"><b>\
+</b></font> % %   o........o %   <font color="#00ff00"><b>\
+</b></font> % % o %.... ..%  %   <font color="#00ff00"><b>\
+</b></font> %  o o%%%%o%%%% o%   <font color="#00ff00"><b>\
+</b></font> % o   %%% o   o  %%  <font color="#00ff00"><b>\
+</b></font> % o     o o  o    %  <font color="#00ff00"><b>\
+</b></font> %% %%%%%% o %%%%% %  <font color="#00ff00"><b>\
+</b></font> %         %       %  <font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%  <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^23$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 23<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>     %%%%%%%          <font color="#00ff00"><b>\
+</b></font>     %  %  %%%%       <font color="#00ff00"><b>\
+</b></font> %%%%% o%o %  %%      <font color="#00ff00"><b>\
+</b></font> %.. %  %  %   %      <font color="#00ff00"><b>\
+</b></font> %.. % o%o %  o%%%%   <font color="#00ff00"><b>\
+</b></font> %.  %     %o  %  %   <font color="#00ff00"><b>\
+</b></font> %..   o%  % o    %   <font color="#00ff00"><b>\
+</b></font> %..@%  %o %o  %  %   <font color="#00ff00"><b>\
+</b></font> %.. % o%     o%  %   <font color="#00ff00"><b>\
+</b></font> %.. %  %oo%o  %  %%  <font color="#00ff00"><b>\
+</b></font> %.. % o%  %  o%o  %  <font color="#00ff00"><b>\
+</b></font> %.. %  %  %   %   %  <font color="#00ff00"><b>\
+</b></font> %%. %%%%  %%%%%   %  <font color="#00ff00"><b>\
+</b></font>  %%%%  %%%%   %%%%%  <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^24$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 24<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%      <font color="#00ff00"><b>\
+</b></font> %..........  .%%%%   <font color="#00ff00"><b>\
+</b></font> %..........oo.%  %   <font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%o %   %%  <font color="#00ff00"><b>\
+</b></font> %      o  o     o %  <font color="#00ff00"><b>\
+</b></font> %% %%%%   %  o %  %  <font color="#00ff00"><b>\
+</b></font> %      %   %%  % %%  <font color="#00ff00"><b>\
+</b></font> %  o%  % %%  %%% %%  <font color="#00ff00"><b>\
+</b></font> % o %o%%%    %%% %%  <font color="#00ff00"><b>\
+</b></font> %%%  o %  %  %%% %%  <font color="#00ff00"><b>\
+</b></font> %%%    o %% %  % %%  <font color="#00ff00"><b>\
+</b></font>  % o  %  o  o o   %  <font color="#00ff00"><b>\
+</b></font>  %  o  o%ooo  %   %  <font color="#00ff00"><b>\
+</b></font>  %  %  o      %%%%%  <font color="#00ff00"><b>\
+</b></font>  % @%%  %  %  %      <font color="#00ff00"><b>\
+</b></font>  %%%%%%%%%%%%%%      <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^25$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 25<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font> %%%%                 <font color="#00ff00"><b>\
+</b></font> %  %%%%%%%%%%%%%%    <font color="#00ff00"><b>\
+</b></font> %  %   ..%......%    <font color="#00ff00"><b>\
+</b></font> %  % % %%%%% ...%    <font color="#00ff00"><b>\
+</b></font> %%o%    ........%    <font color="#00ff00"><b>\
+</b></font> %   %%o%%%%%%  %%%%  <font color="#00ff00"><b>\
+</b></font> % o %     %%%%%%@ %  <font color="#00ff00"><b>\
+</b></font> %%o % o   %%%%%%  %  <font color="#00ff00"><b>\
+</b></font> %  o %ooo%%       %  <font color="#00ff00"><b>\
+</b></font> %      %    %o%o%%%  <font color="#00ff00"><b>\
+</b></font> % %%%% %ooooo    %   <font color="#00ff00"><b>\
+</b></font> % %    o     %   %   <font color="#00ff00"><b>\
+</b></font> % %   %%        %%%  <font color="#00ff00"><b>\
+</b></font> % %%%%%%o%%%%%% o %  <font color="#00ff00"><b>\
+</b></font> %        %    %   %  <font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%    %%%%%  <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^26$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 26<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>  %%%%%%%             <font color="#00ff00"><b>\
+</b></font>  %  %  %%%%%         <font color="#00ff00"><b>\
+</b></font> %%  %  %...%%%       <font color="#00ff00"><b>\
+</b></font> %  o%  %...  %       <font color="#00ff00"><b>\
+</b></font> % o %oo ...  %       <font color="#00ff00"><b>\
+</b></font> %  o%  %... .%       <font color="#00ff00"><b>\
+</b></font> %   % o%%%%%%%%      <font color="#00ff00"><b>\
+</b></font> %%o       o o %      <font color="#00ff00"><b>\
+</b></font> %%  %  oo %   %      <font color="#00ff00"><b>\
+</b></font>  %%%%%%  %%oo@%      <font color="#00ff00"><b>\
+</b></font>       %      %%      <font color="#00ff00"><b>\
+</b></font>       %%%%%%%%       <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^27$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 27<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>  %%%%%%%%%%%%%%%%%   <font color="#00ff00"><b>\
+</b></font>  %...   %    %   %%  <font color="#00ff00"><b>\
+</b></font> %%.....  o%% % %o %  <font color="#00ff00"><b>\
+</b></font> %......%  o  %    %  <font color="#00ff00"><b>\
+</b></font> %......%  %  % %  %  <font color="#00ff00"><b>\
+</b></font> %%%%%%%%% o  o o  %  <font color="#00ff00"><b>\
+</b></font>   %     %o%%o %%o%%  <font color="#00ff00"><b>\
+</b></font>  %%   o    % o    %  <font color="#00ff00"><b>\
+</b></font>  %  %% %%% %  %%o %  <font color="#00ff00"><b>\
+</b></font>  % o oo     o  o  %  <font color="#00ff00"><b>\
+</b></font>  % o    o%%o %%%%%%  <font color="#00ff00"><b>\
+</b></font>  %%%%%%%  @ %%       <font color="#00ff00"><b>\
+</b></font>        %%%%%%        <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^28$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 28<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>          %%%%%       <font color="#00ff00"><b>\
+</b></font>      %%%%%   %       <font color="#00ff00"><b>\
+</b></font>     %% o  o  %%%%    <font color="#00ff00"><b>\
+</b></font> %%%%% o  o o %%.%    <font color="#00ff00"><b>\
+</b></font> %       oo  %%..%    <font color="#00ff00"><b>\
+</b></font> %  %%%%%% %%%.. %    <font color="#00ff00"><b>\
+</b></font> %% %  %    %... %    <font color="#00ff00"><b>\
+</b></font> % o   %    %... %    <font color="#00ff00"><b>\
+</b></font> %@ %o %% %%%%...%    <font color="#00ff00"><b>\
+</b></font> %%%%  o oo  %%..%    <font color="#00ff00"><b>\
+</b></font>    %%  o o  o...%    <font color="#00ff00"><b>\
+</b></font>     % oo  o %  .%    <font color="#00ff00"><b>\
+</b></font>     %   o o  %%%%    <font color="#00ff00"><b>\
+</b></font>     %%%%%%   %       <font color="#00ff00"><b>\
+</b></font>          %%%%%       <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^29$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 29<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font> %%%%%                <font color="#00ff00"><b>\
+</b></font> %   %%               <font color="#00ff00"><b>\
+</b></font> % o  %%%%%%%%%       <font color="#00ff00"><b>\
+</b></font> %% % %       %%%%%%  <font color="#00ff00"><b>\
+</b></font> %% %   o%o%@  %   %  <font color="#00ff00"><b>\
+</b></font> %  %      o %   o %  <font color="#00ff00"><b>\
+</b></font> %  %%% %%%%%%%%% %%  <font color="#00ff00"><b>\
+</b></font> %  %% ..O..... % %%  <font color="#00ff00"><b>\
+</b></font> %% %% O.O..O.O % %%  <font color="#00ff00"><b>\
+</b></font> % o%%%%%%%%%% %%o %  <font color="#00ff00"><b>\
+</b></font> %  o   o  o    o  %  <font color="#00ff00"><b>\
+</b></font> %  %   %   %   %  %  <font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%  <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^30$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 30<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>        %%%%%%%%%%%   <font color="#00ff00"><b>\
+</b></font>        %   %     %   <font color="#00ff00"><b>\
+</b></font> %%%%%  %     o o %   <font color="#00ff00"><b>\
+</b></font> %   %%%%% o%% % %%   <font color="#00ff00"><b>\
+</b></font> % o %%   % %% o  %   <font color="#00ff00"><b>\
+</b></font> % o  @oo % %%ooo %   <font color="#00ff00"><b>\
+</b></font> %% %%%   % %%    %   <font color="#00ff00"><b>\
+</b></font> %% %   %%% %%%%%o%   <font color="#00ff00"><b>\
+</b></font> %% %     o  %....%   <font color="#00ff00"><b>\
+</b></font> %  %%% %% o %....%%  <font color="#00ff00"><b>\
+</b></font> % o   o %   %..o. %  <font color="#00ff00"><b>\
+</b></font> %  %% o %  %%.... %  <font color="#00ff00"><b>\
+</b></font> %%%%%   %%%%%%...%%  <font color="#00ff00"><b>\
+</b></font>     %%%%%    %%%%%   <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^31$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 31<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>   %%%%               <font color="#00ff00"><b>\
+</b></font>   %  %%%%%%%%%       <font color="#00ff00"><b>\
+</b></font>  %%  %%  %   %       <font color="#00ff00"><b>\
+</b></font>  %  o% o@o   %%%%    <font color="#00ff00"><b>\
+</b></font>  %o  o  % o o%  %%   <font color="#00ff00"><b>\
+</b></font> %%  o%% %o o     %   <font color="#00ff00"><b>\
+</b></font> %  %  % %   ooo  %   <font color="#00ff00"><b>\
+</b></font> % o    o  o%% %%%%   <font color="#00ff00"><b>\
+</b></font> % o o %o%  %  %      <font color="#00ff00"><b>\
+</b></font> %%  %%%  %%%o %      <font color="#00ff00"><b>\
+</b></font>  %  %....     %      <font color="#00ff00"><b>\
+</b></font>  %%%%......%%%%      <font color="#00ff00"><b>\
+</b></font>    %....%%%%         <font color="#00ff00"><b>\
+</b></font>    %...%%            <font color="#00ff00"><b>\
+</b></font>    %...%             <font color="#00ff00"><b>\
+</b></font>    %%%%%             <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^32$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 32<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>       %%%%           <font color="#00ff00"><b>\
+</b></font>   %%%%%  %           <font color="#00ff00"><b>\
+</b></font>  %%     o%           <font color="#00ff00"><b>\
+</b></font> %% o  %% %%%         <font color="#00ff00"><b>\
+</b></font> %@o o % o  %         <font color="#00ff00"><b>\
+</b></font> %%%% %%   o%         <font color="#00ff00"><b>\
+</b></font>  %....%o o %         <font color="#00ff00"><b>\
+</b></font>  %....%   o%         <font color="#00ff00"><b>\
+</b></font>  %....  oo %%        <font color="#00ff00"><b>\
+</b></font>  %... % o   %        <font color="#00ff00"><b>\
+</b></font>  %%%%%%o o  %        <font color="#00ff00"><b>\
+</b></font>       %   %%%        <font color="#00ff00"><b>\
+</b></font>       %o %%%         <font color="#00ff00"><b>\
+</b></font>       %  %           <font color="#00ff00"><b>\
+</b></font>       %%%%           <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^33$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 33<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>  %%%%%%%%%%%         <font color="#00ff00"><b>\
+</b></font>  %     %%  %         <font color="#00ff00"><b>\
+</b></font>  %   o   o %         <font color="#00ff00"><b>\
+</b></font> %%%% %% oo %         <font color="#00ff00"><b>\
+</b></font> %   o %    %         <font color="#00ff00"><b>\
+</b></font> % ooo % %%%%         <font color="#00ff00"><b>\
+</b></font> %   % % o %%         <font color="#00ff00"><b>\
+</b></font> %  %  %  o %         <font color="#00ff00"><b>\
+</b></font> % o% o%    %         <font color="#00ff00"><b>\
+</b></font> %   ..% %%%%         <font color="#00ff00"><b>\
+</b></font> %%%%.. o %@%         <font color="#00ff00"><b>\
+</b></font> %.....% o% %         <font color="#00ff00"><b>\
+</b></font> %%....%  o %         <font color="#00ff00"><b>\
+</b></font>  %%..%%    %         <font color="#00ff00"><b>\
+</b></font>   %%%%%%%%%%         <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^34$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 34<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>  %%%%%%%%%           <font color="#00ff00"><b>\
+</b></font>  %....   %%          <font color="#00ff00"><b>\
+</b></font>  %.%.%  o %%         <font color="#00ff00"><b>\
+</b></font> %%....% % @%%        <font color="#00ff00"><b>\
+</b></font> % ....%  %  %%       <font color="#00ff00"><b>\
+</b></font> %     %o %%o %       <font color="#00ff00"><b>\
+</b></font> %% %%%  o    %       <font color="#00ff00"><b>\
+</b></font>  %o  o o o%  %       <font color="#00ff00"><b>\
+</b></font>  % %  o o %% %       <font color="#00ff00"><b>\
+</b></font>  %  %%%  %%  %       <font color="#00ff00"><b>\
+</b></font>  %    %% %% %%       <font color="#00ff00"><b>\
+</b></font>  %  o %  o  %        <font color="#00ff00"><b>\
+</b></font>  %%%o o   %%%        <font color="#00ff00"><b>\
+</b></font>    %  %%%%%          <font color="#00ff00"><b>\
+</b></font>    %%%%              <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^35$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 35<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%% %%%%%%  <font color="#00ff00"><b>\
+</b></font> %   %    % %%%....%  <font color="#00ff00"><b>\
+</b></font> %   oo%   @  .....%  <font color="#00ff00"><b>\
+</b></font> %   % %%%   % ....%  <font color="#00ff00"><b>\
+</b></font> %% %% %%%  %  ....%  <font color="#00ff00"><b>\
+</b></font>  % o o     % % %%%%  <font color="#00ff00"><b>\
+</b></font>  %  o o%%  %      %  <font color="#00ff00"><b>\
+</b></font> %%%% %  %%%% % %% %  <font color="#00ff00"><b>\
+</b></font> %  % %o   %% %    %  <font color="#00ff00"><b>\
+</b></font> % o  o  % %% %   %%  <font color="#00ff00"><b>\
+</b></font> % % o o    % %   %   <font color="#00ff00"><b>\
+</b></font> %  o %% %% % %%%%%   <font color="#00ff00"><b>\
+</b></font> % oo     oo  %       <font color="#00ff00"><b>\
+</b></font> %% %% %%% o  %       <font color="#00ff00"><b>\
+</b></font>  %    % %    %       <font color="#00ff00"><b>\
+</b></font>  %%%%%% %%%%%%       <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^36$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 36<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>             %%%%%    <font color="#00ff00"><b>\
+</b></font> %%%%%  %%%%%%   %    <font color="#00ff00"><b>\
+</b></font> %   %%%%  o o o %    <font color="#00ff00"><b>\
+</b></font> % o   %% %% %%  %%   <font color="#00ff00"><b>\
+</b></font> %   o o     o  o %   <font color="#00ff00"><b>\
+</b></font> %%% o  %% %%     %%  <font color="#00ff00"><b>\
+</b></font>   % %%%%% %%%%%oo %  <font color="#00ff00"><b>\
+</b></font>  %%o%%%%% @%%     %  <font color="#00ff00"><b>\
+</b></font>  % o  %%%o%%% o  %%  <font color="#00ff00"><b>\
+</b></font>  % o  %   %%%  %%%   <font color="#00ff00"><b>\
+</b></font>  % oo o %   oo %     <font color="#00ff00"><b>\
+</b></font>  %     %   %%  %     <font color="#00ff00"><b>\
+</b></font>  %%%%%%%.. .%%%      <font color="#00ff00"><b>\
+</b></font>     %.........%      <font color="#00ff00"><b>\
+</b></font>     %.........%      <font color="#00ff00"><b>\
+</b></font>     %%%%%%%%%%%      <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^37$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 37<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%          <font color="#00ff00"><b>\
+</b></font> %......   %%%%%%%%%  <font color="#00ff00"><b>\
+</b></font> %......   %  %%   %  <font color="#00ff00"><b>\
+</b></font> %..%%% o    o     %  <font color="#00ff00"><b>\
+</b></font> %... o o %   %%   %  <font color="#00ff00"><b>\
+</b></font> %...%o%%%%%    %  %  <font color="#00ff00"><b>\
+</b></font> %%%    %   %o  %o %  <font color="#00ff00"><b>\
+</b></font>   %  oo o o  o%%  %  <font color="#00ff00"><b>\
+</b></font>   %  o   %o%o %%o %  <font color="#00ff00"><b>\
+</b></font>   %%% %% %    %%  %  <font color="#00ff00"><b>\
+</b></font>    %  o o %% %%%%%%  <font color="#00ff00"><b>\
+</b></font>    %    o  o  %      <font color="#00ff00"><b>\
+</b></font>    %%   % %   %      <font color="#00ff00"><b>\
+</b></font>     %%%%%@%%%%%      <font color="#00ff00"><b>\
+</b></font>         %%%          <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^38$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 38<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>       %%%%           <font color="#00ff00"><b>\
+</b></font> %%%%%%% @%           <font color="#00ff00"><b>\
+</b></font> %     o  %           <font color="#00ff00"><b>\
+</b></font> %   o%% o%           <font color="#00ff00"><b>\
+</b></font> %%o%...% %           <font color="#00ff00"><b>\
+</b></font>  % o...  %           <font color="#00ff00"><b>\
+</b></font>  % %. .% %%          <font color="#00ff00"><b>\
+</b></font>  %   % %o %          <font color="#00ff00"><b>\
+</b></font>  %o  o    %          <font color="#00ff00"><b>\
+</b></font>  %  %%%%%%%          <font color="#00ff00"><b>\
+</b></font>  %%%%                <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^39$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 39<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>              %%%%%%  <font color="#00ff00"><b>\
+</b></font>  %%%%%%%%%%%%%....%  <font color="#00ff00"><b>\
+</b></font> %%   %%     %%....%  <font color="#00ff00"><b>\
+</b></font> %  oo%%  o @%%....%  <font color="#00ff00"><b>\
+</b></font> %      oo o%  ....%  <font color="#00ff00"><b>\
+</b></font> %  o %% oo % % ...%  <font color="#00ff00"><b>\
+</b></font> %  o %% o  %  ....%  <font color="#00ff00"><b>\
+</b></font> %% %%%%% %%% %%.%%%  <font color="#00ff00"><b>\
+</b></font> %%   o  o %%   .  %  <font color="#00ff00"><b>\
+</b></font> % o%%%  % %%%%% %%%  <font color="#00ff00"><b>\
+</b></font> %   o   %       %    <font color="#00ff00"><b>\
+</b></font> %  o %o o o%%%  %    <font color="#00ff00"><b>\
+</b></font> % ooo% o   % %%%%    <font color="#00ff00"><b>\
+</b></font> %    %  oo %         <font color="#00ff00"><b>\
+</b></font> %%%%%%   %%%         <font color="#00ff00"><b>\
+</b></font>      %%%%%           <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^40$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 40<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>     %%%%%%%%%%%%     <font color="#00ff00"><b>\
+</b></font>     %          %%    <font color="#00ff00"><b>\
+</b></font>     %  % %oo o  %    <font color="#00ff00"><b>\
+</b></font>     %o %o%  %% @%    <font color="#00ff00"><b>\
+</b></font>    %% %% % o % %%    <font color="#00ff00"><b>\
+</b></font>    %   o %o  % %     <font color="#00ff00"><b>\
+</b></font>    %   % o   % %     <font color="#00ff00"><b>\
+</b></font>    %% o o   %% %     <font color="#00ff00"><b>\
+</b></font>    %  %  %%  o %     <font color="#00ff00"><b>\
+</b></font>    %    %% oo% %     <font color="#00ff00"><b>\
+</b></font> %%%%%%oo   %   %     <font color="#00ff00"><b>\
+</b></font> %....%  %%%%%%%%     <font color="#00ff00"><b>\
+</b></font> %.%... %%            <font color="#00ff00"><b>\
+</b></font> %....   %            <font color="#00ff00"><b>\
+</b></font> %....   %            <font color="#00ff00"><b>\
+</b></font> %%%%%%%%%            <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^41$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 41<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>            %%%%%     <font color="#00ff00"><b>\
+</b></font>           %%   %%    <font color="#00ff00"><b>\
+</b></font>          %%     %    <font color="#00ff00"><b>\
+</b></font>         %%  oo  %    <font color="#00ff00"><b>\
+</b></font>        %% oo  o %    <font color="#00ff00"><b>\
+</b></font>        % o    o %    <font color="#00ff00"><b>\
+</b></font> %%%%   %   oo %%%%%  <font color="#00ff00"><b>\
+</b></font> %  %%%%%%%% %%    %  <font color="#00ff00"><b>\
+</b></font> %.            ooo@%  <font color="#00ff00"><b>\
+</b></font> %.% %%%%%%% %%   %%  <font color="#00ff00"><b>\
+</b></font> %.% %%%%%%%. %o o%%  <font color="#00ff00"><b>\
+</b></font> %........... %    %  <font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%  o %  <font color="#00ff00"><b>\
+</b></font>              %%  %%  <font color="#00ff00"><b>\
+</b></font>               %%%%   <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^42$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 42<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>      %%%%%%%%        <font color="#00ff00"><b>\
+</b></font>   %%%%      %%%%%%   <font color="#00ff00"><b>\
+</b></font>   %    %% o o   @%   <font color="#00ff00"><b>\
+</b></font>   % %% %%o%o o o%%   <font color="#00ff00"><b>\
+</b></font> %%% ......%  oo %%   <font color="#00ff00"><b>\
+</b></font> %   ......%  %   %   <font color="#00ff00"><b>\
+</b></font> % % ......%o  o  %   <font color="#00ff00"><b>\
+</b></font> % %o...... oo% o %   <font color="#00ff00"><b>\
+</b></font> %   %%% %%%o  o %%   <font color="#00ff00"><b>\
+</b></font> %%%  o  o  o  o %    <font color="#00ff00"><b>\
+</b></font>   %  o  o  o  o %    <font color="#00ff00"><b>\
+</b></font>   %%%%%%   %%%%%%    <font color="#00ff00"><b>\
+</b></font>        %%%%%         <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^43$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 43<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>         %%%%%%%      <font color="#00ff00"><b>\
+</b></font>     %%%%%  %  %%%%   <font color="#00ff00"><b>\
+</b></font>     %   %   o    %   <font color="#00ff00"><b>\
+</b></font>  %%%% %oo %% %%  %   <font color="#00ff00"><b>\
+</b></font> %%      % %  %% %%%  <font color="#00ff00"><b>\
+</b></font> %  %%% o%o  o  o  %  <font color="#00ff00"><b>\
+</b></font> %...    % %%  %   %  <font color="#00ff00"><b>\
+</b></font> %...%    @ % %%% %%  <font color="#00ff00"><b>\
+</b></font> %...%  %%%  o  o  %  <font color="#00ff00"><b>\
+</b></font> %%%%%%%% %%   %   %  <font color="#00ff00"><b>\
+</b></font>           %%%%%%%%%  <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^44$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 44<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>  %%%%%               <font color="#00ff00"><b>\
+</b></font>  %   %               <font color="#00ff00"><b>\
+</b></font>  % % %%%%%%%         <font color="#00ff00"><b>\
+</b></font>  %      o@%%%%%%     <font color="#00ff00"><b>\
+</b></font>  % o %%o %%%   %     <font color="#00ff00"><b>\
+</b></font>  % %%%% o    o %     <font color="#00ff00"><b>\
+</b></font>  % %%%%% %  %o %%%%  <font color="#00ff00"><b>\
+</b></font> %%  %%%% %%o      %  <font color="#00ff00"><b>\
+</b></font> %  o%  o  % %% %% %  <font color="#00ff00"><b>\
+</b></font> %         % %...% %  <font color="#00ff00"><b>\
+</b></font> %%%%%%  %%%  ...  %  <font color="#00ff00"><b>\
+</b></font>      %%%% % %...% %  <font color="#00ff00"><b>\
+</b></font>           % %%% % %  <font color="#00ff00"><b>\
+</b></font>           %       %  <font color="#00ff00"><b>\
+</b></font>           %%%%%%%%%  <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^45$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 45<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font> %%%%% %%%%           <font color="#00ff00"><b>\
+</b></font> %...% %  %%%%        <font color="#00ff00"><b>\
+</b></font> %...%%%  o  %        <font color="#00ff00"><b>\
+</b></font> %....%% o  o%%%      <font color="#00ff00"><b>\
+</b></font> %%....%%   o  %      <font color="#00ff00"><b>\
+</b></font> %%%... %% o o %      <font color="#00ff00"><b>\
+</b></font> % %%    %  o  %      <font color="#00ff00"><b>\
+</b></font> %  %% % %%% %%%%     <font color="#00ff00"><b>\
+</b></font> % o % %o  o    %     <font color="#00ff00"><b>\
+</b></font> %  o @ o    o  %     <font color="#00ff00"><b>\
+</b></font> %   % o oo o %%%     <font color="#00ff00"><b>\
+</b></font> %  %%%%%%  %%%       <font color="#00ff00"><b>\
+</b></font> % %%    %%%%         <font color="#00ff00"><b>\
+</b></font> %%%                  <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^46$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 46<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%           <font color="#00ff00"><b>\
+</b></font> %        %%%%        <font color="#00ff00"><b>\
+</b></font> % %%%%%% %  %%       <font color="#00ff00"><b>\
+</b></font> % % o o o  o %       <font color="#00ff00"><b>\
+</b></font> %       %o   %       <font color="#00ff00"><b>\
+</b></font> %%%o  oo%  %%%       <font color="#00ff00"><b>\
+</b></font>   %  %% % o%%        <font color="#00ff00"><b>\
+</b></font>   %%o%   o @%        <font color="#00ff00"><b>\
+</b></font>    %  o o %%%        <font color="#00ff00"><b>\
+</b></font>    % %   o  %        <font color="#00ff00"><b>\
+</b></font>    % %%   % %        <font color="#00ff00"><b>\
+</b></font>   %%  %%%%% %        <font color="#00ff00"><b>\
+</b></font>   %         %        <font color="#00ff00"><b>\
+</b></font>   %.......%%%        <font color="#00ff00"><b>\
+</b></font>   %.......%          <font color="#00ff00"><b>\
+</b></font>   %%%%%%%%%          <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^47$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 47<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>          %%%%        <font color="#00ff00"><b>\
+</b></font>  %%%%%%%%%  %%       <font color="#00ff00"><b>\
+</b></font> %%  o      o %%%%%   <font color="#00ff00"><b>\
+</b></font> %   %% %%   %%...%   <font color="#00ff00"><b>\
+</b></font> % %oo o oo%o%%...%   <font color="#00ff00"><b>\
+</b></font> % %   @   %   ...%   <font color="#00ff00"><b>\
+</b></font> %  o% %%%oo   ...%   <font color="#00ff00"><b>\
+</b></font> % o  oo  o %%....%   <font color="#00ff00"><b>\
+</b></font> %%%o       %%%%%%%   <font color="#00ff00"><b>\
+</b></font>   %  %%%%%%%         <font color="#00ff00"><b>\
+</b></font>   %%%%               <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^48$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 48<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>   %%%%%%%%%          <font color="#00ff00"><b>\
+</b></font>   %O.O%O.O%          <font color="#00ff00"><b>\
+</b></font>   %.O.O.O.%          <font color="#00ff00"><b>\
+</b></font>   %O.O.O.O%          <font color="#00ff00"><b>\
+</b></font>   %.O.O.O.%          <font color="#00ff00"><b>\
+</b></font>   %O.O.O.O%          <font color="#00ff00"><b>\
+</b></font>   %%%   %%%          <font color="#00ff00"><b>\
+</b></font>     %   %            <font color="#00ff00"><b>\
+</b></font> %%%%%% %%%%%%        <font color="#00ff00"><b>\
+</b></font> %           %        <font color="#00ff00"><b>\
+</b></font> % o o o o o %        <font color="#00ff00"><b>\
+</b></font> %% o o o o %%        <font color="#00ff00"><b>\
+</b></font>  %o o o o o%         <font color="#00ff00"><b>\
+</b></font>  %   o@o   %         <font color="#00ff00"><b>\
+</b></font>  %  %%%%%  %         <font color="#00ff00"><b>\
+</b></font>  %%%%   %%%%         <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^49$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 49<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>        %%%%          <font color="#00ff00"><b>\
+</b></font>        %  %%         <font color="#00ff00"><b>\
+</b></font>        %   %%        <font color="#00ff00"><b>\
+</b></font>        % oo %%       <font color="#00ff00"><b>\
+</b></font>      %%%o  o %%      <font color="#00ff00"><b>\
+</b></font>   %%%%    o   %      <font color="#00ff00"><b>\
+</b></font> %%%  % %%%%%  %      <font color="#00ff00"><b>\
+</b></font> %    % %....o %      <font color="#00ff00"><b>\
+</b></font> % %   o ....% %      <font color="#00ff00"><b>\
+</b></font> %  o % %.O..% %      <font color="#00ff00"><b>\
+</b></font> %%%  %%%% %%% %      <font color="#00ff00"><b>\
+</b></font>   %%%% @o  %%o%%     <font color="#00ff00"><b>\
+</b></font>      %%% o     %     <font color="#00ff00"><b>\
+</b></font>        %  %%   %     <font color="#00ff00"><b>\
+</b></font>        %%%%%%%%%     <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^50$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 50<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>       %%%%%%%%%%%%   <font color="#00ff00"><b>\
+</b></font>      %%..    %   %   <font color="#00ff00"><b>\
+</b></font>     %%..O o    o %   <font color="#00ff00"><b>\
+</b></font>    %%..O.% % % o%%   <font color="#00ff00"><b>\
+</b></font>    %..O.% % % o  %   <font color="#00ff00"><b>\
+</b></font> %%%%...%  %    % %   <font color="#00ff00"><b>\
+</b></font> %  %% %          %   <font color="#00ff00"><b>\
+</b></font> % @o o %%%  %   %%   <font color="#00ff00"><b>\
+</b></font> % o   o   % %   %    <font color="#00ff00"><b>\
+</b></font> %%%oo   % % % % %    <font color="#00ff00"><b>\
+</b></font>   %   o   % % %%%%%  <font color="#00ff00"><b>\
+</b></font>   % o% %%%%%      %  <font color="#00ff00"><b>\
+</b></font>   %o   %   %    % %  <font color="#00ff00"><b>\
+</b></font>   %  %%%   %%     %  <font color="#00ff00"><b>\
+</b></font>   %  %      %    %%  <font color="#00ff00"><b>\
+</b></font>   %%%%      %%%%%%   <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^51$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 51<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>  %%%%%%%%%           <font color="#00ff00"><b>\
+</b></font>  %       %           <font color="#00ff00"><b>\
+</b></font>  % o oo o%           <font color="#00ff00"><b>\
+</b></font> %%% %  o %           <font color="#00ff00"><b>\
+</b></font> %.%   oo %%          <font color="#00ff00"><b>\
+</b></font> %.%%%   o %          <font color="#00ff00"><b>\
+</b></font> %.%. o %% %%%%       <font color="#00ff00"><b>\
+</b></font> %...  o%% o  %       <font color="#00ff00"><b>\
+</b></font> %...o   o    %       <font color="#00ff00"><b>\
+</b></font> %..%%%o%%% %@%       <font color="#00ff00"><b>\
+</b></font> %..% %     %%%       <font color="#00ff00"><b>\
+</b></font> %%%% %%%%%%%         <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^52$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 52<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>            %%%%%%%%  <font color="#00ff00"><b>\
+</b></font>            %......%  <font color="#00ff00"><b>\
+</b></font>    %%%%    %......%  <font color="#00ff00"><b>\
+</b></font>    %  %%%%%%%%%...%  <font color="#00ff00"><b>\
+</b></font>    % o   o    %...%  <font color="#00ff00"><b>\
+</b></font>    %  % % % % %   %  <font color="#00ff00"><b>\
+</b></font> %%%%% % % %@% %   %  <font color="#00ff00"><b>\
+</b></font> %   % %%% %%% %% %%  <font color="#00ff00"><b>\
+</b></font> %    o % o o o % %   <font color="#00ff00"><b>\
+</b></font> % ooo  o   %     %   <font color="#00ff00"><b>\
+</b></font> %   % %%%o%%%o%% %   <font color="#00ff00"><b>\
+</b></font> %%% %  o   %     %   <font color="#00ff00"><b>\
+</b></font>  %% o  % o o o %%%   <font color="#00ff00"><b>\
+</b></font>  %  % %%% %%% %%     <font color="#00ff00"><b>\
+</b></font>  % o          %      <font color="#00ff00"><b>\
+</b></font>  %  %%%%%%%%%%%      <font color="#00ff00"><b>\
+</b></font>  %%%%                <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^53$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 53<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%   <font color="#00ff00"><b>\
+</b></font> %                %%  <font color="#00ff00"><b>\
+</b></font> % o%   o %%  o    %  <font color="#00ff00"><b>\
+</b></font> %    o%%%    % oo %  <font color="#00ff00"><b>\
+</b></font> %.%%%     o o %%  %% <font color="#00ff00"><b>\
+</b></font> %...%  %  %    %o  % <font color="#00ff00"><b>\
+</b></font> %..%%oo%%%% o  %   % <font color="#00ff00"><b>\
+</b></font> %...%      o %%  %%% <font color="#00ff00"><b>\
+</b></font> %...o  %%%  %    % % <font color="#00ff00"><b>\
+</b></font> %%..  o%  %%   %%@ % <font color="#00ff00"><b>\
+</b></font>  %%.%              % <font color="#00ff00"><b>\
+</b></font>   %%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^54$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 54<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font> %   %    %   %   %@% <font color="#00ff00"><b>\
+</b></font> % o      o   o   % % <font color="#00ff00"><b>\
+</b></font> %% %%%..%% %%%     % <font color="#00ff00"><b>\
+</b></font> %   %....%o%  o%%% % <font color="#00ff00"><b>\
+</b></font> % o %....%  o  o o % <font color="#00ff00"><b>\
+</b></font> %   %....% % % o o % <font color="#00ff00"><b>\
+</b></font> %   %%..%%   %o%   % <font color="#00ff00"><b>\
+</b></font> %%o%%    %%  %  %o%% <font color="#00ff00"><b>\
+</b></font> %   o  o     %  %  % <font color="#00ff00"><b>\
+</b></font> %   %    %   %     % <font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^55$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 55<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font> %    @%%      %   %% <font color="#00ff00"><b>\
+</b></font> %    %%    o    o %% <font color="#00ff00"><b>\
+</b></font> %  %%%....% % %  %%% <font color="#00ff00"><b>\
+</b></font> %   %....% % % o   % <font color="#00ff00"><b>\
+</b></font> %%% %...%  %       % <font color="#00ff00"><b>\
+</b></font> %%  %%.%     o   o % <font color="#00ff00"><b>\
+</b></font> %%  o o %%%  % % %%% <font color="#00ff00"><b>\
+</b></font> %% o       % % o   % <font color="#00ff00"><b>\
+</b></font> %%%% o  o% % % % o % <font color="#00ff00"><b>\
+</b></font> %%%%         % %  %% <font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^56$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 56<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font> %  %  %%    %   @%%% <font color="#00ff00"><b>\
+</b></font> %%    o    % o%%%  % <font color="#00ff00"><b>\
+</b></font> %%o% o %%o% o o    % <font color="#00ff00"><b>\
+</b></font> %   o%    o      %%% <font color="#00ff00"><b>\
+</b></font> % %%   o %%%  %....% <font color="#00ff00"><b>\
+</b></font> % % o% % % % %....%% <font color="#00ff00"><b>\
+</b></font> %    o o %  %....%%% <font color="#00ff00"><b>\
+</b></font> %%o %%%  o %....%%%% <font color="#00ff00"><b>\
+</b></font> %  % o        %%%%%% <font color="#00ff00"><b>\
+</b></font> %      % %    %%%%%% <font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^57$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 57<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font> %@     %%%   %  %  % <font color="#00ff00"><b>\
+</b></font> % % %  %  o  o     % <font color="#00ff00"><b>\
+</b></font> %%%%%     % o o%o% % <font color="#00ff00"><b>\
+</b></font> %.%..%    %%o o    % <font color="#00ff00"><b>\
+</b></font> %.....    o   %   %% <font color="#00ff00"><b>\
+</b></font> %.....    %%%o%%o%%% <font color="#00ff00"><b>\
+</b></font> %.%..%    o    %   % <font color="#00ff00"><b>\
+</b></font> %%%%%     %  %o  o % <font color="#00ff00"><b>\
+</b></font> %%%%%  %  o    o o % <font color="#00ff00"><b>\
+</b></font> %%%%%  %  %  %  %  % <font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^58$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 58<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font> %%...   %% %    %  % <font color="#00ff00"><b>\
+</b></font> %....         o %% % <font color="#00ff00"><b>\
+</b></font> %....% % %o%%%o    % <font color="#00ff00"><b>\
+</b></font> %...%    %       % % <font color="#00ff00"><b>\
+</b></font> %%.%  %o %     o%% % <font color="#00ff00"><b>\
+</b></font> %  %  % o o %%%  o % <font color="#00ff00"><b>\
+</b></font> %     o  o %  % %% % <font color="#00ff00"><b>\
+</b></font> %% % %% %oo% o%  % % <font color="#00ff00"><b>\
+</b></font> %  %   o o %      %% <font color="#00ff00"><b>\
+</b></font> %    %     %  %   @% <font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^59$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 59<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font> %   %  %@% %%  %%%%% <font color="#00ff00"><b>\
+</b></font> % % %  o    o  %%%%% <font color="#00ff00"><b>\
+</b></font> % %    %%%%%% o  %%% <font color="#00ff00"><b>\
+</b></font> %   %  %....%  oo  % <font color="#00ff00"><b>\
+</b></font> %%o%%o%%....%      % <font color="#00ff00"><b>\
+</b></font> %      %....%%o%%o%% <font color="#00ff00"><b>\
+</b></font> %  oo  %....%      % <font color="#00ff00"><b>\
+</b></font> % o  o  %  %  %%%  % <font color="#00ff00"><b>\
+</b></font> %%%%%  o   o    o  % <font color="#00ff00"><b>\
+</b></font> %%%%% %    %  %   %% <font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^60$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 60<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font> % %     %          % <font color="#00ff00"><b>\
+</b></font> %       o  %% %%% %% <font color="#00ff00"><b>\
+</b></font> %%%%%  %%   o  o   % <font color="#00ff00"><b>\
+</b></font> %%..%%  % % o % %  % <font color="#00ff00"><b>\
+</b></font> %....  o     %%o% %% <font color="#00ff00"><b>\
+</b></font> %....  o%%%%%   %o%% <font color="#00ff00"><b>\
+</b></font> %%..% %  %   %  o  % <font color="#00ff00"><b>\
+</b></font> %%%.% %  o   o  % @% <font color="#00ff00"><b>\
+</b></font> %%  o  o %   %  %%%% <font color="#00ff00"><b>\
+</b></font> %%       %%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^61$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 61<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font> %     %%%..%%%     % <font color="#00ff00"><b>\
+</b></font> % oo  %%%..%%%  o@ % <font color="#00ff00"><b>\
+</b></font> %  % %%......%  o  % <font color="#00ff00"><b>\
+</b></font> %     %......%  o  % <font color="#00ff00"><b>\
+</b></font> %%%%  %%%..%%%%%%o % <font color="#00ff00"><b>\
+</b></font> %   ooo %..%    %  % <font color="#00ff00"><b>\
+</b></font> % o%   o  o  oo %o % <font color="#00ff00"><b>\
+</b></font> %  %  %% o  %%  %  % <font color="#00ff00"><b>\
+</b></font> % o    o %% o    o % <font color="#00ff00"><b>\
+</b></font> %  %  %%    %%  %  % <font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^62$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 62<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font> %    %  % %  %  %  % <font color="#00ff00"><b>\
+</b></font> % @% % %% o   o   %% <font color="#00ff00"><b>\
+</b></font> %%%% %    %  % o   % <font color="#00ff00"><b>\
+</b></font> %    % %% %o %% %% % <font color="#00ff00"><b>\
+</b></font> %      o   o   o   % <font color="#00ff00"><b>\
+</b></font> %..%%%oo%% o%%o %% % <font color="#00ff00"><b>\
+</b></font> %..%.%  % o   o %  % <font color="#00ff00"><b>\
+</b></font> %....% oo   %%o %%%% <font color="#00ff00"><b>\
+</b></font> %....%  %%%%%      % <font color="#00ff00"><b>\
+</b></font> %...%%%        %%  % <font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^63$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 63<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font> %....%       %  %  % <font color="#00ff00"><b>\
+</b></font> %....% % o  o      % <font color="#00ff00"><b>\
+</b></font> %.... %%  o% % o%o % <font color="#00ff00"><b>\
+</b></font> %...%   o   o%  o  % <font color="#00ff00"><b>\
+</b></font> %..%%%%  % o   oo  % <font color="#00ff00"><b>\
+</b></font> %      %%%% %%%% %%% <font color="#00ff00"><b>\
+</b></font> %        %   %     % <font color="#00ff00"><b>\
+</b></font> % %%   %   o % o o % <font color="#00ff00"><b>\
+</b></font> % %%    o %% o  o  % <font color="#00ff00"><b>\
+</b></font> %     @%     %   % % <font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^64$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 64<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font> %....%%%           % <font color="#00ff00"><b>\
+</b></font> %....%%%%% %  %o% %% <font color="#00ff00"><b>\
+</b></font> %....%%%   %o  o   % <font color="#00ff00"><b>\
+</b></font> %....%%%    o  %oo%% <font color="#00ff00"><b>\
+</b></font> %%  %%%% o%  %o o  % <font color="#00ff00"><b>\
+</b></font> %%  %%%%  o  o  %  % <font color="#00ff00"><b>\
+</b></font> %@  %%%%o%%%o%% o  % <font color="#00ff00"><b>\
+</b></font> %%        %  %  o  % <font color="#00ff00"><b>\
+</b></font> %%   %%%  %  o  %%%% <font color="#00ff00"><b>\
+</b></font> %%%%%%%%  %  %     % <font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^65$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 65<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font> %     %     @%...%%% <font color="#00ff00"><b>\
+</b></font> %     %      %%...%% <font color="#00ff00"><b>\
+</b></font> % % % %%o%% %% ....% <font color="#00ff00"><b>\
+</b></font> %   o %   ooo  ....% <font color="#00ff00"><b>\
+</b></font> %%%o%%% oo  %%% %%.% <font color="#00ff00"><b>\
+</b></font> %     o  %    % %%%% <font color="#00ff00"><b>\
+</b></font> %  o  %  %%%  % %  % <font color="#00ff00"><b>\
+</b></font> %% %o%%    o  oo   % <font color="#00ff00"><b>\
+</b></font> %   o %%   %  % %  % <font color="#00ff00"><b>\
+</b></font> %     %    %  %    % <font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^66$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 66<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font> %     %  %...%@    % <font color="#00ff00"><b>\
+</b></font> % %       ....%    % <font color="#00ff00"><b>\
+</b></font> %  o  %   %....%   % <font color="#00ff00"><b>\
+</b></font> % %%o%%%% %%....%  % <font color="#00ff00"><b>\
+</b></font> % o   o  %  %...%  % <font color="#00ff00"><b>\
+</b></font> % oo %   %   % oo  % <font color="#00ff00"><b>\
+</b></font> %%%  ooo%   oo  o  % <font color="#00ff00"><b>\
+</b></font> % o  %  %    % o%  % <font color="#00ff00"><b>\
+</b></font> %   o%  %       o  % <font color="#00ff00"><b>\
+</b></font> %  %    %    %  %  % <font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^67$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 67<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font> %%%%%@%%%.%%...%%  % <font color="#00ff00"><b>\
+</b></font> %%%%%o  ..%...%    % <font color="#00ff00"><b>\
+</b></font> %%%%    ......%  o % <font color="#00ff00"><b>\
+</b></font> %%%  o %.....%% % %% <font color="#00ff00"><b>\
+</b></font> %%  oo% %%%%%  o o % <font color="#00ff00"><b>\
+</b></font> %% o% o    %%  oo  % <font color="#00ff00"><b>\
+</b></font> %%  %  %    % o  o % <font color="#00ff00"><b>\
+</b></font> %%   oo %%% %o%%   % <font color="#00ff00"><b>\
+</b></font> %% o%      o o  o %% <font color="#00ff00"><b>\
+</b></font> %%%    %    %    %%% <font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^68$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 68<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font> %@     %   %       % <font color="#00ff00"><b>\
+</b></font> %% %%% %%  %%%% % %% <font color="#00ff00"><b>\
+</b></font> %    % %  oo       % <font color="#00ff00"><b>\
+</b></font> %  % % % o % o %% %% <font color="#00ff00"><b>\
+</b></font> %     o %  %oo %   % <font color="#00ff00"><b>\
+</b></font> %  %%%  %      %% %% <font color="#00ff00"><b>\
+</b></font> %..%.% o %  o %    % <font color="#00ff00"><b>\
+</b></font> %..%.%  o % %% oo  % <font color="#00ff00"><b>\
+</b></font> %....%%   oo  o  % % <font color="#00ff00"><b>\
+</b></font> %.....%%        %  % <font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^69$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 69<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font> %  %      %   %   %% <font color="#00ff00"><b>\
+</b></font> % o% o o %%...o  o % <font color="#00ff00"><b>\
+</b></font> %  o  % %%....% o  % <font color="#00ff00"><b>\
+</b></font> % %% o %%....%   o % <font color="#00ff00"><b>\
+</b></font> % o    %....%% o   % <font color="#00ff00"><b>\
+</b></font> % o%%  %...%       % <font color="#00ff00"><b>\
+</b></font> %   ooo%%o%%  %%% %% <font color="#00ff00"><b>\
+</b></font> % % %  %   %  %    % <font color="#00ff00"><b>\
+</b></font> % o %  o  %%       % <font color="#00ff00"><b>\
+</b></font> %    %    %@       % <font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^70$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 70<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font> %  %  % %    %  %  % <font color="#00ff00"><b>\
+</b></font> %   o      o o     % <font color="#00ff00"><b>\
+</b></font> %% %  %o%%%o%%  %% % <font color="#00ff00"><b>\
+</b></font> %   o     o  %  o  % <font color="#00ff00"><b>\
+</b></font> % %%%o%%o%   % o   % <font color="#00ff00"><b>\
+</b></font> % %   o o  %%%%%% o% <font color="#00ff00"><b>\
+</b></font> % o  oo o  %@%.%...% <font color="#00ff00"><b>\
+</b></font> % %     %  % %.%...% <font color="#00ff00"><b>\
+</b></font> % %%%%%%%%%% %.....% <font color="#00ff00"><b>\
+</b></font> %            %.....% <font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^71$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 71<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font> %  %     %  %%    %% <font color="#00ff00"><b>\
+</b></font> % o%   o %     %%  % <font color="#00ff00"><b>\
+</b></font> % o  o  %..%     o % <font color="#00ff00"><b>\
+</b></font> % o o  %....%   % %% <font color="#00ff00"><b>\
+</b></font> % o%  %......%%% o % <font color="#00ff00"><b>\
+</b></font> %   %  %....%  %o  % <font color="#00ff00"><b>\
+</b></font> % o  %%%%..%   %   % <font color="#00ff00"><b>\
+</b></font> %% o   %% % % o  o%% <font color="#00ff00"><b>\
+</b></font> %%% o    o%@o o%   % <font color="#00ff00"><b>\
+</b></font> %%%%   %       %   % <font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^72$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 72<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font> %      ....%    %%%% <font color="#00ff00"><b>\
+</b></font> %      ....        % <font color="#00ff00"><b>\
+</b></font> % % %%%%%%%%%%     % <font color="#00ff00"><b>\
+</b></font> % %o   %      %%%..% <font color="#00ff00"><b>\
+</b></font> %  o   %oo%%%   %..% <font color="#00ff00"><b>\
+</b></font> % o %%% o   o   %..% <font color="#00ff00"><b>\
+</b></font> % o %   o o %  %%..% <font color="#00ff00"><b>\
+</b></font> %  %  oo % o %%   %% <font color="#00ff00"><b>\
+</b></font> %@%% o%  o  o     %% <font color="#00ff00"><b>\
+</b></font> %%       %%   %  %%% <font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^73$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 73<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font> %        %   %@ %  % <font color="#00ff00"><b>\
+</b></font> % oo  %oo% % %  %% % <font color="#00ff00"><b>\
+</b></font> %  % o o %oo %     % <font color="#00ff00"><b>\
+</b></font> %% %  %  % % %  %  % <font color="#00ff00"><b>\
+</b></font> %   %%       %     % <font color="#00ff00"><b>\
+</b></font> %   % o %   %   %  % <font color="#00ff00"><b>\
+</b></font> % o %o %   %  o %..% <font color="#00ff00"><b>\
+</b></font> %%o %  %%%%    %...% <font color="#00ff00"><b>\
+</b></font> %  o          %....% <font color="#00ff00"><b>\
+</b></font> %   %  %     %.....% <font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^74$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 74<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font> %     %   %%%%%    % <font color="#00ff00"><b>\
+</b></font> %% o  %   %%%%  o  % <font color="#00ff00"><b>\
+</b></font> %%%% oo   %..%  %  % <font color="#00ff00"><b>\
+</b></font> %  o  o  %%..%%%% %% <font color="#00ff00"><b>\
+</b></font> % o   %%%....   oo % <font color="#00ff00"><b>\
+</b></font> %  %o%   ....% % o % <font color="#00ff00"><b>\
+</b></font> % %  % o ..%%%o%   % <font color="#00ff00"><b>\
+</b></font> % %   o %..%   %%  % <font color="#00ff00"><b>\
+</b></font> %   o%  %%%%   % o%% <font color="#00ff00"><b>\
+</b></font> % %  %    @%      %% <font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^75$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 75<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font> %   %   %    %   %@% <font color="#00ff00"><b>\
+</b></font> %   o  o     % o % % <font color="#00ff00"><b>\
+</b></font> %%o% o%%% %    oo% % <font color="#00ff00"><b>\
+</b></font> %  %  %.%%%  %o o  % <font color="#00ff00"><b>\
+</b></font> %  %o%....%  % %%% % <font color="#00ff00"><b>\
+</b></font> % o  %.....%%    % % <font color="#00ff00"><b>\
+</b></font> %%o  %.%....%oo o  % <font color="#00ff00"><b>\
+</b></font> %  %%%%%%..%% %  % % <font color="#00ff00"><b>\
+</b></font> %  o         o %%% % <font color="#00ff00"><b>\
+</b></font> %   %   %        % % <font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^76$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 76<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font> % % % %   %@%%   % % <font color="#00ff00"><b>\
+</b></font> %             o    % <font color="#00ff00"><b>\
+</b></font> %  %%o% %%%%% o % %% <font color="#00ff00"><b>\
+</b></font> %%    %%.....%  %  % <font color="#00ff00"><b>\
+</b></font> %%o%%o%.....%%%o%o % <font color="#00ff00"><b>\
+</b></font> %   % %%.....%  % %% <font color="#00ff00"><b>\
+</b></font> %  o    %%..%%  %  % <font color="#00ff00"><b>\
+</b></font> % o %   o   o  ooo % <font color="#00ff00"><b>\
+</b></font> %% o  o% %  %  o   % <font color="#00ff00"><b>\
+</b></font> %   %%   %  %      % <font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^77$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 77<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font> %    %%   %    %   % <font color="#00ff00"><b>\
+</b></font> %  o  o     %% o   % <font color="#00ff00"><b>\
+</b></font> %% %%%%%  .%%%%%% %% <font color="#00ff00"><b>\
+</b></font>  % %%  %%....%%%% %% <font color="#00ff00"><b>\
+</b></font> %% %%o %%%..%%     % <font color="#00ff00"><b>\
+</b></font> %      %... .% o o % <font color="#00ff00"><b>\
+</b></font> % o %% %% . %%% %%%% <font color="#00ff00"><b>\
+</b></font> % % o    %.%% % %    <font color="#00ff00"><b>\
+</b></font> % o o %   .%%%% %%   <font color="#00ff00"><b>\
+</b></font> % %  %% % %%  %  %%  <font color="#00ff00"><b>\
+</b></font> %%%%%%%  o%%o   o %  <font color="#00ff00"><b>\
+</b></font>       %%      o %@%  <font color="#00ff00"><b>\
+</b></font>        %  %% %%%%%%  <font color="#00ff00"><b>\
+</b></font>        %%%%%%%       <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^78$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 78<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>        %%%%%%%%%%%   <font color="#00ff00"><b>\
+</b></font>        %         %   <font color="#00ff00"><b>\
+</b></font>        %    o o  %   <font color="#00ff00"><b>\
+</b></font> %%%%%% % o %%%%% %   <font color="#00ff00"><b>\
+</b></font> %    %%%%% o  %%o%   <font color="#00ff00"><b>\
+</b></font> %       o o      %   <font color="#00ff00"><b>\
+</b></font> %          %% %% %   <font color="#00ff00"><b>\
+</b></font> %    %%@%%%%% %% %   <font color="#00ff00"><b>\
+</b></font> %    %%%%   % %% %%  <font color="#00ff00"><b>\
+</b></font> %....%      % o   %  <font color="#00ff00"><b>\
+</b></font> %....%      %     %  <font color="#00ff00"><b>\
+</b></font> %%%%%%      %%%%%%%  <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^79$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 79<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%        <font color="#00ff00"><b>\
+</b></font> %           %        <font color="#00ff00"><b>\
+</b></font> % %%% oo    %        <font color="#00ff00"><b>\
+</b></font> %   % o  o  %        <font color="#00ff00"><b>\
+</b></font> %  o%%%%o%%%%%%      <font color="#00ff00"><b>\
+</b></font> % o %%        %%%%%  <font color="#00ff00"><b>\
+</b></font> %  oo o        ...%  <font color="#00ff00"><b>\
+</b></font> %%% %% oo%     ...%  <font color="#00ff00"><b>\
+</b></font>   % %%   %     ...%  <font color="#00ff00"><b>\
+</b></font>   %      %     ...%  <font color="#00ff00"><b>\
+</b></font>   %%%@%%%%%%%%%%%%%  <font color="#00ff00"><b>\
+</b></font>     %%%              <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^80$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 80<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>   %%%%%%%%%%%%%%%%%  <font color="#00ff00"><b>\
+</b></font> %%%@%%         ...%  <font color="#00ff00"><b>\
+</b></font> %    %         ...%  <font color="#00ff00"><b>\
+</b></font> % o  %         ...%  <font color="#00ff00"><b>\
+</b></font> % oo %         ...%  <font color="#00ff00"><b>\
+</b></font> %% o %%%o%%%%%%%%%%  <font color="#00ff00"><b>\
+</b></font>  % %%%  o %          <font color="#00ff00"><b>\
+</b></font> %%   o  o %          <font color="#00ff00"><b>\
+</b></font> %  o %  o %          <font color="#00ff00"><b>\
+</b></font> % o  %    %          <font color="#00ff00"><b>\
+</b></font> %  o %    %          <font color="#00ff00"><b>\
+</b></font> %    %    %          <font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%          <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^81$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 81<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>               %%%%%  <font color="#00ff00"><b>\
+</b></font>      %%%%%%%%%%   %  <font color="#00ff00"><b>\
+</b></font>      %        %   %  <font color="#00ff00"><b>\
+</b></font>      %  o o    oo %  <font color="#00ff00"><b>\
+</b></font>      % %%%%% %% o %  <font color="#00ff00"><b>\
+</b></font>      %oo   %o%% o %  <font color="#00ff00"><b>\
+</b></font>      % %%% % %%o  %  <font color="#00ff00"><b>\
+</b></font> %%%%%% %%% o o    %  <font color="#00ff00"><b>\
+</b></font> %....        %%   %  <font color="#00ff00"><b>\
+</b></font> %....        %%%%%%  <font color="#00ff00"><b>\
+</b></font> %....        %       <font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%@%%       <font color="#00ff00"><b>\
+</b></font>           %%%        <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^82$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 82<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>     %%%%%%           <font color="#00ff00"><b>\
+</b></font>  %%%%    %           <font color="#00ff00"><b>\
+</b></font>  %    %% %           <font color="#00ff00"><b>\
+</b></font>  % o     %           <font color="#00ff00"><b>\
+</b></font> %%% %%%% %%%%%%%%    <font color="#00ff00"><b>\
+</b></font> %  o   o %%  ...%    <font color="#00ff00"><b>\
+</b></font> %   oo oo    ...%    <font color="#00ff00"><b>\
+</b></font> %    o  o%%  ...%    <font color="#00ff00"><b>\
+</b></font> %%@%% %% %%  ...%    <font color="#00ff00"><b>\
+</b></font>  %%%  o  %%%%%%%%    <font color="#00ff00"><b>\
+</b></font>  %   oo  %           <font color="#00ff00"><b>\
+</b></font>  %    %  %           <font color="#00ff00"><b>\
+</b></font>  %%%%%%%%%           <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^83$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 83<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font> %%%%%%% %%%%%%%%%    <font color="#00ff00"><b>\
+</b></font> %     % %   %%  %    <font color="#00ff00"><b>\
+</b></font> % %%% % %   o   %    <font color="#00ff00"><b>\
+</b></font> % % o %%%   o   %    <font color="#00ff00"><b>\
+</b></font> %   oo      %%o %    <font color="#00ff00"><b>\
+</b></font> %    %%%%   %%  %    <font color="#00ff00"><b>\
+</b></font> %@%%%%%%%%%%%% %%    <font color="#00ff00"><b>\
+</b></font> %%%..    %%%%%o %    <font color="#00ff00"><b>\
+</b></font>   %..    %%%%   %    <font color="#00ff00"><b>\
+</b></font>   %..       oo  %    <font color="#00ff00"><b>\
+</b></font>   %..    %%%% o %    <font color="#00ff00"><b>\
+</b></font>   %..    %  %   %    <font color="#00ff00"><b>\
+</b></font>   %%%%%%%%  %%%%%    <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^84$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 84<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font> %%%%%%%              <font color="#00ff00"><b>\
+</b></font> %     %%%%%%%%%%     <font color="#00ff00"><b>\
+</b></font> %     %    %  %%     <font color="#00ff00"><b>\
+</b></font> % o   %   o o  %     <font color="#00ff00"><b>\
+</b></font> %  o  %  o %%  %     <font color="#00ff00"><b>\
+</b></font> % oo  %%o o    %     <font color="#00ff00"><b>\
+</b></font> %% %  %% %%%%%%%     <font color="#00ff00"><b>\
+</b></font> %% %  %%    ...%     <font color="#00ff00"><b>\
+</b></font> %  %o       ...%     <font color="#00ff00"><b>\
+</b></font> %   oo      ...%     <font color="#00ff00"><b>\
+</b></font> %     %%@%  ...%     <font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%     <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^85$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 85<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%         <font color="#00ff00"><b>\
+</b></font> %      %   %%        <font color="#00ff00"><b>\
+</b></font> % o  o   %  %%%%%%   <font color="#00ff00"><b>\
+</b></font> %%%%  %%%%%      %   <font color="#00ff00"><b>\
+</b></font>  %..  %     %%%% %   <font color="#00ff00"><b>\
+</b></font>  %.%%%%  %%%%    %   <font color="#00ff00"><b>\
+</b></font>  %....    %  o %%%%  <font color="#00ff00"><b>\
+</b></font>  % ...%   % ooo%  %% <font color="#00ff00"><b>\
+</b></font> %%%.%%%% %%  o@o   % <font color="#00ff00"><b>\
+</b></font> %     %%%%% o %    % <font color="#00ff00"><b>\
+</b></font> % %.% o      o%%%o % <font color="#00ff00"><b>\
+</b></font> % %.%%%%%%%%  %  o % <font color="#00ff00"><b>\
+</b></font> % %..        %%  o % <font color="#00ff00"><b>\
+</b></font> % % %%%%%%% o % %  % <font color="#00ff00"><b>\
+</b></font> %   %     %       %% <font color="#00ff00"><b>\
+</b></font> %%%%%     %%%%%%%%%% <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^86$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 86<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%     <font color="#00ff00"><b>\
+</b></font> %       %@ %   %     <font color="#00ff00"><b>\
+</b></font> % % % % % o  oo%     <font color="#00ff00"><b>\
+</b></font> % %...% %ooo   %     <font color="#00ff00"><b>\
+</b></font> %  ...% % o  oo%%    <font color="#00ff00"><b>\
+</b></font> % %%.%% % %%    %    <font color="#00ff00"><b>\
+</b></font> % %...     o    %    <font color="#00ff00"><b>\
+</b></font> % %% %%%  %%%%%%%    <font color="#00ff00"><b>\
+</b></font> %    % %%%%          <font color="#00ff00"><b>\
+</b></font> %%%%%%               <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^87$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 87<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>     %%%%%            <font color="#00ff00"><b>\
+</b></font>  %%%%   %% %%%%%     <font color="#00ff00"><b>\
+</b></font>  %  o    %%%   %     <font color="#00ff00"><b>\
+</b></font>  % o@o o    o  %     <font color="#00ff00"><b>\
+</b></font>  % %o%%%%%%%% %%     <font color="#00ff00"><b>\
+</b></font>  % %  o  %     %     <font color="#00ff00"><b>\
+</b></font>  % % o o % %   %     <font color="#00ff00"><b>\
+</b></font> %% %  o% % %%%%%     <font color="#00ff00"><b>\
+</b></font> %  %%    %     %     <font color="#00ff00"><b>\
+</b></font> %    o % %%%   %     <font color="#00ff00"><b>\
+</b></font> %%%%% %%  %....%     <font color="#00ff00"><b>\
+</b></font> %    o     ....%     <font color="#00ff00"><b>\
+</b></font> %         %....%     <font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%     <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^88$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 88<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%        <font color="#00ff00"><b>\
+</b></font> %........%%%%        <font color="#00ff00"><b>\
+</b></font> %...%%%% %  %%%%%    <font color="#00ff00"><b>\
+</b></font> %...%  %%%    o %    <font color="#00ff00"><b>\
+</b></font> %...oo     o o  %    <font color="#00ff00"><b>\
+</b></font> %  .%  o o% o  %%    <font color="#00ff00"><b>\
+</b></font> %...% %o%   o  %     <font color="#00ff00"><b>\
+</b></font> %.% % o   o    %     <font color="#00ff00"><b>\
+</b></font> %.  %o%%%o%%%%o%     <font color="#00ff00"><b>\
+</b></font> %%  %   o o    %     <font color="#00ff00"><b>\
+</b></font>  %  %  o@o  %  %     <font color="#00ff00"><b>\
+</b></font>  %  % %%%% o  o%     <font color="#00ff00"><b>\
+</b></font>  %  %    %%%   %     <font color="#00ff00"><b>\
+</b></font>  %  % oo % %%%%%     <font color="#00ff00"><b>\
+</b></font>  %  %    %           <font color="#00ff00"><b>\
+</b></font>  %%%%%%%%%           <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^89$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 89<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font>  %%%%%%%%%%%%%%%%%%  <font color="#00ff00"><b>\
+</b></font>  %   o       ...%.%% <font color="#00ff00"><b>\
+</b></font>  %       %%%%..... % <font color="#00ff00"><b>\
+</b></font>  % %%%%%%%  %..... % <font color="#00ff00"><b>\
+</b></font>  % %    o o %%....%% <font color="#00ff00"><b>\
+</b></font>  % %  o % % %%%...%  <font color="#00ff00"><b>\
+</b></font>  % % o@o o  %%%%% %  <font color="#00ff00"><b>\
+</b></font> %% %  o  o oo   o %  <font color="#00ff00"><b>\
+</b></font> %  %o% o%   % o%% %  <font color="#00ff00"><b>\
+</b></font> % %%    %% %% o % %  <font color="#00ff00"><b>\
+</b></font> % % o% o o  %     %  <font color="#00ff00"><b>\
+</b></font> % %         %%%%%%%  <font color="#00ff00"><b>\
+</b></font> % %%%%%%%%o%%   %    <font color="#00ff00"><b>\
+</b></font> %        %  o   %    <font color="#00ff00"><b>\
+</b></font> %%%%%%%%    %%%%%    <font color="#00ff00"><b>\
+</b></font>        %%%  %        <font color="#00ff00"><b>\
+</b></font>          %%%%        <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^90$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
+</b></font>SED Sokoban - LEVEL 90<font color="#00ff00"><b>\
+</b></font><font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font> %..%    %          % <font color="#00ff00"><b>\
+</b></font> %.o  o  %oo  o%% o%% <font color="#00ff00"><b>\
+</b></font> %.o%  %%%  %% %%   % <font color="#00ff00"><b>\
+</b></font> %  % o %  oo   o   % <font color="#00ff00"><b>\
+</b></font> % %%%  % %  %o  %%%% <font color="#00ff00"><b>\
+</b></font> %  %% % o   %@ %   % <font color="#00ff00"><b>\
+</b></font> % o    o  %%.%%  o % <font color="#00ff00"><b>\
+</b></font> %  % o% o% o     %%% <font color="#00ff00"><b>\
+</b></font> %  %  %  %   %%%   % <font color="#00ff00"><b>\
+</b></font> %  %%%%%%%% %      % <font color="#00ff00"><b>\
+</b></font> %           %  %.%.% <font color="#00ff00"><b>\
+</b></font> %%o%%%%%%%%o%   ...% <font color="#00ff00"><b>\
+</b></font> %    .O  %    %%.%.% <font color="#00ff00"><b>\
+</b></font> % .O...O   o  .....% <font color="#00ff00"><b>\
+</b></font> %%%%%%%%%%%%%%%%%%%% <font color="#00ff00"><b>\
+</b></font>                      <font color="#00ff00"><b>\
+</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#endmap">endmap</a>
+<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>SED Soko</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>!</b></font><font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font>there is no '<font color="#00ff00"><b>&amp;</b></font>' level!<font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>p</b></font>
+    <font color="#ffff00"><b>q</b></font>
+<font color="#ff6060"><b>}</b></font>  
+
+<font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="endmap">endmap</a></b></font>
+<font color="#00ffff"><b># back to line 1 col 1</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^</b></font><font color="#ff6060"><b>/</b></font>[H<font color="#ff6060"><b>/</b></font>
+<font color="#00ffff"><b># show available commands</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>,</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>\n\)$</b></font><font color="#ff6060"><b>,</b></font><font color="#00ff00"><b>\1</b></font><font color="#00ff00"><b>\1</b></font>[ h j k l :q :r :z :gN ]<font color="#ff6060"><b>,</b></font>
+<font color="#ffff00"><b>x</b></font>  
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>:p </b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>!</b></font><font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>b</b></font> <a href="#ini">ini</a>
+
+
+<font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="zero">zero</a></b></font>
+
+<font color="#00ffff"><b># welcome message</b></font>
+<font color="#8080ff"><b>1</b></font> <font color="#ffff00"><b>b</b></font> <a href="#welcome">welcome</a>
+
+<font color="#00ffff"><b># first map loading</b></font>
+<font color="#8080ff"><b>2</b></font> <font color="#ffff00"><b>b</b></font> <a href="#loadmap">loadmap</a>
+
+<font color="#00ffff"><b># supporting arrow keys also</b></font>
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b></b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\[A</b></font><font color="#ff6060"><b>/</b></font>k<font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>g</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\[B</b></font><font color="#ff6060"><b>/</b></font>j<font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>g</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\[C</b></font><font color="#ff6060"><b>/</b></font>l<font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>g</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\[D</b></font><font color="#ff6060"><b>/</b></font>h<font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>g</b></font>
+<font color="#ff6060"><b>}</b></font>  
+
+<font color="#00ffff"><b># command aliases</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b></b></font><font color="#ff6060"><b>/</b></font>:z<font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>g</b></font>
+
+<font color="#00ffff"><b># lowercase commands</b></font>
+<font color="#ffff00"><b>y</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>HJKLQGZR</b></font><font color="#ff6060"><b>/</b></font>hjklqgzr<font color="#ff6060"><b>/</b></font>
+
+<font color="#00ffff"><b># wipe trash (anything that is not command)</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>[^hjklqgzr:0-9]</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>g</b></font>
+
+<font color="#00ffff"><b># commands!</b></font>
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^:</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#00ffff"><b># quit</b></font>
+    <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^:q</b></font><font color="#ff6060"><b>/</b></font> <font color="#ffff00"><b>q</b></font>
+
+    <font color="#00ffff"><b># refresh screen</b></font>
+    <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^:z</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+        <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font>[2J<font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>p</b></font>
+        <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font>:p [refresh]<font color="#ff6060"><b>/</b></font>
+        <font color="#ffff00"><b>b</b></font> <a href="#ini">ini</a>
+    <font color="#ff6060"><b>}</b></font>
+    <font color="#00ffff"><b># goto level N (optional g)</b></font>
+    <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^:g\{0,1\}\<font color="#ff00ff"><b>(</b></font>[0-9]\{1,\}\)$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+        <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+        <font color="#ffff00"><b>h</b></font>
+        <font color="#ffff00"><b>x</b></font>
+        <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font>:p [goto level <font color="#00ff00"><b>&amp;</b></font>]<font color="#ff6060"><b>/</b></font>
+        <font color="#ffff00"><b>x</b></font>
+        <font color="#ffff00"><b>b</b></font> <a href="#loadmap">loadmap</a>
+    <font color="#ff6060"><b>}</b></font>
+    <font color="#00ffff"><b># restarting level</b></font>
+    <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^:r</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+        <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font>:p [restart]<font color="#ff6060"><b>/</b></font>
+        <font color="#ffff00"><b>x</b></font>
+        <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*LEVEL \<font color="#ff00ff"><b>(</b></font>[0-9]\{1,\}\).*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+        <font color="#ffff00"><b>b</b></font> <a href="#loadmap">loadmap</a>
+    <font color="#ff6060"><b>}</b></font>
+<font color="#ff6060"><b>}</b></font>  
+
+
+<font color="#00ffff"><b># here the party begins</b></font>
+<font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="ini">ini</a></b></font>
+
+<font color="#00ffff"><b># print message (XXX bad idea)</b></font>
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^:p </b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#00ffff"><b>#s//last command: /; s/$/       /p;</b></font>
+    <font color="#00ffff"><b>#s/last .*// </b></font>
+<font color="#ff6060"><b>}</b></font>  
+
+<font color="#00ffff"><b># empty command, jump to end</b></font>
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>!</b></font><font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>x</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#x">x</a>
+<font color="#ff6060"><b>}</b></font>  
+
+
+<font color="#00ffff"><b># -------------[ LEFT ]--------------------------</b></font>
+
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^h</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+
+    <font color="#00ffff"><b># del current move and save others</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>x</b></font>
+
+    <font color="#00ffff"><b># reset 't' status</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#zeroleft">zeroleft</a>
+    <font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="zeroleft">zeroleft</a></b></font>
+
+    <font color="#00ffff"><b># clear path</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b> @</b></font><font color="#ff6060"><b>/</b></font>@ <font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+    <font color="#00ffff"><b># push load</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b> o@</b></font><font color="#ff6060"><b>/</b></font>o@ <font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+
+    <font color="#00ffff"><b># enter overdot</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\.@</b></font><font color="#ff6060"><b>/</b></font>! <font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+    <font color="#00ffff"><b># continue overdot</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\.!</b></font><font color="#ff6060"><b>/</b></font>!.<font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+    <font color="#00ffff"><b># out overdot</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b> !</b></font><font color="#ff6060"><b>/</b></font>@.<font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+
+    <font color="#00ffff"><b># enter load overdot</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\.o@</b></font><font color="#ff6060"><b>/</b></font>O@ <font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+    <font color="#00ffff"><b># enter overdot with load</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\.O@</b></font><font color="#ff6060"><b>/</b></font>O! <font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+    <font color="#00ffff"><b># continue overdot with load</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\.O!</b></font><font color="#ff6060"><b>/</b></font>O!.<font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+    <font color="#00ffff"><b># out load overdot / enter overdot</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b> O@</b></font><font color="#ff6060"><b>/</b></font>o! <font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+    <font color="#00ffff"><b># out load overdot / continue overdot</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b> O!</b></font><font color="#ff6060"><b>/</b></font>o!.<font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+    <font color="#00ffff"><b># out overdot with load</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b> o!</b></font><font color="#ff6060"><b>/</b></font>o@.<font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+    <font color="#00ffff"><b># out overdot with load / enter overdot</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\.o!</b></font><font color="#ff6060"><b>/</b></font>O@.<font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+
+    <font color="#00ffff"><b># can't pass</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#x">x</a>
+
+<font color="#ff6060"><b>}</b></font>  
+
+
+<font color="#00ffff"><b># -------------[ RIGHT ]-------------------------</b></font>
+
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^l</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+
+    <font color="#00ffff"><b># del current move and save others</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>x</b></font>
+
+    <font color="#00ffff"><b># reset 't' status</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#zerorght">zerorght</a>
+    <font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="zerorght">zerorght</a></b></font>
+
+    <font color="#00ffff"><b># clear path</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>@ </b></font><font color="#ff6060"><b>/</b></font> @<font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+    <font color="#00ffff"><b># push load</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>@o </b></font><font color="#ff6060"><b>/</b></font> @o<font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+
+    <font color="#00ffff"><b># enter overdot</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>@\.</b></font><font color="#ff6060"><b>/</b></font> !<font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+    <font color="#00ffff"><b># continue overdot</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>!\.</b></font><font color="#ff6060"><b>/</b></font>.!<font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+    <font color="#00ffff"><b># out overdot</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>! </b></font><font color="#ff6060"><b>/</b></font>.@<font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+
+    <font color="#00ffff"><b># enter load overdot</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>@o\.</b></font><font color="#ff6060"><b>/</b></font> @O<font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+    <font color="#00ffff"><b># enter overdot with load</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>@O\.</b></font><font color="#ff6060"><b>/</b></font> !O<font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+    <font color="#00ffff"><b># continue overdot with load</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>!O\.</b></font><font color="#ff6060"><b>/</b></font>.!O<font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+    <font color="#00ffff"><b># out load overdot / enter overdot</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>@O </b></font><font color="#ff6060"><b>/</b></font> !o<font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+    <font color="#00ffff"><b># out load overdot / continue overdot</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>!O </b></font><font color="#ff6060"><b>/</b></font>.!o<font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+    <font color="#00ffff"><b># out overdot with load</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>!o </b></font><font color="#ff6060"><b>/</b></font>.@o<font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+    <font color="#00ffff"><b># out overdot with load / enter overdot</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>!o\.</b></font><font color="#ff6060"><b>/</b></font>.@O<font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+
+    <font color="#00ffff"><b># can't pass</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#x">x</a>
+<font color="#ff6060"><b>}</b></font>  
+
+
+<font color="#00ffff"><b># -------------[ DOWN ]--------------------------</b></font>
+
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^j</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+
+    <font color="#00ffff"><b># del current move and save others</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>x</b></font>
+
+    <font color="#00ffff"><b># reset 't' status</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#zerodown">zerodown</a>
+    <font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="zerodown">zerodown</a></b></font>
+
+    <font color="#00ffff"><b># clear path</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>@\<font color="#ff00ff"><b>(</b></font>.\{22\}\) </b></font><font color="#ff6060"><b>/</b></font> <font color="#00ff00"><b>\1</b></font>@<font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+    <font color="#00ffff"><b># push load</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>@\<font color="#ff00ff"><b>(</b></font>.\{22\}\)o\<font color="#ff00ff"><b>(</b></font>.\{22\}\) </b></font><font color="#ff6060"><b>/</b></font> <font color="#00ff00"><b>\1</b></font>@<font color="#00ff00"><b>\2</b></font>o<font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+
+    <font color="#00ffff"><b># enter overdot</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>@\<font color="#ff00ff"><b>(</b></font>.\{22\}\)\.</b></font><font color="#ff6060"><b>/</b></font> <font color="#00ff00"><b>\1</b></font>!<font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+    <font color="#00ffff"><b># continue overdot</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>!\<font color="#ff00ff"><b>(</b></font>.\{22\}\)\.</b></font><font color="#ff6060"><b>/</b></font>.<font color="#00ff00"><b>\1</b></font>!<font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+    <font color="#00ffff"><b># out overdot</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>!\<font color="#ff00ff"><b>(</b></font>.\{22\}\) </b></font><font color="#ff6060"><b>/</b></font>.<font color="#00ff00"><b>\1</b></font>@<font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+
+    <font color="#00ffff"><b># enter load overdot</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>@\<font color="#ff00ff"><b>(</b></font>.\{22\}\)o\<font color="#ff00ff"><b>(</b></font>.\{22\}\)\.</b></font><font color="#ff6060"><b>/</b></font> <font color="#00ff00"><b>\1</b></font>@<font color="#00ff00"><b>\2</b></font>O<font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+    <font color="#00ffff"><b># enter overdot with load</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>@\<font color="#ff00ff"><b>(</b></font>.\{22\}\)O\<font color="#ff00ff"><b>(</b></font>.\{22\}\)\.</b></font><font color="#ff6060"><b>/</b></font> <font color="#00ff00"><b>\1</b></font>!<font color="#00ff00"><b>\2</b></font>O<font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+    <font color="#00ffff"><b># continue overdot with load</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>!\<font color="#ff00ff"><b>(</b></font>.\{22\}\)O\<font color="#ff00ff"><b>(</b></font>.\{22\}\)\.</b></font><font color="#ff6060"><b>/</b></font>.<font color="#00ff00"><b>\1</b></font>!<font color="#00ff00"><b>\2</b></font>O<font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+    <font color="#00ffff"><b># out load overdot / enter overdot</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>@\<font color="#ff00ff"><b>(</b></font>.\{22\}\)O\<font color="#ff00ff"><b>(</b></font>.\{22\}\) </b></font><font color="#ff6060"><b>/</b></font> <font color="#00ff00"><b>\1</b></font>!<font color="#00ff00"><b>\2</b></font>o<font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+    <font color="#00ffff"><b># out load overdot / continue overdot</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>!\<font color="#ff00ff"><b>(</b></font>.\{22\}\)O\<font color="#ff00ff"><b>(</b></font>.\{22\}\) </b></font><font color="#ff6060"><b>/</b></font>.<font color="#00ff00"><b>\1</b></font>!<font color="#00ff00"><b>\2</b></font>o<font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+    <font color="#00ffff"><b># out overdot with load</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>!\<font color="#ff00ff"><b>(</b></font>.\{22\}\)o\<font color="#ff00ff"><b>(</b></font>.\{22\}\) </b></font><font color="#ff6060"><b>/</b></font>.<font color="#00ff00"><b>\1</b></font>@<font color="#00ff00"><b>\2</b></font>o<font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+    <font color="#00ffff"><b># out overdot with load / enter overdot</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>!\<font color="#ff00ff"><b>(</b></font>.\{22\}\)o\<font color="#ff00ff"><b>(</b></font>.\{22\}\)\.</b></font><font color="#ff6060"><b>/</b></font>.<font color="#00ff00"><b>\1</b></font>@<font color="#00ff00"><b>\2</b></font>O<font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+
+    <font color="#00ffff"><b># target not free</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#x">x</a>
+<font color="#ff6060"><b>}</b></font>  
+
+
+<font color="#00ffff"><b># ---------------[ UP ]--------------------------</b></font>
+
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^k</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+
+    <font color="#00ffff"><b># del current move and save others</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>x</b></font>
+
+    <font color="#00ffff"><b># reset 't' status</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#zeroup">zeroup</a>
+    <font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="zeroup">zeroup</a></b></font>
+
+    <font color="#00ffff"><b># clear path</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b> \<font color="#ff00ff"><b>(</b></font>.\{22\}\)@</b></font><font color="#ff6060"><b>/</b></font>@<font color="#00ff00"><b>\1</b></font> <font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+    <font color="#00ffff"><b># push load</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b> \<font color="#ff00ff"><b>(</b></font>.\{22\}\)o\<font color="#ff00ff"><b>(</b></font>.\{22\}\)@</b></font><font color="#ff6060"><b>/</b></font>o<font color="#00ff00"><b>\1</b></font>@<font color="#00ff00"><b>\2</b></font> <font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+
+    <font color="#00ffff"><b># enter overdot</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\.\<font color="#ff00ff"><b>(</b></font>.\{22\}\)@</b></font><font color="#ff6060"><b>/</b></font>!<font color="#00ff00"><b>\1</b></font> <font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+    <font color="#00ffff"><b># continue overdot</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\.\<font color="#ff00ff"><b>(</b></font>.\{22\}\)!</b></font><font color="#ff6060"><b>/</b></font>!<font color="#00ff00"><b>\1</b></font>.<font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+    <font color="#00ffff"><b># out overdot</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b> \<font color="#ff00ff"><b>(</b></font>.\{22\}\)!</b></font><font color="#ff6060"><b>/</b></font>@<font color="#00ff00"><b>\1</b></font>.<font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+
+    <font color="#00ffff"><b># enter load overdot</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\.\<font color="#ff00ff"><b>(</b></font>.\{22\}\)o\<font color="#ff00ff"><b>(</b></font>.\{22\}\)@</b></font><font color="#ff6060"><b>/</b></font>O<font color="#00ff00"><b>\1</b></font>@<font color="#00ff00"><b>\2</b></font> <font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+    <font color="#00ffff"><b># enter overdot with load</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\.\<font color="#ff00ff"><b>(</b></font>.\{22\}\)O\<font color="#ff00ff"><b>(</b></font>.\{22\}\)@</b></font><font color="#ff6060"><b>/</b></font>O<font color="#00ff00"><b>\1</b></font>!<font color="#00ff00"><b>\2</b></font> <font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+    <font color="#00ffff"><b># continue overdot with load</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\.\<font color="#ff00ff"><b>(</b></font>.\{22\}\)O\<font color="#ff00ff"><b>(</b></font>.\{22\}\)!</b></font><font color="#ff6060"><b>/</b></font>O<font color="#00ff00"><b>\1</b></font>!<font color="#00ff00"><b>\2</b></font>.<font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+    <font color="#00ffff"><b># out load overdot / enter overdot</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b> \<font color="#ff00ff"><b>(</b></font>.\{22\}\)O\<font color="#ff00ff"><b>(</b></font>.\{22\}\)@</b></font><font color="#ff6060"><b>/</b></font>o<font color="#00ff00"><b>\1</b></font>!<font color="#00ff00"><b>\2</b></font> <font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+    <font color="#00ffff"><b># out load overdot / continue overdot</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b> \<font color="#ff00ff"><b>(</b></font>.\{22\}\)O\<font color="#ff00ff"><b>(</b></font>.\{22\}\)!</b></font><font color="#ff6060"><b>/</b></font>o<font color="#00ff00"><b>\1</b></font>!<font color="#00ff00"><b>\2</b></font>.<font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+    <font color="#00ffff"><b># out overdot with load</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b> \<font color="#ff00ff"><b>(</b></font>.\{22\}\)o\<font color="#ff00ff"><b>(</b></font>.\{22\}\)!</b></font><font color="#ff6060"><b>/</b></font>o<font color="#00ff00"><b>\1</b></font>@<font color="#00ff00"><b>\2</b></font>.<font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+    <font color="#00ffff"><b># out overdot with load / enter overdot</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\.\<font color="#ff00ff"><b>(</b></font>.\{22\}\)o\<font color="#ff00ff"><b>(</b></font>.\{22\}\)!</b></font><font color="#ff6060"><b>/</b></font>O<font color="#00ff00"><b>\1</b></font>@<font color="#00ff00"><b>\2</b></font>.<font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+
+    <font color="#00ffff"><b># target not free</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#x">x</a>
+<font color="#ff6060"><b>}</b></font>  
+
+<font color="#00ffff"><b># wrong command, do nothing</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^.</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>x</b></font>  
+
+
+<font color="#00ffff"><b># ----------------[ THE END ]-----------------</b></font>
+<font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="x">x</a></b></font>
+
+<font color="#00ffff"><b># adding color codes</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>%</b></font><font color="#ff6060"><b>/</b></font>[46;36m<font color="#00ff00"><b>&amp;</b></font>[m<font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>g</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>[!@]</b></font><font color="#ff6060"><b>/</b></font>[33;1m<font color="#00ff00"><b>&amp;</b></font>[m<font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>g</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>O</b></font><font color="#ff6060"><b>/</b></font>[37;1m<font color="#00ff00"><b>&amp;</b></font>[m<font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>g</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\.</b></font><font color="#ff6060"><b>/</b></font>[31;1m<font color="#00ff00"><b>&amp;</b></font>[m<font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>g</b></font>
+
+
+<font color="#00ffff"><b># uncomment this line if you DON'T want colorized output (why not?)</b></font>
+<font color="#00ffff"><b>### s/\[[0-9;]*m//g</b></font>
+
+<font color="#00ffff"><b># update screen</b></font>
+<font color="#ffff00"><b>p</b></font>  
+
+<font color="#00ffff"><b># removing color codes from maze</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\[[0-9;]*m</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>g</b></font>
+
+<font color="#00ffff"><b># no more messy boxes ('o'), level finished!</b></font>
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>%%%.*o.*%%%</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>!</b></font><font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font>[37;01m(( [31mV[32mI[33mC[34mT<font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>$</b></font><font color="#ff6060"><b>/</b></font>[31mO[32mR[33mY[34m![37m ))[m<font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>$</b></font><font color="#ff6060"><b>/</b></font>                                                   <font color="#ff6060"><b>/</b></font>
+    <font color="#00ffff"><b># uncomment here if you DON'T want color or sound on victory</b></font>
+    <font color="#00ffff"><b># s///g ; s/\[[0-9;]*m//g</b></font>
+    <font color="#ffff00"><b>p</b></font>
+    <font color="#ffff00"><b>i</b></font><font color="#00ff00"><b>\
+</b></font>  You're a master of this level. Try the next!
+    <font color="#ffff00"><b>q</b></font>
+<font color="#ff6060"><b>}</b></font>  
+
+<font color="#00ffff"><b># save current position on hold space</b></font>
+<font color="#ffff00"><b>x</b></font>  
+
+<font color="#00ffff"><b># skipping loop</b></font>
+<font color="#8080ff"><b>2</b></font> <font color="#ffff00"><b>d</b></font>
+
+<font color="#00ffff"><b># nice loop for accumulated moves</b></font>
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>p</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#ini">ini</a>
+<font color="#ff6060"><b>}</b></font>  
+
+<font color="#00ffff"><b># The End ;(</b></font>
+
+<font color="#00ffff"><b>### colorized by <a href="http://sedsed.sf.net">sedsed</a>, a SED script debugger/indenter/tokenizer/HTMLizer</b></font>
+
+</pre></body></html>

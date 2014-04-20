@@ -1,0 +1,500 @@
+<html>
+<head><meta name="Generator" content="sedsed --htmlize">
+<title>Colorized config.sed</title></head>
+<body bgcolor="#000000" text="#ffffff"
+      link="#ff00ff" alink="#ff00ff" vlink="#ff00ff">
+<pre>
+<font color="#00ffff"><b>#n</b></font>
+<font color="#00ffff"><b>#! /bin/sed -nf</b></font>
+
+<font color="#00ffff"><b>####### DESCRIPTION ############################################################</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b># config.sed</b></font>
+<font color="#00ffff"><b># version 1.0</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b># This script processes a configuration file.</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b># The input to the script is a configuration file. Each line of the</b></font>
+<font color="#00ffff"><b># configuration file should be one of the following:</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b># 	1) a blank line (with or without whitespace);</b></font>
+<font color="#00ffff"><b># 	2) a comment;</b></font>
+<font color="#00ffff"><b># 	3) an assignment via equals ('=');</b></font>
+<font color="#00ffff"><b># 	4) an assignment via here document ('&lt;&lt;' or '&lt;&lt;-').</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b># The syntax of a comment is:</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b># 	[&lt;ws&gt;] '#' [&lt;text&gt;]</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b># The syntax of an assignment via equals is:</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b># 	[&lt;ws&gt;] &lt;name&gt; [&lt;ws&gt;] '=' [&lt;ws&gt;] [&lt;value&gt;] [&lt;comment&gt;]</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b># The name must begin with a letter or underscore and can contain any</b></font>
+<font color="#00ffff"><b># combination of digits, letters, dashes, periods, slashes, colons, and</b></font>
+<font color="#00ffff"><b># underscores.</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b># If the value is not present, the entire line will be treated as a comment. If</b></font>
+<font color="#00ffff"><b># the value is present, it must be either unquoted, single-quoted, or</b></font>
+<font color="#00ffff"><b># double-quoted. The value may begin on a subsequent line if each newline after</b></font>
+<font color="#00ffff"><b># the operator (and before the value) is immediately preceded by a backslash,</b></font>
+<font color="#00ffff"><b># and the backslash is the first non-whitespace character after the operator (or</b></font>
+<font color="#00ffff"><b># the first non-whitespace character of the line, in the case of intermittent</b></font>
+<font color="#00ffff"><b># lines). The value may continue over multiple lines if each newline within the</b></font>
+<font color="#00ffff"><b># value is immediately preceeded by a backslash. Such backslash-newline pairs</b></font>
+<font color="#00ffff"><b># will be removed and will not be included as part of the value. A newline</b></font>
+<font color="#00ffff"><b># cannot be part of a value assigned via equals.</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b># An unquoted value extends from the first non-whitespace character to the last</b></font>
+<font color="#00ffff"><b># non-whitespace character (or to the last non-whitespace character before a</b></font>
+<font color="#00ffff"><b># comment, if a comment is present). A pound sign may be included as part of the</b></font>
+<font color="#00ffff"><b># value if escaped by a backslash; the backslash will be removed and will not be</b></font>
+<font color="#00ffff"><b># included as part of the value. Each single quote and double quote (other than</b></font>
+<font color="#00ffff"><b># as the first character) will be treated as if escaped by a backslash (that is,</b></font>
+<font color="#00ffff"><b># no split tokenization will be performed. Each dollar sign, grave accent, and</b></font>
+<font color="#00ffff"><b># backslash (other than a backslash used to escape another character or a</b></font>
+<font color="#00ffff"><b># newline) will be treated as if escaped by a backslash (that is, no parameter</b></font>
+<font color="#00ffff"><b># substitution or command substitution will be performed); if such a backslash</b></font>
+<font color="#00ffff"><b># is present, it will be removed and will not be included as part of the value.</b></font>
+<font color="#00ffff"><b># Otherwise, each backslash (other than a backslash used to escape a newline)</b></font>
+<font color="#00ffff"><b># will be treated literally.</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b># A single-quoted value extends from the first character after the opening quote</b></font>
+<font color="#00ffff"><b># to the last character before the closing quote. A single quote cannot be</b></font>
+<font color="#00ffff"><b># included as part of the value. Each backslash (other than a backslash used to</b></font>
+<font color="#00ffff"><b># escape a newline) will be treated literally.</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b># A double-quoted value extends from the first character after the opening quote</b></font>
+<font color="#00ffff"><b># to the last character before the closing quote. A double quote may be included</b></font>
+<font color="#00ffff"><b># as part of the value if escaped by a backslash; the backslash will be removed</b></font>
+<font color="#00ffff"><b># and will not be included as part of the value. Each dollar sign, grave accent,</b></font>
+<font color="#00ffff"><b># and backslash (other than a backslash used to escape another character or a</b></font>
+<font color="#00ffff"><b># newline) will be treated as if escaped by a backslash (that is, no parameter</b></font>
+<font color="#00ffff"><b># substitution or command substitution will be performed); if such a backslash</b></font>
+<font color="#00ffff"><b># is present, it will be removed and will not be included as part of the value.</b></font>
+<font color="#00ffff"><b># Otherwise, each backslash (other than a backslash used to escape a newline)</b></font>
+<font color="#00ffff"><b># will be treated literally.</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b># The syntax of an assignment via here document is:</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b># 	[&lt;ws&gt;] &lt;name&gt; [&lt;ws&gt;] { '&lt;&lt;' | '&lt;&lt;-' } [&lt;ws&gt;] [&lt;word&gt; [&lt;ws&gt;]</b></font>
+<font color="#00ffff"><b># 	[&lt;value-line&gt;...]</b></font>
+<font color="#00ffff"><b># 	&lt;word&gt;]</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b># The name must adhere to the same syntax as specified for an assignment by</b></font>
+<font color="#00ffff"><b># equals.</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b># If the first occurrance of the word is not present, the entire line will be</b></font>
+<font color="#00ffff"><b># treated as a comment and processing will continue with the next line,</b></font>
+<font color="#00ffff"><b># interpreting it outside the context of a here document. If the first</b></font>
+<font color="#00ffff"><b># occurrance of the word is present, it extends from the first non-whitespace</b></font>
+<font color="#00ffff"><b># character after the operator to the last non-whitespace character, and will be</b></font>
+<font color="#00ffff"><b># treated literally (that is, no parameter substitution or command substitution</b></font>
+<font color="#00ffff"><b># will be performed, either in the word or in any of the value lines).</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b># If the operator is '&lt;&lt;' (meaning the here document is unindented), the value</b></font>
+<font color="#00ffff"><b># will be the concatenation of value lines, read literally, until the second</b></font>
+<font color="#00ffff"><b># occurrance of the word is encountered on a line by itself. The value will</b></font>
+<font color="#00ffff"><b># include each newline that separates a pair of value lines, but will not</b></font>
+<font color="#00ffff"><b># include the newline that separates the last value line from the second</b></font>
+<font color="#00ffff"><b># occurrance of the word.</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b># If the operator is '&lt;&lt;-' (meaning the here document is indented), the result</b></font>
+<font color="#00ffff"><b># will be the same as if the operator was '&lt;&lt;' except that leading tabs will be</b></font>
+<font color="#00ffff"><b># stripped from each line (including the second occurrance of the word).</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b># Since the here document is read literally, comments that appear in the here</b></font>
+<font color="#00ffff"><b># document will be included as part of the value. Also, note that this is not a</b></font>
+<font color="#00ffff"><b># true here document, since it is stored by sed and not in a temporary file.</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b># Because each value is stored by sed, the maximum length of a value is</b></font>
+<font color="#00ffff"><b># approximately eight kilobytes.</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b># The output of the script is a series of lines, one line per assignment in the</b></font>
+<font color="#00ffff"><b># configuration file. The syntax of each output line is:</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b># 	&lt;name&gt; '=' &lt;encoded-value&gt;</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b># Note that each name is guaranteed not to contain an equals sign, and each</b></font>
+<font color="#00ffff"><b># output line will contain no whitespace, unless whitespace is part of the</b></font>
+<font color="#00ffff"><b># value. Thus, the name of the assignment is the first character of the line to</b></font>
+<font color="#00ffff"><b># the last character before the first equals sign, and the encoded value of the</b></font>
+<font color="#00ffff"><b># assignment is the first character after the first equals sign to the last</b></font>
+<font color="#00ffff"><b># character of the line (not including the newline).</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b># In each encoded value, each double quote, dollar sign, grave accent, and</b></font>
+<font color="#00ffff"><b># backslash will be escaped by a backslash, and each newline (present only if</b></font>
+<font color="#00ffff"><b># assigned via here document) will be represented by the escape sequence '\n'.</b></font>
+<font color="#00ffff"><b># This is necessary for representing a newline and useful for assigning both an</b></font>
+<font color="#00ffff"><b># encoded value and a decoded value to shell parameters. Assuming the shell</b></font>
+<font color="#00ffff"><b># parameter 'LINE' contains an output line, consider the following:</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b># 	NAME=`echo $LINE | cut -f 1 -d "="`</b></font>
+<font color="#00ffff"><b># 	VALUE_ENCODED=`echo $LINE | cut -f 2- -d "="`</b></font>
+<font color="#00ffff"><b># 	eval "VALUE_DECODED=\"$VALUE_ENCODED\""</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b># The script will output a line as each assignment in the configuration file is</b></font>
+<font color="#00ffff"><b># processed, until the end of the configuration file is reached or until a</b></font>
+<font color="#00ffff"><b># syntax error is encountered in the configuration file. If the end of the</b></font>
+<font color="#00ffff"><b># configuration file is reached, the last output line will be a status code that</b></font>
+<font color="#00ffff"><b># indicates success. If a syntax error is encountered in the configuration file,</b></font>
+<font color="#00ffff"><b># the last output line will be a status code that indicates the error. The</b></font>
+<font color="#00ffff"><b># status code will be one of the following:</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b># 	 0  success;</b></font>
+<font color="#00ffff"><b># 	 1  invalid name;</b></font>
+<font color="#00ffff"><b># 	 2  beginning of value is folded beyond end-of-file;</b></font>
+<font color="#00ffff"><b># 	 3  unquoted value is folded beyond end-of-file;</b></font>
+<font color="#00ffff"><b># 	 4  single-quoted value is folded beyond end-of-file;</b></font>
+<font color="#00ffff"><b># 	 5  single-quoted value is missing closing quote;</b></font>
+<font color="#00ffff"><b># 	 6  single-quoted value contains extraneous quote;</b></font>
+<font color="#00ffff"><b># 	 7  double-quoted value is folded beyond end-of-file;</b></font>
+<font color="#00ffff"><b># 	 8  double-quoted value is missing closing quote;</b></font>
+<font color="#00ffff"><b># 	 9  double-quoted value contains extraneous quote;</b></font>
+<font color="#00ffff"><b># 	10  unindented here document continues beyond end-of-file;</b></font>
+<font color="#00ffff"><b># 	11  indented here document continues beyond end-of-file.</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b># If the status code is greater than 0, the second-to-last output line will be</b></font>
+<font color="#00ffff"><b># the line number at which the syntax error was encountered. If the status code</b></font>
+<font color="#00ffff"><b># is 1, the third-to-last output line will be the line of the configuration file</b></font>
+<font color="#00ffff"><b># with the invalid name. If the status code is greater than 1, the third-to-last</b></font>
+<font color="#00ffff"><b># output line will be the name that was to be assigned an invalid value.</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b>#</b></font>
+
+
+<font color="#00ffff"><b>####### HISTORY ################################################################</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b># 2001.11.28	Nathan D. Ryan &lt;ryannd@cs.colorado.edu&gt;</b></font>
+<font color="#00ffff"><b># 		Initial implementation. This probably would have been easier in</b></font>
+<font color="#00ffff"><b>#		perl, but I got carried away...</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b>#</b></font>
+
+
+<font color="#00ffff"><b># process a blank line</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^[	 ]*$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ffff00"><b>b</b></font> <a href="#is_eof">is_eof</a>
+
+
+<font color="#00ffff"><b># process a comment</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^[	 ]*#</b></font><font color="#ff6060"><b>/</b></font> <font color="#ffff00"><b>b</b></font> <a href="#is_eof">is_eof</a>
+
+
+<font color="#00ffff"><b># process an assignment via equals ('=')</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^[	 ]*[A-Za-z_][0-9A-Za-z\.\/:_-]*[	 ]*=</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+
+    <font color="#00ffff"><b># copy the name into the hold space, removing both extraneous whitespace</b></font>
+    <font color="#00ffff"><b># and the operator</b></font>
+    <font color="#00ffff"><b>#</b></font>
+    <font color="#ffff00"><b>h</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^[	 ]*\<font color="#ff00ff"><b>(</b></font>[^	 =]*\).*$</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>x</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^[^=]*=[	 ]*\<font color="#ff00ff"><b>(</b></font>.*\)$</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+
+    <font color="#00ffff"><b># unfold lines before the value</b></font>
+    <font color="#00ffff"><b>#</b></font>
+    <font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="unfold">unfold</a></b></font>
+    <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^\\$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+        <font color="#8080ff"><b>$</b></font> <font color="#ff6060"><b>{</b></font>
+            <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^.*$</b></font><font color="#ff6060"><b>/</b></font>2<font color="#ff6060"><b>/</b></font>
+            <font color="#ffff00"><b>b</b></font> <a href="#quit">quit</a>
+        <font color="#ff6060"><b>}</b></font>
+        <font color="#ffff00"><b>N</b></font>
+        <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\\\n[	 ]*</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font>
+        <font color="#ffff00"><b>b</b></font> <a href="#unfold">unfold</a>
+    <font color="#ff6060"><b>}</b></font>
+
+    <font color="#00ffff"><b># process a null value</b></font>
+    <font color="#00ffff"><b>#</b></font>
+    <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ffff00"><b>b</b></font> <a href="#is_eof">is_eof</a>
+
+    <font color="#00ffff"><b># process a null value with a comment</b></font>
+    <font color="#00ffff"><b>#</b></font>
+    <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^#</b></font><font color="#ff6060"><b>/</b></font> <font color="#ffff00"><b>b</b></font> <a href="#is_eof">is_eof</a>
+
+    <font color="#00ffff"><b># process an unquoted value</b></font>
+    <font color="#00ffff"><b>#</b></font>
+    <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^[^"']</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+        <font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="unfold0">unfold0</a></b></font>
+
+        <font color="#00ffff"><b># reset the replacement test</b></font>
+        <font color="#00ffff"><b>#</b></font>
+        <font color="#ffff00"><b>t</b></font> <a href="#reset0">reset0</a>
+        <font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="reset0">reset0</a></b></font>
+
+        <font color="#00ffff"><b># replace a trailing comment with a space (the space prevents</b></font>
+        <font color="#00ffff"><b># unintended line folding)</b></font>
+        <font color="#00ffff"><b>#</b></font>
+        <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>[^\\]\)\<font color="#ff00ff"><b>(</b></font>\\*\)\2#.*$</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\1</b></font><font color="#00ff00"><b>\2</b></font><font color="#00ff00"><b>\2</b></font> <font color="#ff6060"><b>/</b></font>
+        <font color="#ffff00"><b>t</b></font> <a href="#trim0">trim0</a>
+
+        <font color="#00ffff"><b># unfold lines within the value</b></font>
+        <font color="#00ffff"><b>#</b></font>
+        <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>[^\\]\<font color="#ff00ff"><b>(</b></font>\\*\)\1\\$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+            <font color="#8080ff"><b>$</b></font> <font color="#ff6060"><b>{</b></font>
+                <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^.*$</b></font><font color="#ff6060"><b>/</b></font>3<font color="#ff6060"><b>/</b></font>
+                <font color="#ffff00"><b>b</b></font> <a href="#quit">quit</a>
+            <font color="#ff6060"><b>}</b></font>
+            <font color="#ffff00"><b>N</b></font>
+            <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\\\n</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font>
+            <font color="#ffff00"><b>b</b></font> <a href="#unfold0">unfold0</a>
+        <font color="#ff6060"><b>}</b></font>
+
+        <font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="trim0">trim0</a></b></font>
+        <font color="#00ffff"><b># remove trailing whitespace</b></font>
+        <font color="#00ffff"><b>#</b></font>
+        <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>[	 ]*$</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font>
+
+        <font color="#00ffff"><b># remove each backslash used to escape a pound sign or a single</b></font>
+        <font color="#00ffff"><b># quote</b></font>
+        <font color="#00ffff"><b>#</b></font>
+        <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^\<font color="#ff00ff"><b>(</b></font>\\*\)\1\\\<font color="#ff00ff"><b>(</b></font>[#']\)</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\1</b></font><font color="#00ff00"><b>\1</b></font><font color="#00ff00"><b>\2</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>g</b></font>
+        <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>[^\\]\)\<font color="#ff00ff"><b>(</b></font>\\*\)\1\\\<font color="#ff00ff"><b>(</b></font>[#']\)</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\1</b></font><font color="#00ff00"><b>\2</b></font><font color="#00ff00"><b>\2</b></font><font color="#00ff00"><b>\3</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>g</b></font>
+
+        <font color="#ffff00"><b>b</b></font> <a href="#decode">decode</a>
+    <font color="#ff6060"><b>}</b></font>
+
+    <font color="#00ffff"><b># process a single-quoted value</b></font>
+    <font color="#00ffff"><b>#</b></font>
+    <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^'</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+        <font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="unfold1">unfold1</a></b></font>
+
+        <font color="#00ffff"><b># reset the replacement test</b></font>
+        <font color="#00ffff"><b>#</b></font>
+        <font color="#ffff00"><b>t</b></font> <a href="#reset1">reset1</a>
+        <font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="reset1">reset1</a></b></font>
+
+        <font color="#00ffff"><b># remove a trailing comment</b></font>
+        <font color="#00ffff"><b>#</b></font>
+        <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>.'[	 ]*\)#.*$</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+        <font color="#ffff00"><b>t</b></font> <a href="#trim1">trim1</a>
+
+        <font color="#00ffff"><b># handle an extraneous quote</b></font>
+        <font color="#00ffff"><b>#</b></font>
+        <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.'[	 ]*[^	 ]</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+            <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^.*$</b></font><font color="#ff6060"><b>/</b></font>6<font color="#ff6060"><b>/</b></font>
+            <font color="#ffff00"><b>b</b></font> <a href="#quit">quit</a>
+        <font color="#ff6060"><b>}</b></font>
+
+        <font color="#00ffff"><b># unfold lines within the value</b></font>
+        <font color="#00ffff"><b>#</b></font>
+        <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\\$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+            <font color="#8080ff"><b>$</b></font> <font color="#ff6060"><b>{</b></font>
+                <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^.*$</b></font><font color="#ff6060"><b>/</b></font>4<font color="#ff6060"><b>/</b></font>
+                <font color="#ffff00"><b>b</b></font> <a href="#quit">quit</a>
+            <font color="#ff6060"><b>}</b></font>
+            <font color="#ffff00"><b>N</b></font>
+            <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\\\n</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font>
+            <font color="#ffff00"><b>b</b></font> <a href="#unfold1">unfold1</a>
+        <font color="#ff6060"><b>}</b></font>
+
+        <font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="trim1">trim1</a></b></font>
+        <font color="#00ffff"><b># remove trailing whitespace</b></font>
+        <font color="#00ffff"><b>#</b></font>
+        <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>[	 ]*$</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font>
+
+        <font color="#00ffff"><b># handle a missing closing quote</b></font>
+        <font color="#00ffff"><b>#</b></font>
+        <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>'$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>!</b></font><font color="#ff6060"><b>{</b></font>
+            <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^.*$</b></font><font color="#ff6060"><b>/</b></font>5<font color="#ff6060"><b>/</b></font>
+            <font color="#ffff00"><b>b</b></font> <a href="#quit">quit</a>
+        <font color="#ff6060"><b>}</b></font>
+
+        <font color="#00ffff"><b># remove the opening quote and the closing quote</b></font>
+        <font color="#00ffff"><b>#</b></font>
+        <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^'\<font color="#ff00ff"><b>(</b></font>.*\)'$</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+
+        <font color="#ffff00"><b>b</b></font> <a href="#encode">encode</a>
+    <font color="#ff6060"><b>}</b></font>
+
+    <font color="#00ffff"><b># process a double-quoted value</b></font>
+    <font color="#00ffff"><b>#</b></font>
+    <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^"</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+        <font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="unfold2">unfold2</a></b></font>
+
+        <font color="#00ffff"><b># reset the replacement test</b></font>
+        <font color="#00ffff"><b>#</b></font>
+        <font color="#ffff00"><b>t</b></font> <a href="#reset2">reset2</a>
+        <font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="reset2">reset2</a></b></font>
+
+        <font color="#00ffff"><b># remove a trailing comment</b></font>
+        <font color="#00ffff"><b>#</b></font>
+        <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>[^\\]\)\<font color="#ff00ff"><b>(</b></font>\\*\)\2"[	 ]*#.*$</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\1</b></font><font color="#00ff00"><b>\2</b></font><font color="#00ff00"><b>\2</b></font>"<font color="#ff6060"><b>/</b></font>
+        <font color="#ffff00"><b>t</b></font> <a href="#trim2">trim2</a>
+
+        <font color="#00ffff"><b># handle an extraneous quote</b></font>
+        <font color="#00ffff"><b>#</b></font>
+        <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>[^\\]\<font color="#ff00ff"><b>(</b></font>\\*\)\1"[	 ]*[^	 ]</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+            <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^.*$</b></font><font color="#ff6060"><b>/</b></font>9<font color="#ff6060"><b>/</b></font>
+            <font color="#ffff00"><b>b</b></font> <a href="#quit">quit</a>
+        <font color="#ff6060"><b>}</b></font>
+
+        <font color="#00ffff"><b># unfold lines within the value</b></font>
+        <font color="#00ffff"><b>#</b></font>
+        <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>[^\\]\<font color="#ff00ff"><b>(</b></font>\\*\)\1\\$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+            <font color="#8080ff"><b>$</b></font> <font color="#ff6060"><b>{</b></font>
+                <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^.*$</b></font><font color="#ff6060"><b>/</b></font>7<font color="#ff6060"><b>/</b></font>
+                <font color="#ffff00"><b>b</b></font> <a href="#quit">quit</a>
+            <font color="#ff6060"><b>}</b></font>
+            <font color="#ffff00"><b>N</b></font>
+            <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\\\n</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font>
+            <font color="#ffff00"><b>b</b></font> <a href="#unfold2">unfold2</a>
+        <font color="#ff6060"><b>}</b></font>
+
+        <font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="trim2">trim2</a></b></font>
+        <font color="#00ffff"><b># remove trailing whitespace</b></font>
+        <font color="#00ffff"><b>#</b></font>
+        <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>[	 ]*$</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font>
+
+        <font color="#00ffff"><b># handle a missing closing quote</b></font>
+        <font color="#00ffff"><b>#</b></font>
+        <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>"$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>!</b></font><font color="#ff6060"><b>{</b></font>
+            <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^.*$</b></font><font color="#ff6060"><b>/</b></font>8<font color="#ff6060"><b>/</b></font>
+            <font color="#ffff00"><b>b</b></font> <a href="#quit">quit</a>
+        <font color="#ff6060"><b>}</b></font>
+
+        <font color="#00ffff"><b># remove the opening quote and the closing quote</b></font>
+        <font color="#00ffff"><b>#</b></font>
+        <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^"\<font color="#ff00ff"><b>(</b></font>.*\)"$</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+
+        <font color="#ffff00"><b>b</b></font> <a href="#decode">decode</a>
+    <font color="#ff6060"><b>}</b></font>
+<font color="#ff6060"><b>}</b></font>  
+
+
+<font color="#00ffff"><b># process an assignment via here document ('&lt;&lt;' or '&lt;&lt;-')</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^[	 ]*[A-Za-z_][0-9A-Za-z\.\/:_-]*[	 ]*&lt;&lt;</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+
+    <font color="#00ffff"><b># copy the name into the hold space, removing extraneous whitespace</b></font>
+    <font color="#00ffff"><b># while retaining the operator</b></font>
+    <font color="#00ffff"><b>#</b></font>
+    <font color="#ffff00"><b>h</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^[	 ]*\<font color="#ff00ff"><b>(</b></font>[^	 &lt;]*\).*$</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>x</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^[^&lt;]*\<font color="#ff00ff"><b>(</b></font>&lt;&lt;.*\)$</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+
+    <font color="#00ffff"><b># process a null value</b></font>
+    <font color="#00ffff"><b>#</b></font>
+    <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^&lt;&lt;-\{0,1\}[	 ]*$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ffff00"><b>b</b></font> <a href="#is_eof">is_eof</a>
+
+    <font color="#00ffff"><b># process a value as an unindented here document</b></font>
+    <font color="#00ffff"><b>#</b></font>
+    <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^&lt;&lt;[^-]</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+
+        <font color="#00ffff"><b># remove the operator</b></font>
+        <font color="#00ffff"><b>#</b></font>
+        <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^&lt;&lt;[	 ]*\<font color="#ff00ff"><b>(</b></font>.*\)$</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+
+        <font color="#00ffff"><b># add each line of the here document</b></font>
+        <font color="#00ffff"><b>#</b></font>
+        <font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="here0">here0</a></b></font>
+        <font color="#8080ff"><b>$</b></font> <font color="#ff6060"><b>{</b></font>
+            <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^.*$</b></font><font color="#ff6060"><b>/</b></font>10<font color="#ff6060"><b>/</b></font>
+            <font color="#ffff00"><b>b</b></font> <a href="#quit">quit</a>
+        <font color="#ff6060"><b>}</b></font>
+        <font color="#ffff00"><b>N</b></font>
+        <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^\<font color="#ff00ff"><b>(</b></font>.*\)\n.*\n\1$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>!</b></font><font color="#ff6060"><b>{</b></font>
+            <font color="#ffff00"><b>b</b></font> <a href="#here0">here0</a>
+        <font color="#ff6060"><b>}</b></font>
+
+        <font color="#00ffff"><b># remove the opening word, the final newline, and the closing</b></font>
+        <font color="#00ffff"><b># word</b></font>
+        <font color="#00ffff"><b>#</b></font>
+        <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^\<font color="#ff00ff"><b>(</b></font>.*\)\n\<font color="#ff00ff"><b>(</b></font>.*\)\n\1$</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\2</b></font><font color="#ff6060"><b>/</b></font>
+
+        <font color="#ffff00"><b>b</b></font> <a href="#encode">encode</a>
+    <font color="#ff6060"><b>}</b></font>
+
+    <font color="#00ffff"><b># process a value as an indented here document</b></font>
+    <font color="#00ffff"><b>#</b></font>
+    <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^&lt;&lt;-.*$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+
+        <font color="#00ffff"><b># remove the operator</b></font>
+        <font color="#00ffff"><b>#</b></font>
+        <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^&lt;&lt;-[	 ]*\<font color="#ff00ff"><b>(</b></font>.*\)$</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+
+        <font color="#00ffff"><b># add each line of the here document, removing leading tabs</b></font>
+        <font color="#00ffff"><b>#</b></font>
+        <font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="here1">here1</a></b></font>
+        <font color="#8080ff"><b>$</b></font> <font color="#ff6060"><b>{</b></font>
+            <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^.*$</b></font><font color="#ff6060"><b>/</b></font>11<font color="#ff6060"><b>/</b></font>
+            <font color="#ffff00"><b>b</b></font> <a href="#quit">quit</a>
+        <font color="#ff6060"><b>}</b></font>
+        <font color="#ffff00"><b>N</b></font>
+        <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^\<font color="#ff00ff"><b>(</b></font>.*\n\)	*\<font color="#ff00ff"><b>(</b></font>.*\)$</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\1</b></font><font color="#00ff00"><b>\2</b></font><font color="#ff6060"><b>/</b></font>
+        <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^\<font color="#ff00ff"><b>(</b></font>.*\)\n.*\n\1$</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>!</b></font><font color="#ff6060"><b>{</b></font>
+            <font color="#ffff00"><b>b</b></font> <a href="#here1">here1</a>
+        <font color="#ff6060"><b>}</b></font>
+
+        <font color="#00ffff"><b># remove the opening word, the final newline, and the closing</b></font>
+        <font color="#00ffff"><b># word</b></font>
+        <font color="#00ffff"><b>#</b></font>
+        <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^\<font color="#ff00ff"><b>(</b></font>.*\)\n\<font color="#ff00ff"><b>(</b></font>.*\)\n\1$</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\2</b></font><font color="#ff6060"><b>/</b></font>
+
+        <font color="#ffff00"><b>b</b></font> <a href="#encode">encode</a>
+    <font color="#ff6060"><b>}</b></font>
+<font color="#ff6060"><b>}</b></font>  
+
+
+<font color="#00ffff"><b># process an invalid line</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#ffff00"><b>h</b></font>  
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^.*$</b></font><font color="#ff6060"><b>/</b></font>1<font color="#ff6060"><b>/</b></font>
+
+
+<font color="#00ffff"><b># output the results of an invalid assignment and quit; the hold space should</b></font>
+<font color="#00ffff"><b># contain either a line with an invalid name or a valid name that was to be</b></font>
+<font color="#00ffff"><b># assigned an invalid value, and the pattern space should contain a status code</b></font>
+<font color="#00ffff"><b># that indicates the error</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="quit">quit</a></b></font>
+<font color="#ffff00"><b>x</b></font>  
+<font color="#ffff00"><b>p</b></font>  
+<font color="#ffff00"><b>=</b></font>  
+<font color="#ffff00"><b>x</b></font>  
+<font color="#ffff00"><b>p</b></font>  
+<font color="#ffff00"><b>q</b></font>  
+
+
+<font color="#00ffff"><b># decode the value; remove each backslash used to escape a double quote, a</b></font>
+<font color="#00ffff"><b># dollar sign, a grave accent, or another backslash</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="decode">decode</a></b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^\<font color="#ff00ff"><b>(</b></font>\\*\)\1\\\<font color="#ff00ff"><b>(</b></font>["$`]\)</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\1</b></font><font color="#00ff00"><b>\1</b></font><font color="#00ff00"><b>\2</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>g</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>[^\\]\)\<font color="#ff00ff"><b>(</b></font>\\*\)\1\\\<font color="#ff00ff"><b>(</b></font>["$`]\)</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\1</b></font><font color="#00ff00"><b>\2</b></font><font color="#00ff00"><b>\2</b></font><font color="#00ff00"><b>\3</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>g</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\\\\</b></font><font color="#ff6060"><b>/</b></font>\\<font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>g</b></font>
+
+<font color="#00ffff"><b># encode the value; add a backslash to escape each double quote, dollar sign,</b></font>
+<font color="#00ffff"><b># grave accent, and backslash; replace each newlin with the escape sequence '\n'</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="encode">encode</a></b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\\</b></font><font color="#ff6060"><b>/</b></font>\\\\<font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>g</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>["$`]\)</b></font><font color="#ff6060"><b>/</b></font>\\<font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>g</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\n</b></font><font color="#ff6060"><b>/</b></font>\\n<font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>g</b></font>
+
+<font color="#00ffff"><b># output the results of a valid assignment; the hold space contains the name,</b></font>
+<font color="#00ffff"><b># name, and the pattern space contains the encoded value</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#ffff00"><b>x</b></font>  
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^\<font color="#ff00ff"><b>(</b></font>.*\)$</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\1</b></font>=<font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>G</b></font>  
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\n</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>p</b></font>  
+
+
+<font color="#00ffff"><b># determine if the last line was just processed; if so, output a status code</b></font>
+<font color="#00ffff"><b># that indicates success</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="is_eof">is_eof</a></b></font>
+<font color="#8080ff"><b>$</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^.*$</b></font><font color="#ff6060"><b>/</b></font>0<font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>p</b></font>
+<font color="#ff6060"><b>}</b></font>  
+
+<font color="#00ffff"><b>### colorized by <a href="http://sedsed.sf.net">sedsed</a>, a SED script debugger/indenter/tokenizer/HTMLizer</b></font>
+
+</pre></body></html>

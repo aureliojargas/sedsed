@@ -1,0 +1,138 @@
+<html>
+<head><meta name="Generator" content="sedsed --htmlize">
+<title>Colorized anagrams.gnu.sed</title></head>
+<body bgcolor="#000000" text="#ffffff"
+      link="#ff00ff" alink="#ff00ff" vlink="#ff00ff">
+<pre>
+<font color="#00ffff"><b>#n</b></font>
+<font color="#00ffff"><b>#! /bin/sed -nf</b></font>
+
+<font color="#00ffff"><b># Search for anagrams in a line-feed-delimited (i.e. one word per line)</b></font>
+<font color="#00ffff"><b># list of words</b></font>
+
+<font color="#ffff00"><b>H</b></font>  
+
+<font color="#00ffff"><b># Sort the letters of the word (preceding it with a @)</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>$</b></font><font color="#ff6060"><b>/</b></font>@<font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>t</b></font> <a href="#z">z</a>
+<font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="z">z</a></b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>z\+\)\<font color="#ff00ff"><b>(</b></font>.*@\)</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\2</b></font><font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>t</b></font> <a href="#z">z</a>
+<font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="y">y</a></b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>y\+\)\<font color="#ff00ff"><b>(</b></font>.*@\)</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\2</b></font><font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>t</b></font> <a href="#y">y</a>
+<font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="x">x</a></b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>x\+\)\<font color="#ff00ff"><b>(</b></font>.*@\)</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\2</b></font><font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>t</b></font> <a href="#x">x</a>
+<font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="w">w</a></b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>w\+\)\<font color="#ff00ff"><b>(</b></font>.*@\)</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\2</b></font><font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>t</b></font> <a href="#w">w</a>
+<font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="v">v</a></b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>v\+\)\<font color="#ff00ff"><b>(</b></font>.*@\)</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\2</b></font><font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>t</b></font> <a href="#v">v</a>
+<font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="u">u</a></b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>u\+\)\<font color="#ff00ff"><b>(</b></font>.*@\)</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\2</b></font><font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>t</b></font> <a href="#u">u</a>
+<font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="t">t</a></b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>t\+\)\<font color="#ff00ff"><b>(</b></font>.*@\)</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\2</b></font><font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>t</b></font> <a href="#t">t</a>
+<font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="s">s</a></b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>s\+\)\<font color="#ff00ff"><b>(</b></font>.*@\)</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\2</b></font><font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>t</b></font> <a href="#s">s</a>
+<font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="r">r</a></b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>r\+\)\<font color="#ff00ff"><b>(</b></font>.*@\)</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\2</b></font><font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>t</b></font> <a href="#r">r</a>
+<font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="q">q</a></b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>q\+\)\<font color="#ff00ff"><b>(</b></font>.*@\)</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\2</b></font><font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>t</b></font> <a href="#q">q</a>
+<font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="p">p</a></b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>p\+\)\<font color="#ff00ff"><b>(</b></font>.*@\)</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\2</b></font><font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>t</b></font> <a href="#p">p</a>
+<font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="o">o</a></b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>o\+\)\<font color="#ff00ff"><b>(</b></font>.*@\)</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\2</b></font><font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>t</b></font> <a href="#o">o</a>
+<font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="n">n</a></b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>n\+\)\<font color="#ff00ff"><b>(</b></font>.*@\)</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\2</b></font><font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>t</b></font> <a href="#n">n</a>
+<font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="m">m</a></b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>m\+\)\<font color="#ff00ff"><b>(</b></font>.*@\)</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\2</b></font><font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>t</b></font> <a href="#m">m</a>
+<font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="l">l</a></b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>l\+\)\<font color="#ff00ff"><b>(</b></font>.*@\)</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\2</b></font><font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>t</b></font> <a href="#l">l</a>
+<font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="k">k</a></b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>k\+\)\<font color="#ff00ff"><b>(</b></font>.*@\)</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\2</b></font><font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>t</b></font> <a href="#k">k</a>
+<font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="j">j</a></b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>j\+\)\<font color="#ff00ff"><b>(</b></font>.*@\)</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\2</b></font><font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>t</b></font> <a href="#j">j</a>
+<font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="i">i</a></b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>i\+\)\<font color="#ff00ff"><b>(</b></font>.*@\)</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\2</b></font><font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>t</b></font> <a href="#i">i</a>
+<font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="h">h</a></b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>h\+\)\<font color="#ff00ff"><b>(</b></font>.*@\)</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\2</b></font><font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>t</b></font> <a href="#h">h</a>
+<font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="g">g</a></b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>g\+\)\<font color="#ff00ff"><b>(</b></font>.*@\)</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\2</b></font><font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>t</b></font> <a href="#g">g</a>
+<font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="f">f</a></b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>f\+\)\<font color="#ff00ff"><b>(</b></font>.*@\)</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\2</b></font><font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>t</b></font> <a href="#f">f</a>
+<font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="e">e</a></b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>e\+\)\<font color="#ff00ff"><b>(</b></font>.*@\)</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\2</b></font><font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>t</b></font> <a href="#e">e</a>
+<font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="d">d</a></b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>d\+\)\<font color="#ff00ff"><b>(</b></font>.*@\)</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\2</b></font><font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>t</b></font> <a href="#d">d</a>
+<font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="c">c</a></b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>c\+\)\<font color="#ff00ff"><b>(</b></font>.*@\)</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\2</b></font><font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>t</b></font> <a href="#c">c</a>
+<font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="b">b</a></b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>b\+\)\<font color="#ff00ff"><b>(</b></font>.*@\)</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\2</b></font><font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>t</b></font> <a href="#b">b</a>
+<font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="a">a</a></b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>a\+\)\<font color="#ff00ff"><b>(</b></font>.*@\)</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\2</b></font><font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>t</b></font> <a href="#a">a</a>
+
+<font color="#00ffff"><b># After this second H command, we added to the hold space &lt;word&gt;\n@&lt;signature&gt;</b></font>
+<font color="#00ffff"><b># We'll remove the extra newlines later</b></font>
+<font color="#ffff00"><b>H</b></font>  
+
+<font color="#8080ff"><b>$</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#00ffff"><b># Append a final line feed to hold space, change \n@ to @</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>H</b></font>
+    <font color="#ffff00"><b>g</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\n@</b></font><font color="#ff6060"><b>/</b></font>@<font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>g</b></font>
+    <font color="#ffff00"><b>h</b></font>
+
+    <font color="#ffff00"><b>t</b></font> <a href="#loop">loop</a>
+    <font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="loop">loop</a></b></font>
+    <font color="#00ffff"><b># Search two words with the same signature and print them</b></font>
+    <font color="#00ffff"><b># \1 = first word</b></font>
+    <font color="#00ffff"><b># \2 = signature</b></font>
+    <font color="#00ffff"><b># \3 = anything in the middle (not backref'ed, needed for \?)</b></font>
+    <font color="#00ffff"><b># \4 = second word</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^.*\n\<font color="#ff00ff"><b>(</b></font>[a-z]*\)@\<font color="#ff00ff"><b>(</b></font>[a-z]*\)\n\<font color="#ff00ff"><b>(</b></font>.*\n\)\?\<font color="#ff00ff"><b>(</b></font>[a-z]*\)@\2\n.*$</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\1</b></font> <font color="#00ff00"><b>\4</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>p</b></font>
+    <font color="#ffff00"><b>g</b></font>
+
+    <font color="#00ffff"><b># Remove the second of the two words with the same signature</b></font>
+    <font color="#00ffff"><b># so we'll print n-1 pairs instead of n(n-1)/2</b></font>
+    <font color="#00ffff"><b># \1 = anything before</b></font>
+    <font color="#00ffff"><b># \2 = first word @ signature</b></font>
+    <font color="#00ffff"><b># \3 = signature</b></font>
+    <font color="#00ffff"><b># \4 = anything in the middle (not backref'ed, needed for \?)</b></font>
+    <font color="#00ffff"><b># \5 = anything after</b></font>
+    <font color="#00ffff"><b>#</b></font>
+    <font color="#00ffff"><b># We need to use \1 and \5 to make sure we remove exactly the same</b></font>
+    <font color="#00ffff"><b># pair that we printed above</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^\<font color="#ff00ff"><b>(</b></font>.*\)\<font color="#ff00ff"><b>(</b></font>\n[a-z]*@\<font color="#ff00ff"><b>(</b></font>[a-z]*\)\n\)\<font color="#ff00ff"><b>(</b></font>.*\n\)\?[a-z]*@\3\n\<font color="#ff00ff"><b>(</b></font>.*\)$</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\1</b></font><font color="#00ff00"><b>\2</b></font><font color="#00ff00"><b>\4</b></font><font color="#00ff00"><b>\5</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>h</b></font>
+
+    <font color="#00ffff"><b># Look for another anagram if we did find one</b></font>
+    <font color="#ffff00"><b>t</b></font> <a href="#loop">loop</a>
+<font color="#ff6060"><b>}</b></font>  
+
+<font color="#00ffff"><b>### colorized by <a href="http://sedsed.sf.net">sedsed</a>, a SED script debugger/indenter/tokenizer/HTMLizer</b></font>
+
+</pre></body></html>

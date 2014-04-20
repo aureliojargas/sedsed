@@ -1,0 +1,108 @@
+<html>
+<head><meta name="Generator" content="sedsed --htmlize">
+<title>Colorized cal.sed</title></head>
+<body bgcolor="#000000" text="#ffffff"
+      link="#ff00ff" alink="#ff00ff" vlink="#ff00ff">
+<pre>
+<font color="#00ffff"><b>#n</b></font>
+<font color="#8080ff"><b>1</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#00ffff"><b># Weekday in hold space, day of the month in pattern space</b></font>
+    <font color="#ffff00"><b>h</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b> .*$</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>x</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^.* </b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font>
+
+    <font color="#00ffff"><b># Reduce day of month to 1-7, subtracting 7 repeatedly. Each iteration</b></font>
+    <font color="#00ffff"><b># decrements the tenths digit, lowering the day of the month by either 7</b></font>
+    <font color="#00ffff"><b># or 14.  The first and third y commands are guaranteed to operate on the</b></font>
+    <font color="#00ffff"><b># units.</b></font>
+    <font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="week">week</a></b></font>
+    <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^[123]</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
+        <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^1</b></font><font color="#ff6060"><b>/</b></font>a<font color="#ff6060"><b>/</b></font>
+        <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^2</b></font><font color="#ff6060"><b>/</b></font>b<font color="#ff6060"><b>/</b></font>
+        <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^3</b></font><font color="#ff6060"><b>/</b></font>c<font color="#ff6060"><b>/</b></font>
+        <font color="#ffff00"><b>y</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>9876543210</b></font><font color="#ff6060"><b>/</b></font>5432176543<font color="#ff6060"><b>/</b></font>
+        <font color="#ffff00"><b>y</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>abc</b></font><font color="#ff6060"><b>/</b></font>012<font color="#ff6060"><b>/</b></font>
+        <font color="#ffff00"><b>b</b></font> <a href="#week">week</a>
+    <font color="#ff6060"><b>}</b></font>
+    <font color="#ffff00"><b>y</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>89</b></font><font color="#ff6060"><b>/</b></font>12<font color="#ff6060"><b>/</b></font>
+
+    <font color="#00ffff"><b># Each iteration decrements both day and weekday by 1</b></font>
+    <font color="#00ffff"><b># (weekday has wrap-around from 0=Sunday to 6=Saturday)</b></font>
+    <font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="wday">wday</a></b></font>
+    <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>01</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>!</b></font><font color="#ff6060"><b>{</b></font>
+        <font color="#ffff00"><b>y</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>234567</b></font><font color="#ff6060"><b>/</b></font>123456<font color="#ff6060"><b>/</b></font>
+        <font color="#ffff00"><b>x</b></font>
+        <font color="#ffff00"><b>y</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>0123456</b></font><font color="#ff6060"><b>/</b></font>6012345<font color="#ff6060"><b>/</b></font>
+        <font color="#ffff00"><b>x</b></font>
+        <font color="#ffff00"><b>b</b></font> <a href="#wday">wday</a>
+    <font color="#ff6060"><b>}</b></font>
+
+    <font color="#00ffff"><b># Prepare a calendar for a 28-day month.  First add the blanks</b></font>
+    <font color="#00ffff"><b># depending on the week-day</b></font>
+    <font color="#ffff00"><b>x</b></font>
+    <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^[1-6]</b></font><font color="#ff6060"><b>/</b></font> <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>$</b></font><font color="#ff6060"><b>/</b></font>    <font color="#ff6060"><b>/</b></font>
+    <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^[2-6]</b></font><font color="#ff6060"><b>/</b></font> <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>$</b></font><font color="#ff6060"><b>/</b></font>    <font color="#ff6060"><b>/</b></font>
+    <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^[3-6]</b></font><font color="#ff6060"><b>/</b></font> <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>$</b></font><font color="#ff6060"><b>/</b></font>    <font color="#ff6060"><b>/</b></font>
+    <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^[4-6]</b></font><font color="#ff6060"><b>/</b></font> <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>$</b></font><font color="#ff6060"><b>/</b></font>    <font color="#ff6060"><b>/</b></font>
+    <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^[5-6]</b></font><font color="#ff6060"><b>/</b></font> <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>$</b></font><font color="#ff6060"><b>/</b></font>    <font color="#ff6060"><b>/</b></font>
+    <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^6</b></font><font color="#ff6060"><b>/</b></font> <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>$</b></font><font color="#ff6060"><b>/</b></font>    <font color="#ff6060"><b>/</b></font>
+
+    <font color="#00ffff"><b># Then add the header (replacing the week-day) and the days</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^.</b></font><font color="#ff6060"><b>/</b></font>Sun Mon Tue Wed Thu Fri Sat <font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>$</b></font><font color="#ff6060"><b>/</b></font>  1   2   3   4   5   6   7   8   9  10  11  12  13  14 <font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>$</b></font><font color="#ff6060"><b>/</b></font> 15  16  17  18  19  20  21  22  23  24  25  26  27  28 <font color="#ff6060"><b>/</b></font>
+
+    <font color="#00ffff"><b># Store in hold space, waiting for the next cycle</b></font>
+    <font color="#ffff00"><b>h</b></font>
+<font color="#ff6060"><b>}</b></font>  
+
+<font color="#8080ff"><b>2</b></font> <font color="#ff6060"><b>{</b></font>
+    <font color="#00ffff"><b># Pick the number of days in the month</b></font>
+    <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^[469]</b></font><font color="#ff6060"><b>/</b></font> <font color="#ffff00"><b>b</b></font> <a href="#d30">d30</a>
+    <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^11</b></font><font color="#ff6060"><b>/</b></font> <font color="#ffff00"><b>b</b></font> <a href="#d30">d30</a>
+    <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^[13578]</b></font><font color="#ff6060"><b>/</b></font> <font color="#ffff00"><b>b</b></font> <a href="#d31">d31</a>
+
+    <font color="#00ffff"><b># February. Get the year.  Decide whether we must test the century</b></font>
+    <font color="#00ffff"><b># or the 2-digit year, and only keep the two relevant digits.</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.* </b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>..00</b></font><font color="#ff6060"><b>/</b></font> <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>..$</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>....</b></font><font color="#ff6060"><b>/</b></font> <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^..</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font>
+
+    <font color="#00ffff"><b># Test divisibility by 4</b></font>
+    <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>[02468][048]</b></font><font color="#ff6060"><b>/</b></font> <font color="#ffff00"><b>b</b></font> <a href="#d29">d29</a>
+    <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>[13579][26]</b></font><font color="#ff6060"><b>/</b></font> <font color="#ffff00"><b>b</b></font> <a href="#d29">d29</a>
+
+    <font color="#ffff00"><b>g</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#line">line</a>
+
+    <font color="#00ffff"><b># Add days if 28 are not enough</b></font>
+    <font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="d29">d29</a></b></font>
+    <font color="#ffff00"><b>g</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>$</b></font><font color="#ff6060"><b>/</b></font> 29<font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#line">line</a>
+
+    <font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="d30">d30</a></b></font>
+    <font color="#ffff00"><b>g</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>$</b></font><font color="#ff6060"><b>/</b></font> 29  30<font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#line">line</a>
+
+    <font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="d31">d31</a></b></font>
+    <font color="#ffff00"><b>g</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>$</b></font><font color="#ff6060"><b>/</b></font> 29  30  31<font color="#ff6060"><b>/</b></font>
+
+    <font color="#00ffff"><b># Split the calendar in 28-character lines</b></font>
+    <font color="#00ffff"><b># could probably be made more efficient...</b></font>
+    <font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="line">line</a></b></font>
+    <font color="#ffff00"><b>h</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^\<font color="#ff00ff"><b>(</b></font>............................\).*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>p</b></font>
+    <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>............................</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>!</b></font><font color="#ffff00"><b>q</b></font>
+    <font color="#ffff00"><b>g</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^............................</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font>
+    <font color="#ffff00"><b>b</b></font> <a href="#line">line</a>
+<font color="#ff6060"><b>}</b></font>  
+
+<font color="#00ffff"><b>### colorized by <a href="http://sedsed.sf.net">sedsed</a>, a SED script debugger/indenter/tokenizer/HTMLizer</b></font>
+
+</pre></body></html>

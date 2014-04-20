@@ -1,0 +1,32 @@
+<html>
+<head><meta name="Generator" content="sedsed --htmlize">
+<title>Colorized bf2c.sed</title></head>
+<body bgcolor="#000000" text="#ffffff"
+      link="#ff00ff" alink="#ff00ff" vlink="#ff00ff">
+<pre>
+<font color="#00ffff"><b>#! /bin/sed -f</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>[^][+&lt;&gt;.,-]</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>g</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>[-+]\)</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\1</b></font><font color="#00ff00"><b>\1</b></font>*p;<font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>g</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>&lt;</b></font><font color="#ff6060"><b>/</b></font>p--;<font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>g</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>&gt;</b></font><font color="#ff6060"><b>/</b></font>p++;<font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>g</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\.</b></font><font color="#ff6060"><b>/</b></font>putchar(*p);<font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>g</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>,</b></font><font color="#ff6060"><b>/</b></font>*p=getchar();<font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>g</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\[</b></font><font color="#ff6060"><b>/</b></font>while (*p) {<font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>g</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\]</b></font><font color="#ff6060"><b>/</b></font>}<font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>g</b></font>
+<font color="#8080ff"><b>1</b></font> <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^</b></font><font color="#ff6060"><b>/</b></font>#include &lt;stdio.h&gt;<font color="#00ff00"><b>\
+</b></font>int main(void){char *p=calloc(1,10000);<font color="#ff6060"><b>/</b></font>
+<font color="#8080ff"><b>$</b></font> <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>$</b></font><font color="#ff6060"><b>/</b></font>}<font color="#ff6060"><b>/</b></font>
+
+<font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>!</b></font><font color="#ffff00"><b>d</b></font>
+
+<font color="#00ffff"><b># Here is an example BF program</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b># +[&gt;&gt;+++++[&lt;++++++&gt;-]&lt;[&gt;++++[&gt;++++++++&lt;-]&lt;[-&gt;+&gt;.&lt;&lt;]&gt;[-&lt;+&gt;]+++++</b></font>
+<font color="#00ffff"><b># [&gt;+++++&lt;-]&gt;+++.-.&lt;+++[&gt;------&lt;-]&gt;.---------.&lt;+++++[&gt;++++++&lt;-]&gt;</b></font>
+<font color="#00ffff"><b># .--.[-]++++++++++.[-]&lt;&lt;-]&gt;+++++[&lt;++++++&gt;-]&gt;&gt;[-]&lt;&lt;&lt;[&gt;++++[&gt;++++</b></font>
+<font color="#00ffff"><b># ++++&lt;-]&gt;&gt;[&lt;.&gt;&gt;+&lt;-]&gt;[-&lt;+&gt;]&lt;+&lt;&lt;+++++[-&gt;++++++&lt;]&gt;.--.&lt;++++[&gt;-----</b></font>
+<font color="#00ffff"><b># --&lt;-]&gt;.++++++++.&lt;+++[&gt;++++++&lt;-]&gt;.++++.[-]++++++++++.[-]&lt;&lt;-]&lt;]</b></font>
+
+<font color="#00ffff"><b>### colorized by <a href="http://sedsed.sf.net">sedsed</a>, a SED script debugger/indenter/tokenizer/HTMLizer</b></font>
+
+</pre></body></html>

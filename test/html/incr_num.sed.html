@@ -1,0 +1,57 @@
+<html>
+<head><meta name="Generator" content="sedsed --htmlize">
+<title>Colorized incr_num.sed</title></head>
+<body bgcolor="#000000" text="#ffffff"
+      link="#ff00ff" alink="#ff00ff" vlink="#ff00ff">
+<pre>
+<font color="#00ffff"><b>#!/usr/bin/sed -f</b></font>
+
+<font color="#00ffff"><b># algorithm by :</b></font>
+<font color="#00ffff"><b># Bruno &lt;Haible@ma2s2.mathematik.uni-karlsruhe.de&gt;</b></font>
+
+<font color="#00ffff"><b># incrementing one number, is just add 1 to first digit, i.e. replacing</b></font>
+<font color="#00ffff"><b># it by the following digit</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b># there is one exception, when carry does happen, on that case, all</b></font>
+<font color="#00ffff"><b># following digits must be added with one</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b># now this solution by `Bruno &lt;Haible@ma2s2.mathematik.uni-karlsruhe.de&gt;'</b></font>
+<font color="#00ffff"><b># is very clever and smart</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b># the only way to happen carry, is when the first digit is a 9</b></font>
+<font color="#00ffff"><b># all others cases are just fine</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#00ffff"><b># for a number beginning with any digit except 9, just replace it (the digit)</b></font>
+<font color="#00ffff"><b># by the next digit, for each number beginning with a 9, just "remove" it and</b></font>
+<font color="#00ffff"><b># proceed as above for all others, i.e. all leadings 9s are "removes" until</b></font>
+<font color="#00ffff"><b># a non-9 is found, if any 9 did not remain, a 0 is insert</b></font>
+
+<font color="#00ffff"><b># replace all leading 9s by _ (any other char except digits, could be used)</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="d">d</a></b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>9\<font color="#ff00ff"><b>(</b></font>_*\)$</b></font><font color="#ff6060"><b>/</b></font>_<font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>t</b></font> <a href="#d">d</a>
+
+<font color="#00ffff"><b># if there aren't any digits left, add a MostSign Digit 0</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^\<font color="#ff00ff"><b>(</b></font>_*\)$</b></font><font color="#ff6060"><b>/</b></font>0<font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+
+<font color="#00ffff"><b># incr last digit only - there is no need for more</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>8\<font color="#ff00ff"><b>(</b></font>_*\)$</b></font><font color="#ff6060"><b>/</b></font>9<font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>7\<font color="#ff00ff"><b>(</b></font>_*\)$</b></font><font color="#ff6060"><b>/</b></font>8<font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>6\<font color="#ff00ff"><b>(</b></font>_*\)$</b></font><font color="#ff6060"><b>/</b></font>7<font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>5\<font color="#ff00ff"><b>(</b></font>_*\)$</b></font><font color="#ff6060"><b>/</b></font>6<font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>4\<font color="#ff00ff"><b>(</b></font>_*\)$</b></font><font color="#ff6060"><b>/</b></font>5<font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>3\<font color="#ff00ff"><b>(</b></font>_*\)$</b></font><font color="#ff6060"><b>/</b></font>4<font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>2\<font color="#ff00ff"><b>(</b></font>_*\)$</b></font><font color="#ff6060"><b>/</b></font>3<font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>1\<font color="#ff00ff"><b>(</b></font>_*\)$</b></font><font color="#ff6060"><b>/</b></font>2<font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>0\<font color="#ff00ff"><b>(</b></font>_*\)$</b></font><font color="#ff6060"><b>/</b></font>1<font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+
+<font color="#00ffff"><b># replace all _ to 0s</b></font>
+<font color="#00ffff"><b>#</b></font>
+<font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>_</b></font><font color="#ff6060"><b>/</b></font>0<font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>g</b></font>
+
+<font color="#00ffff"><b>### colorized by <a href="http://sedsed.sf.net">sedsed</a>, a SED script debugger/indenter/tokenizer/HTMLizer</b></font>
+
+</pre></body></html>
