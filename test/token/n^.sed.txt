@@ -1,0 +1,32 @@
+    linenr:1
+     addr1:
+ addr1flag:
+     addr2:
+ addr2flag:
+  lastaddr:
+  modifier:
+        id:N
+   content:
+ delimiter:
+   pattern:
+   replace:
+      flag:
+ extrainfo:
+   comment:
+
+    linenr:1
+     addr1:
+ addr1flag:
+     addr2:
+ addr2flag:
+  lastaddr:
+  modifier:
+        id:s
+   content:
+ delimiter:/
+   pattern:\n
+   replace:
+      flag:
+ extrainfo:
+   comment:
+

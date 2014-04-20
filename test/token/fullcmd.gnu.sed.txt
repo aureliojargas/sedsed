@@ -1,0 +1,32 @@
+    linenr:1
+     addr1:
+ addr1flag:
+     addr2:
+ addr2flag:
+  lastaddr:
+  modifier:
+        id:#
+   content:
+ delimiter:
+   pattern:
+   replace:
+      flag:
+ extrainfo:
+   comment:# GNU sed extras: /address/I and s///i
+
+    linenr:2
+     addr1:\,addr1,
+ addr1flag:I
+     addr2://
+ addr2flag:
+  lastaddr:\,addr1,
+  modifier:!
+        id:s
+   content:.out1
+ delimiter:/
+   pattern:a
+   replace:.
+      flag:igpww
+ extrainfo:
+   comment:# comment
+

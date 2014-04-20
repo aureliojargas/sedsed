@@ -1,0 +1,176 @@
+    linenr:1
+     addr1:/bla/
+ addr1flag:
+     addr2:
+ addr2flag:
+  lastaddr:
+  modifier:
+        id:{
+   content:
+ delimiter:
+   pattern:
+   replace:
+      flag:
+ extrainfo:
+   comment:# at this address
+
+    linenr:1
+     addr1:
+ addr1flag:
+     addr2:
+ addr2flag:
+  lastaddr:
+  modifier:
+        id:#
+   content:
+ delimiter:
+   pattern:
+   replace:
+      flag:
+ extrainfo:
+   comment:# at this address
+
+    linenr:2
+     addr1:
+ addr1flag:
+     addr2:
+ addr2flag:
+  lastaddr:
+  modifier:
+        id:h
+   content:
+ delimiter:
+   pattern:
+   replace:
+      flag:
+ extrainfo:
+   comment:
+
+    linenr:2
+     addr1:
+ addr1flag:
+     addr2:
+ addr2flag:
+  lastaddr:
+  modifier:
+        id:#
+   content:
+ delimiter:
+   pattern:
+   replace:
+      flag:
+ extrainfo:
+   comment:# do this
+
+    linenr:3
+     addr1:
+ addr1flag:
+     addr2:
+ addr2flag:
+  lastaddr:
+  modifier:
+        id:g
+   content:
+ delimiter:
+   pattern:
+   replace:
+      flag:
+ extrainfo:
+   comment:
+
+    linenr:3
+     addr1:
+ addr1flag:
+     addr2:
+ addr2flag:
+  lastaddr:
+  modifier:
+        id:#
+   content:
+ delimiter:
+   pattern:
+   replace:
+      flag:
+ extrainfo:
+   comment:# than that
+
+    linenr:4
+     addr1:
+ addr1flag:
+     addr2:
+ addr2flag:
+  lastaddr:
+  modifier:
+        id:#
+   content:
+ delimiter:
+   pattern:
+   replace:
+      flag:
+ extrainfo:
+   comment:#
+
+    linenr:5
+     addr1:
+ addr1flag:
+     addr2:
+ addr2flag:
+  lastaddr:
+  modifier:
+        id:}
+   content:
+ delimiter:
+   pattern:
+   replace:
+      flag:
+ extrainfo:
+   comment:
+
+    linenr:5
+     addr1:
+ addr1flag:
+     addr2:
+ addr2flag:
+  lastaddr:
+  modifier:
+        id:#
+   content:
+ delimiter:
+   pattern:
+   replace:
+      flag:
+ extrainfo:
+   comment:#loop end
+
+    linenr:7
+     addr1:
+ addr1flag:
+     addr2:
+ addr2flag:
+  lastaddr:/bla/
+  modifier:
+        id:s
+   content:
+ delimiter:/
+   pattern:
+   replace:
+      flag:
+ extrainfo:
+   comment:
+
+    linenr:7
+     addr1:
+ addr1flag:
+     addr2:
+ addr2flag:
+  lastaddr:
+  modifier:
+        id:#
+   content:
+ delimiter:
+   pattern:
+   replace:
+      flag:
+ extrainfo:
+   comment:# script end
+

@@ -1,0 +1,48 @@
+    linenr:1
+     addr1:
+ addr1flag:
+     addr2:
+ addr2flag:
+  lastaddr:
+  modifier:
+        id:#
+   content:
+ delimiter:
+   pattern:
+   replace:
+      flag:
+ extrainfo:
+   comment:# Google Code issue #3: https://code.google.com/p/sedsed/issues/detail?id=3
+
+    linenr:2
+     addr1:
+ addr1flag:
+     addr2:
+ addr2flag:
+  lastaddr:
+  modifier:
+        id:#
+   content:
+ delimiter:
+   pattern:
+   replace:
+      flag:
+ extrainfo:
+   comment:# "I" char removed when appears after "/"
+
+    linenr:3
+     addr1:
+ addr1flag:
+     addr2:
+ addr2flag:
+  lastaddr:
+  modifier:
+        id:s
+   content:
+ delimiter:/
+   pattern:Ione
+   replace:FAIL
+      flag:
+ extrainfo:
+   comment:
+

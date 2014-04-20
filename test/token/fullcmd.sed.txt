@@ -1,0 +1,16 @@
+    linenr:1
+     addr1:\,addr1,
+ addr1flag:
+     addr2://
+ addr2flag:
+  lastaddr:\,addr1,
+  modifier:!
+        id:s
+   content:.out1
+ delimiter:/
+   pattern:a
+   replace:.
+      flag:gpww
+ extrainfo:
+   comment:# comment
+
