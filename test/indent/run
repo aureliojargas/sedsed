@@ -1,0 +1,19 @@
+#!/bin/bash
+
+sedsed='python ../../sedsed.py'
+
+# Always run the tests from this script's folder
+cd $(dirname "$0") || exit 1
+
+# Test files user supplied files ($@) otherwise test everything
+for file_path in ${@:-../scripts/*.sed}; do
+
+	output_file=$(basename $file_path)
+
+	# Generate the HTML version
+	echo "Generating $output_file"
+	$sedsed --indent -f $file_path > $output_file
+done
+
+# Use git to show the errors (differences)
+git status --short . | sed 's/^/********** ERROR (use git diff): /'
