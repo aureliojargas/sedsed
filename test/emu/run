@@ -1,0 +1,28 @@
+#!/bin/bash
+
+sed='sed'
+sedsed='python ../../sedsed.py'
+
+sed_output='sed-output.txt'
+sedsed_output='sedsed-output.txt'
+text=$(printf "one\ntwo\nthree\nfour\nfive\nsix\n")
+
+# Always run the tests from this script's folder
+cd $(dirname "$0") || exit 1
+
+# Test files user supplied files ($@) otherwise test everything
+for file in ${@:-*.sed}; do
+
+	# The emulator do not support GNU sed extensions
+	test ${file%.gnu.sed} != $file && continue
+
+	echo "Testing ${file%.sed}"
+
+	# Run the same sed script in sed and sedsed -d, results must be equal
+	echo "$text" | $sed -f $file > $sed_output
+	echo "$text" | $sedsed --emu -f $file > $sedsed_output
+	diff -U1 $sed_output $sedsed_output
+done
+
+# Clean up
+rm -f $sed_output $sedsed_output w.out1 w.out2
