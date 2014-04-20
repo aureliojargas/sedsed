@@ -1,16 +1,89 @@
 # sedsed tester
 
+
+## Requirements
+
 Currently working for GNU sed only.
 
   - You must have a `gsed` command in your system.
     Create a symlink pointing to the GNU sed executable.
 
-  - You must change the `sedbin` variable to `gsed` in sedsed.py.
+  - You must change the `sedbin` variable to `gsed` in sedsed.py
+    if your default sed is not GNU's.
 
-This is the expected output from the tester:
 
+## Instructions
+
+You can run any individual module by itself:
+
+```console
+$ ./test/html/run
+Generating anagrams.gnu.sed.html
+Generating bf2c.sed.html
+Generating cal.sed.html
+Generating config.sed.html
+Generating dc.sed.html
+Generating expand.sed.html
+Generating fmt.sed.html
+Generating html_uc.gnu.sed.html
+Generating impossible.gnu.sed.html
+Generating incr_num.sed.html
+Generating revlines.sed.html
+Generating sedcheck.sed.html
+Generating sodelnum.gnu.sed.html
+Generating sokoban.sed.html
+Generating sort.gnu.sed.html
+Generating tex2xml.gnu.sed.html
+Generating tolower.sed.html
+Generating ttest1.sed.html
+Generating ttest2.sed.html
+$
 ```
-$ ./run 
+
+Or run all at once with the main `test/run` script:
+
+```console
+$ ./test/run 
+---- Running html/run...
+Generating anagrams.gnu.sed.html
+Generating bf2c.sed.html
+Generating cal.sed.html
+Generating config.sed.html
+Generating dc.sed.html
+Generating expand.sed.html
+Generating fmt.sed.html
+Generating html_uc.gnu.sed.html
+Generating impossible.gnu.sed.html
+Generating incr_num.sed.html
+Generating revlines.sed.html
+Generating sedcheck.sed.html
+Generating sodelnum.gnu.sed.html
+Generating sokoban.sed.html
+Generating sort.gnu.sed.html
+Generating tex2xml.gnu.sed.html
+Generating tolower.sed.html
+Generating ttest1.sed.html
+Generating ttest2.sed.html
+---- Running indent/run...
+Generating anagrams.gnu.sed
+Generating bf2c.sed
+Generating cal.sed
+Generating config.sed
+Generating dc.sed
+Generating expand.sed
+Generating fmt.sed
+Generating html_uc.gnu.sed
+Generating impossible.gnu.sed
+Generating incr_num.sed
+Generating revlines.sed
+Generating sedcheck.sed
+Generating sodelnum.gnu.sed
+Generating sokoban.sed
+Generating sort.gnu.sed
+Generating tex2xml.gnu.sed
+Generating tolower.sed
+Generating ttest1.sed
+Generating ttest2.sed
 ---- Running parsing/run...
 Testing =
 Testing a
