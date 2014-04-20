@@ -367,7 +367,7 @@ html_data = {
 <title>Colorized %(SCRIPTNAME)s</title></head>
 <body bgcolor="%(BGCOLOR)s" text="%(TEXT)s"
       link="%(LINK)s" alink="%(ALINK)s" vlink="%(VLINK)s">
-<pre>
+<pre>\
 """%html_colors,
                    'footer': """
 <font color="%s"><b>### colorized by <a \
@@ -887,16 +887,16 @@ def dumpScript(datalist, indent_prefix):
 	
 	for data in datalist[1:]:                         # skip headers at 0
 		if not data['id']:
-			outlist.append('\n')
+			outlist.append('')
 			continue                                  # blank line
 		if data['id'] == '#' :
 			indentstr = indfmt['string']*indent
 			if action != 'html':
-				outlist.append('%s%s\n'%(
+				outlist.append('%s%s'%(
 				               indentstr,
 				               data['comment']))
 			else:
-				outlist.append('%s%s\n'%(
+				outlist.append('%s%s'%(
 				               indentstr,
 				               paintHtml('comment',
 				                         data['comment'])))
@@ -913,12 +913,12 @@ def dumpScript(datalist, indent_prefix):
 			comm = ''
 			if data['comment']: comm = ';'+data['comment']
 			cmd = '%s%s%s'%(indentstr,addr,cmd)
-			outlist.append('%-39s%s\n'%(cmd,comm))
+			outlist.append('%-39s%s'%(cmd,comm))
 	
 	if action == 'html':
 		outlist.append(html_data['footer'])
 	
-	for line in outlist: print line,                  # print the result
+	print '\n'.join(outlist)                          # print the result
 
 
 #-------------------------------------------------------------------------------
