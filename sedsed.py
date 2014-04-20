@@ -392,7 +392,7 @@ sedcmds = {
   'text' : 'aci'           ,
   'jump' : ':bt'           ,
   'block': '{}'            ,
-  'flag' : 'gpIi0123456789w'
+  'flag' : 'gp0123456789w' + 'IiMme'  # default + GNU
 }
 
 # Regex patterns to identify special entities
