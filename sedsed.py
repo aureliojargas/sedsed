@@ -548,7 +548,7 @@ def isOpenBracket(text):
     return isis
 
 
-def paintHtml(id, txt=''):
+def paintHtml(element, txt=''):
     # Escape HTML special chars
     if txt:
         txt = txt.replace('&', '&amp;')
@@ -556,42 +556,42 @@ def paintHtml(id, txt=''):
         txt = txt.replace('<', '&lt;')
 
     # Some color adjustments and emphasis
-    if id == 'id' and txt in sedcmds['block']:
-        id = 'delimiter'
+    if element == 'id' and txt in sedcmds['block']:
+        element = 'delimiter'
 
-    elif id == 'id' and txt == ':':
-        id = 'content'
+    elif element == 'id' and txt == ':':
+        element = 'content'
 
-    elif id == 'replace':
+    elif element == 'replace':
         # highlight \n, & and \$
         newtxt = paintHtml('special', '\\' + linesep)
         txt = txt.replace('\\' + linesep, newtxt)
         txt = re.sub('(\\\\[1-9]|&amp;)', paintHtml('special', '\\1'), txt)
 
-    elif id == 'pattern':
+    elif element == 'pattern':
         # highlight ( and |
         txt = re.sub(
             '(\\\\)([(|])',
             '\\1' + paintHtml('pattmeta', '\\2'),
             txt)
 
-    elif id == 'plaintext':
+    elif element == 'plaintext':
         # highlight \$
         newtxt = paintHtml('special', '\\' + linesep)
         txt = txt.replace('\\' + linesep, newtxt)
 
-    elif id == 'branch':
+    elif element == 'branch':
         # nice link to the label
         txt = '<a href="#%s">%s</a>' % (txt, txt)
 
-    elif id == 'target':
+    elif element == 'target':
         # link target
         txt = '<a name="%s">%s</a>' % (txt, txt)
-        id = 'content'
+        element = 'content'
 
     # Paint it!
-    if html_colors.get(id) and txt:
-        font_color = html_colors[id]
+    if html_colors.get(element) and txt:
+        font_color = html_colors[element]
         txt = '<font color="%s"><b>%s</b></font>' % (font_color, txt)
     return txt
 
@@ -631,24 +631,24 @@ class SedCommand(object):
 
     def doItAll(self):
         # here, junk arrives without the id, but not lstripped (s///)
-        id = self.id
+        sedcmd = self.id
 
         # TODO put pending comment on the previous command (h ;#comm)
-        if id == '#':
+        if sedcmd == '#':
             Debug('type: comment', 3)
             self.comment = self.id + self.junk
             self.junk = ''
             self.isok = 1
 
-        elif id in sedcmds['solo']:
+        elif sedcmd in sedcmds['solo']:
             Debug('type: solo', 3)
             self.isok = 1
 
-        elif id in sedcmds['block']:
+        elif sedcmd in sedcmds['block']:
             Debug('type: block', 3)
             self.isok = 1
 
-        elif id in sedcmds['text']:
+        elif sedcmd in sedcmds['text']:
             Debug('type: text', 3)
 
             # if not \ at end, finished
@@ -659,7 +659,7 @@ class SedCommand(object):
                 self.content = '\\%s%s' % (linesep, self.content)
                 self.isok = 1
 
-        elif id in sedcmds['jump']:
+        elif sedcmd in sedcmds['jump']:
             Debug('type: jump', 3)
 
             self.junk = self.junk.lstrip()
@@ -669,7 +669,7 @@ class SedCommand(object):
                 self.junk = self.junk[m.end():]
                 self.isok = 1
 
-        elif id in sedcmds['file']:
+        elif sedcmd in sedcmds['file']:
             # TODO deal with valid cmds like 'r bla;bla' and 'r bla ;#comm'
             # TODO spaces and ; are valid as filename chars
             Debug('type: file', 3)
@@ -681,7 +681,7 @@ class SedCommand(object):
                 self.junk = self.junk[m.end():]
                 self.isok = 1
 
-        elif id in sedcmds['multi']:  # s/// & y///
+        elif sedcmd in sedcmds['multi']:  # s/// & y///
             Debug('type: multi', 3)
 
             self.delimiter = self.junk[0]
@@ -727,7 +727,7 @@ class SedCommand(object):
                 self.isok = 1
 
         else:
-            Error("invalid SED command '%s' at line %d" % (id, linenr))
+            Error("invalid SED command '%s' at line %d" % (sedcmd, linenr))
 
         if self.isok:
             self.full = composeSedCommand(vars(self))
@@ -795,11 +795,11 @@ class SedAddress(object):
             Debug('OH NO! partial addr: %s' % self.rest)
 
     def setType(self):
-        id = self.junk[0]
-        if re.match('[0-9$]', id):         # numeric addr, easy!
+        first = self.junk[0]
+        if re.match('[0-9$]', first):      # numeric addr, easy!
             self.isline = 1
         else:                              # oh no, pattern
-            if id == '\\':                 # strange delimiter (!/)
+            if first == '\\':              # strange delimiter (!/)
                 self.escape = '\\'
                 self.junk = self.junk[1:]  # del escape
             self.delimiter = self.junk[0]  # set delimiter
