@@ -127,31 +127,31 @@ def Debug(msg, level=1):
         print('+++ DEBUG%d: %s' % (level, msg))
 
 
-def read_file(file):
+def read_file(file_path):
     "Reads a file into a list, removing line breaks"
 
-    if file in (stdin_id, '-'):
+    if file_path in (stdin_id, '-'):
         try:
             data = sys.stdin.readlines()
         except:
             Error('I was expecting data on STDIN!')
     else:
         try:
-            f = open(file)
+            f = open(file_path)
             data = f.readlines()
             f.close()
         except:
-            Error("Cannot read file: %s" % file)
+            Error("Cannot read file: %s" % file_path)
     return [re.sub('[\n\r]+$', '', x) for x in data]
 
 
-def write_file(file, lines):
+def write_file(file_path, lines):
     "Writes a list contents into file, adding correct line breaks"
 
     try:
-        f = open(file, 'w')
+        f = open(file_path, 'w')
     except:
-        Error("Cannot open file for writing: %s" % file)
+        Error("Cannot open file for writing: %s" % file_path)
 
     # TODO maybe use os.linesep? - all this is really necessary?
     # ensuring line break
@@ -1156,12 +1156,11 @@ def doDebug(datalist):
     outlist.append(showpatt + showhold)           # last line status
 
     # executing sed script
-    cmdextra = inputfiles = ''
+    cmdextra = ''
     if action_modifiers.count('_stdout-only'):
         # cmdextra = "| egrep -v '^PATT|^HOLD|^COMM|\$$|\\$'"  # sed
         cmdextra = "-l 5000 | egrep -v '^PATT|^HOLD|^COMM'"   # gsed
-    for file in textfiles:
-        inputfiles = '%s %s' % (inputfiles, file)
+    inputfiles = ' '.join(textfiles)
     if dump_debug:
         for line in [re.sub('\n$', '', x) for x in outlist]:
             print(line)
