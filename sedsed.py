@@ -1417,7 +1417,7 @@ ZZ[0]['has_t'] = has_t
 #    SED
 #
 
-class emuSed(object):
+class SedEmulator(object):
     # TODO check for syntax errors
     # TODO convert regexes
     # TODO organize debug msgs
@@ -1762,7 +1762,7 @@ elif action in ['emu', 'emudebug']:
     else:
         dodebug = 0
     for input_file in textfiles:
-        emuSed(ZZ, input_file, dodebug)
+        SedEmulator(ZZ, input_file, dodebug)
 
 
 # -----------------------------------------------------------------------------
