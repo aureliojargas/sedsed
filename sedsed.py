@@ -162,14 +162,14 @@ def write_file(file_path, lines):
 
 def runCommand(cmd):  # Returns a (#exit_code, program_output[]) tuple
     # TODO don't use popen()
-    list = []
+    output = []
     fd = os.popen(cmd)
     for line in fd.readlines():
-        list.append(line.rstrip())  # stripping \s*\n
+        output.append(line.rstrip())  # stripping \s*\n
     ret = fd.close()
     if ret:
         ret = ret / 256  # 16bit number
-    return ret, list
+    return ret, output
 
 
 # -----------------------------------------------------------------------------
@@ -876,19 +876,19 @@ class SedAddress(object):
 # -----------------------------------------------------------------------------
 
 
-def composeSedAddress(dict):
+def composeSedAddress(data):
     addr1 = ''
     if action == 'html':
-        if dict['addr1']:
-            addr1 = dict['addr1html']
-        if dict['addr2']:
-            addr2 = dict['addr2html']
+        if data['addr1']:
+            addr1 = data['addr1html']
+        if data['addr2']:
+            addr2 = data['addr2html']
     else:
-        addr1 = '%s%s' % (dict['addr1'], dict['addr1flag'])
-        if dict['addr2']:
-            addr2 = '%s%s' % (dict['addr2'], dict['addr2flag'])
+        addr1 = '%s%s' % (data['addr1'], data['addr1flag'])
+        if data['addr2']:
+            addr2 = '%s%s' % (data['addr2'], data['addr2flag'])
 
-    if dict['addr2']:
+    if data['addr2']:
         addr = '%s,%s' % (addr1, addr2)
     else:
         addr = addr1
@@ -898,56 +898,56 @@ def composeSedAddress(dict):
     return addr
 
 
-def composeSedCommand(dict):
-    if dict['delimiter']:         # s///
+def composeSedCommand(data):
+    if data['delimiter']:         # s///
         if action != 'html':
             cmd = '%s%s%s%s%s%s%s%s' % (
-                dict['modifier'],  dict['id'],
-                dict['delimiter'], dict['pattern'],
-                dict['delimiter'], dict['replace'],
-                dict['delimiter'], dict['flag'])
-            if dict['content']:   # s///w filename
-                cmd = cmd + ' ' + dict['content']
+                data['modifier'],  data['id'],
+                data['delimiter'], data['pattern'],
+                data['delimiter'], data['replace'],
+                data['delimiter'], data['flag'])
+            if data['content']:   # s///w filename
+                cmd = cmd + ' ' + data['content']
         else:
             cmd = """%s%s%s%s%s%s%s%s""" % (
-                paintHtml('modifier',  dict['modifier']),
-                paintHtml('id',        dict['id']),
-                paintHtml('delimiter', dict['delimiter']),
-                paintHtml('pattern',   dict['pattern']),
-                paintHtml('delimiter', dict['delimiter']),
-                paintHtml('replace',   dict['replace']),
-                paintHtml('delimiter', dict['delimiter']),
-                paintHtml('flag',      dict['flag']))
-            if dict['content']:   # s///w filename
-                painted = paintHtml('content', dict['content'])
+                paintHtml('modifier',  data['modifier']),
+                paintHtml('id',        data['id']),
+                paintHtml('delimiter', data['delimiter']),
+                paintHtml('pattern',   data['pattern']),
+                paintHtml('delimiter', data['delimiter']),
+                paintHtml('replace',   data['replace']),
+                paintHtml('delimiter', data['delimiter']),
+                paintHtml('flag',      data['flag']))
+            if data['content']:   # s///w filename
+                painted = paintHtml('content', data['content'])
                 cmd = '%s %s' % (cmd, painted)
     else:
         idsep = ''
         # spacer on r,w,b,t commands only
         spaceme = sedcmds['file'] + sedcmds['jump']
         spaceme = spaceme.replace(':', '')  # : label (no space!)
-        if dict['id'] in spaceme:
+        if data['id'] in spaceme:
             idsep = ' '
         cmd = '%s%s%s%s' % (
-              dict['modifier'],
-              dict['id'],
+              data['modifier'],
+              data['id'],
               idsep,
-              dict['content'])
+              data['content'])
         if action == 'html':
-            if dict['id'] in sedcmds['text']:
+            if data['id'] in sedcmds['text']:
                 content_type = 'plaintext'
-            elif dict['id'] in 'bt':
+            elif data['id'] in 'bt':
                 content_type = 'branch'
-            elif dict['id'] == ':':
+            elif data['id'] == ':':
                 content_type = 'target'
             else:
                 content_type = 'content'
 
             cmd = '%s%s%s%s' % (
-                paintHtml('modifier', dict['modifier']),
-                paintHtml('id', dict['id']),
+                paintHtml('modifier', data['modifier']),
+                paintHtml('id', data['id']),
                 idsep,
-                paintHtml(content_type, dict['content']))
+                paintHtml(content_type, data['content']))
     cmd = cmd.replace(linesep, '\n')
     return cmd
 
