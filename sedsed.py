@@ -588,7 +588,7 @@ def paintHtml(id, txt=''):
 
 
 # TIP: SedCommand already receives lstrip()ed data and data != None
-class SedCommand:
+class SedCommand(object):
     def __init__(self, abcde):
         self.id = abcde[0]   # s
         self.content = ''    # txt, filename
@@ -735,7 +735,7 @@ class SedCommand:
 
 
 # TIP an address is NOT multiline
-class SedAddress:
+class SedAddress(object):
     def __init__(self, abcde, context='address'):
         self.delimiter = ''
         self.pattern = ''
@@ -1407,7 +1407,7 @@ ZZ[0]['has_t'] = has_t
 #    SED
 #
 
-class emuSed:
+class emuSed(object):
     # TODO check for syntax errors
     # TODO convert regexes
     # TODO organize debug msgs
