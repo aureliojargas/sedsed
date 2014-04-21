@@ -263,7 +263,7 @@ for o in opt:
             action_modifiers.append('no' + hide_me)
 
     elif o[0] == '--prefix':
-        if re.sub('\s', '', o[1]):          # prefix is valid?
+        if re.sub(r'\s', '', o[1]):         # prefix is valid?
             Error("--prefix: must be spaces and/or TABs")
         indent_prefix = o[1]
 
@@ -513,7 +513,7 @@ def isOpenBracket(str):
     # not bracket : \[  \\\[  \\\\\[ ...
     isis = 0
     delim = '['
-    str = re.sub('\[:[a-z]+:]', '', str)            # del [:charclasses:]
+    str = re.sub(r'\[:[a-z]+:]', '', str)           # del [:charclasses:]
     if str.find(delim) == -1:                       # hey, no brackets!
         return 0
 
@@ -689,11 +689,11 @@ class SedCommand:
             if hs and hs.isok and self.junk:
                 Debug('possible s/// flag: %s' % self.junk, 3)
 
-                m = re.match('(%s\s*)+' % patt['flag'], self.junk)
+                m = re.match(r'(%s\s*)+' % patt['flag'], self.junk)
                 if m:
                     self.flag = m.group()
                     self.junk = self.junk[m.end():].lstrip()  # del flag
-                    self.flag = re.sub('\s', '', self.flag)  # del blanks@flag
+                    self.flag = re.sub(r'\s', '', self.flag)  # del blanks@flag
                     Debug('FOUND s/// flag: %s' % (self.flag.strip()))
 
                     # now we've got flags also
@@ -847,7 +847,7 @@ class SedAddress:
             if patterns[0] and self.context == 'address':
                 Debug('possible addr flag: %s' % patterns[0], 3)
 
-                m = re.match('\s*I\s*', patterns[0])
+                m = re.match(r'\s*I\s*', patterns[0])
                 if m:
                     # yes, a flag, set addr flag
                     self.flag = m.group()
