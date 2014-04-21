@@ -1,0 +1,8 @@
+PATT:one$
+HOLD:$
+one
+two
+three
+four
+five
+six

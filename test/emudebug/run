@@ -1,0 +1,23 @@
+#!/bin/bash
+
+sedsed='python ../../sedsed.py'
+
+text=$(printf "one\ntwo\nthree\nfour\nfive\nsix\n")
+
+# Always run the tests from this script's folder
+cd $(dirname "$0") || exit 1
+
+# Test files user supplied files ($@) otherwise test everything
+for file_path in ${@:-../emu/*.sed}; do
+
+    file=$(basename $file_path)
+	output_file=$file.txt
+
+	echo "Testing ${file%.sed}"
+
+	# Run the sed emulator debugger and save the results
+	echo "$text" | $sedsed --emudebug -f $file_path > $output_file
+done
+
+# Use git to show the errors (differences)
+git status --short . | sed 's/^/********** ERROR (use git diff): /'

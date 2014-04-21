@@ -1,0 +1,14 @@
+PATT:one$
+HOLD:$
+COMM:[33;1m:todo[m
+one
+COMM:[33;1m:todo[m
+two
+COMM:[33;1m:todo[m
+three
+COMM:[33;1m:todo[m
+four
+COMM:[33;1m:todo[m
+five
+COMM:[33;1m:todo[m
+six
