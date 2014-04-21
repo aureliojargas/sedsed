@@ -292,6 +292,29 @@ for o in opt:
 # -----------------------------------------------------------------------------
 
 
+def validate_script_syntax(script_text):
+    """Validate a sed script using system's sed."""
+
+    # Using tmpfile2 because "sed -f script /dev/null" won't work in Windows
+    tmpfile1 = tempfile.mktemp()
+    tmpfile2 = tempfile.mktemp()
+    write_file(tmpfile1, script_text)
+    write_file(tmpfile2, '')
+    try:
+        # sed -f sed_script empty_file
+        ret, msg = runCommand("%s -f '%s' '%s'" % (sedbin, tmpfile1, tmpfile2))
+    except:
+        # popen(), used in runCommand, is broken on Win9x machines
+        # https://docs.python.org/2.6/faq/windows.html
+        ret = None
+    os.remove(tmpfile1)
+    os.remove(tmpfile2)
+
+    if ret:
+        msg = 'syntax error on your SED script, please fix it before.'
+        Error('#%d: %s' % (ret, msg))
+
+
 # There's a SED script?
 if not sedscript:
     if args:          # the script is the only argument (echo | sed 's///')
@@ -304,17 +327,8 @@ textfiles = args or [stdin_id]
 
 # On --debug, check the given script syntax, running SED with it.
 # We will not debug a broken script.
-# XXX there is a problem with popen() and win9x machines
-#    so I'm skipping this check for those machines
-# TODO redo this check using !runCommand
-if action == 'debug' and os.name != 'nt':
-    tmpfile = tempfile.mktemp()
-    write_file(tmpfile, sedscript)
-    ret, msg = runCommand("%s -f '%s' /dev/null" % (sedbin, tmpfile))
-    if ret:
-        msg = 'syntax error on your SED script, please fix it before.'
-        Error('#%d: %s' % (ret, msg))
-    os.remove(tmpfile)
+if action == 'debug':
+    validate_script_syntax(sedscript)
 
 
 # -----------------------------------------------------------------------------
