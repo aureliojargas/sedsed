@@ -141,7 +141,7 @@ def write_file(file, lines=[]):
     f.writelines(lines); f.close()
 
 
-def runCommand(cmd): # Returns a (#exit_code, program_output[]) tuple
+def runCommand(cmd):  # Returns a (#exit_code, program_output[]) tuple
     # TODO don't use popen()
     list = [] ; fd = os.popen(cmd)
     for line in fd.readlines():
@@ -159,10 +159,10 @@ def runCommand(cmd): # Returns a (#exit_code, program_output[]) tuple
 # Here's all the valid command line options
 short_options = 'he:f:ditVHn'
 long_options = [
-  'debug', 'tokenize', 'htmlize', 'indent',                     # actions
-  'version', 'help', 'file=', 'expression=', 'silent', 'quiet', # sed-like
-  'nocolor', 'color', 'hide=', 'prefix=', 'emu', 'emudebug',    # misc
-  'dump-debug',                                                 # other
+  'debug', 'tokenize', 'htmlize', 'indent',                       # actions
+  'version', 'help', 'file=', 'expression=', 'silent', 'quiet',   # sed-like
+  'nocolor', 'color', 'hide=', 'prefix=', 'emu', 'emudebug',      # misc
+  'dump-debug',                                                   # other
   '_debuglevel=', '_emudebuglevel=', '_stdout-only', 'dumpcute']  # admin
 
 # Check it!
@@ -482,7 +482,7 @@ def paintHtml(id, txt=''):
     elif id == 'pattern':   # highlight ( and |
         txt = re.sub(
               '(\\\\)([(|])', '\\1'+paintHtml('pattmeta', '\\2'), txt)
-    elif id == 'plaintext': # highlight \$
+    elif id == 'plaintext':  # highlight \$
         newtxt = paintHtml('special', '\\'+linesep)
         txt = txt.replace('\\'+linesep, newtxt)
     elif id == 'branch':    # nice link to the label!
@@ -549,7 +549,7 @@ class SedCommand:
             self.isok = 1
         elif id in sedcmds['text']:
             Debug('type: text', 3)
-            if self.junk[-1] != '\\': # if not \ at end, finished
+            if self.junk[-1] != '\\':  # if not \ at end, finished
                 # ensure \LineSep at beginning
                 self.content = re.sub(
                                r'^\\%s'%linesep, '', self.junk)
@@ -599,7 +599,7 @@ class SedCommand:
                 m = re.match('(%s\s*)+'%patt['flag'], self.junk)
                 if m:
                     self.flag = m.group()
-                    self.junk = self.junk[m.end():].lstrip() # del flag
+                    self.junk = self.junk[m.end():].lstrip()  # del flag
                     self.flag = re.sub(
                        '\s', '', self.flag)  # del blanks@flag
                     Debug('FOUND s/// flag: %s'%(
@@ -687,14 +687,14 @@ class SedAddress:
 
     def setType(self):
         id = self.junk[0]
-        if re.match('[0-9$]', id):        # numeric addr, easy!
+        if re.match('[0-9$]', id):         # numeric addr, easy!
             self.isline = 1
-        else:                             # oh no, pattern
-            if id == '\\':                # strange delimiter (!/)
+        else:                              # oh no, pattern
+            if id == '\\':                 # strange delimiter (!/)
                 self.escape = '\\'
-                self.junk = self.junk[1:] # del escape
-            self.delimiter = self.junk[0] # set delimiter
-            self.junk = self.junk[1:]     # del delimiter@junk
+                self.junk = self.junk[1:]  # del escape
+            self.delimiter = self.junk[0]  # set delimiter
+            self.junk = self.junk[1:]      # del delimiter@junk
 
     def setLineAddr(self):
         m = re.match(r'[0-9]+|\$', self.junk)
@@ -806,7 +806,7 @@ def composeSedCommand(dict):
         idsep=''
         # spacer on r,w,b,t commands only
         spaceme = sedcmds['file']+sedcmds['jump']
-        spaceme = spaceme.replace(':', '') # : label (no space!)
+        spaceme = spaceme.replace(':', '')  # : label (no space!)
         if dict['id'] in spaceme: idsep=' '
         cmd = '%s%s%s%s'%(
               dict['modifier'],
@@ -1076,7 +1076,7 @@ linesep = '@#linesep#@'
 newlineshow = '%s\\N%s'%(color_RED, color_NO)
 blanklines= []
 ZZ = []
-ZZ.append({})  #for header
+ZZ.append({})  # for header
 
 linenr = 0
 cmddict = {}
@@ -1121,7 +1121,7 @@ for line in sedscript:
         else:
             incompletecmdline = ''
 
-        if not possiblecmd: continue # ; at EOL or useless seq of ;;;;
+        if not possiblecmd: continue  # ; at EOL or useless seq of ;;;;
 
         Debug('possiblecmd: '+possiblecmd, 2)
         possiblecmd = possiblecmd.lstrip()       # del space at begin
@@ -1141,7 +1141,7 @@ for line in sedscript:
         # We're not using split cause it fails at /bla[,]bla/ address
         #
         while True:
-            if not possiblecmd[0] in sedcmds['addr']: break # NOaddr
+            if not possiblecmd[0] in sedcmds['addr']: break  # NOaddr
 
             addr = SedAddress(possiblecmd, 'address')  # get data
 
@@ -1403,13 +1403,13 @@ class emuSed:
             PS = PS.translate(trtab)
         elif cmd['id'] == 'l': print(self._makeRawString(PS))
         elif cmd['id'] == 'd':
-            self.f_delme = 1 ; self.EOS = 1   # d) forces next cycle
-        elif cmd['id'] == 'D':             # D) del till \n, next cycle
-            cutted = re.sub('^.*?\n', '', PS) # del till the 1st \n
-            if cutted == PS: cutted = ''      # if no \n, del all
+            self.f_delme = 1 ; self.EOS = 1    # d) forces next cycle
+        elif cmd['id'] == 'D':                 # D) del till \n, next cycle
+            cutted = re.sub('^.*?\n', '', PS)  # del till the 1st \n
+            if cutted == PS: cutted = ''       # if no \n, del all
             PS = cutted
-            self.rewindScript()               # D forces rewind
-            if not PS:                    # no PS, start next cycle
+            self.rewindScript()                # D forces rewind
+            if not PS:                         # no PS, start next cycle
                 self.f_delme = 1 ; self.EOS = 1
             print('------ ' + PS)
         elif cmd['id'] == 'n':             # n) print patt, read line
@@ -1420,14 +1420,14 @@ class emuSed:
             self.readNextLine(); PS = self.line
         elif cmd['id'] in 'aic':           # aic) spill text
             txt = re.sub(r'\\%s'%linesep, '\n', cmd['content'])
-            txt = re.sub('^\n', '', txt)     #  delete first escape
+            txt = re.sub('^\n', '', txt)     # delete first escape
             self.f_delme = 1
-            if cmd['id'] == 'a': print(PS)   #  line before
-            print(txt)                       #  put text
-            if cmd['id'] == 'i': print(PS)   #  line after
+            if cmd['id'] == 'a': print(PS)   # line before
+            print(txt)                       # put text
+            if cmd['id'] == 'i': print(PS)   # line after
         elif cmd['id'] in 'bt':            # jump to...
-            if not cmd['content']: self.EOS = 1            #...end
-            else: self.cmdnr = self.labels[cmd['content']] #...label
+            if not cmd['content']: self.EOS = 1             # ...end
+            else: self.cmdnr = self.labels[cmd['content']]  # ...label
         # TODO s///3 ; s//\1/ ; s//&/
         elif cmd['id'] == 's':
             times = 1
@@ -1436,7 +1436,7 @@ class emuSed:
             # TODO v----- test only, make function
             patt = re.sub(r'\\\(', '(', patt)
             patt = re.sub(r'\\\)', ')', patt)
-            repl = re.sub(r'^\\\n', '\n', repl) # NL escaped on repl
+            repl = re.sub(r'^\\\n', '\n', repl)  # NL escaped on repl
             if 'g' in cmd['flag']: times = 0           # global
             if 'i' in cmd['flag']: patt = '(?i)'+patt  # ignore case
             new = re.sub(patt, repl, PS, times)
@@ -1460,7 +1460,7 @@ class emuSed:
                 print(pattid+self._makeRawString(PS))
                 print(holdid+self._makeRawString(HS))
 
-        self.line = PS ; self.holdspace = HS # save registers
+        self.line = PS ; self.holdspace = HS  # save registers
 
     def run(self):
         while not self.EOF:
@@ -1482,7 +1482,7 @@ class emuSed:
                 elif self.cmd['id'] == '{':
                     self.cmdnr = self.blocks[self.cmdnr]
 
-                self.cmdnr = self.cmdnr +1 # next command
+                self.cmdnr = self.cmdnr +1  # next command
                 if self.cmdnr > len(self.cmdlist)-1: break
 
             # default print pattern behaviour
