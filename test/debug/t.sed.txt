@@ -1,0 +1,58 @@
+PATT:one$
+HOLD:$
+COMM:[33;1ms/o/0/[m
+PATT:0ne$
+HOLD:$
+COMM:[33;1mt foo[m
+COMM:[33;1ms/e/3/[m
+PATT:0n3$
+HOLD:$
+COMM:[33;1mt [m
+0n3
+PATT:two$
+HOLD:$
+COMM:[33;1ms/o/0/[m
+PATT:tw0$
+HOLD:$
+COMM:[33;1mt foo[m
+COMM:[33;1ms/e/3/[m
+PATT:tw0$
+HOLD:$
+COMM:[33;1mt [m
+PATT:tw0$
+HOLD:$
+COMM:[33;1md[m
+PATT:three$
+HOLD:$
+COMM:[33;1ms/o/0/[m
+PATT:three$
+HOLD:$
+COMM:[33;1mt foo[m
+COMM:[33;1md[m
+PATT:four$
+HOLD:$
+COMM:[33;1ms/o/0/[m
+PATT:f0ur$
+HOLD:$
+COMM:[33;1mt foo[m
+COMM:[33;1ms/e/3/[m
+PATT:f0ur$
+HOLD:$
+COMM:[33;1mt [m
+PATT:f0ur$
+HOLD:$
+COMM:[33;1md[m
+PATT:five$
+HOLD:$
+COMM:[33;1ms/o/0/[m
+PATT:five$
+HOLD:$
+COMM:[33;1mt foo[m
+COMM:[33;1md[m
+PATT:six$
+HOLD:$
+COMM:[33;1ms/o/0/[m
+PATT:six$
+HOLD:$
+COMM:[33;1mt foo[m
+COMM:[33;1md[m

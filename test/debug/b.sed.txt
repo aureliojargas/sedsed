@@ -1,0 +1,30 @@
+PATT:one$
+HOLD:$
+COMM:[33;1mb foo[m
+COMM:[33;1mb [m
+one
+PATT:two$
+HOLD:$
+COMM:[33;1mb foo[m
+COMM:[33;1mb [m
+two
+PATT:three$
+HOLD:$
+COMM:[33;1mb foo[m
+COMM:[33;1mb [m
+three
+PATT:four$
+HOLD:$
+COMM:[33;1mb foo[m
+COMM:[33;1mb [m
+four
+PATT:five$
+HOLD:$
+COMM:[33;1mb foo[m
+COMM:[33;1mb [m
+five
+PATT:six$
+HOLD:$
+COMM:[33;1mb foo[m
+COMM:[33;1mb [m
+six

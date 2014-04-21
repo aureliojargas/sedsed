@@ -1,0 +1,42 @@
+PATT:one$
+HOLD:$
+COMM:[33;1m/bla/ {[m
+COMM:[33;1ms///[m
+PATT:one$
+HOLD:$
+one
+PATT:two$
+HOLD:$
+COMM:[33;1m/bla/ {[m
+COMM:[33;1ms///[m
+PATT:two$
+HOLD:$
+two
+PATT:three$
+HOLD:$
+COMM:[33;1m/bla/ {[m
+COMM:[33;1ms///[m
+PATT:three$
+HOLD:$
+three
+PATT:four$
+HOLD:$
+COMM:[33;1m/bla/ {[m
+COMM:[33;1ms///[m
+PATT:four$
+HOLD:$
+four
+PATT:five$
+HOLD:$
+COMM:[33;1m/bla/ {[m
+COMM:[33;1ms///[m
+PATT:five$
+HOLD:$
+five
+PATT:six$
+HOLD:$
+COMM:[33;1m/bla/ {[m
+COMM:[33;1ms///[m
+PATT:six$
+HOLD:$
+six

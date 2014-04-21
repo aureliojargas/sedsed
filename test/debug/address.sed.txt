@@ -1,0 +1,1172 @@
+PATT:one$
+HOLD:$
+COMM:[33;1m1 {[m
+COMM:[33;1mx[m
+PATT:$
+HOLD:one$
+COMM:[33;1ms/.*/10/p[m
+10
+PATT:10$
+HOLD:one$
+COMM:[33;1mx[m
+PATT:one$
+HOLD:10$
+COMM:[33;1m}[m
+COMM:[33;1m2,3 {[m
+COMM:[33;1m4,4 {[m
+COMM:[33;1m5,$ {[m
+COMM:[33;1m/one/ {[m
+COMM:[33;1mx[m
+PATT:10$
+HOLD:one$
+COMM:[33;1ms/.*/14/p[m
+14
+PATT:14$
+HOLD:one$
+COMM:[33;1mx[m
+PATT:one$
+HOLD:14$
+COMM:[33;1m}[m
+COMM:[33;1m/two/,/three/ {[m
+COMM:[33;1m/four/,/four/ {[m
+COMM:[33;1m/five/,$ {[m
+COMM:[33;1m1,/three/ {[m
+COMM:[33;1mx[m
+PATT:14$
+HOLD:one$
+COMM:[33;1ms/.*/18/p[m
+18
+PATT:18$
+HOLD:one$
+COMM:[33;1mx[m
+PATT:one$
+HOLD:18$
+COMM:[33;1m}[m
+COMM:[33;1m/four/,5 {[m
+COMM:[33;1m/six/,// {[m
+COMM:[33;1m\,one, {[m
+COMM:[33;1mx[m
+PATT:18$
+HOLD:one$
+COMM:[33;1ms/.*/21/p[m
+21
+PATT:21$
+HOLD:one$
+COMM:[33;1mx[m
+PATT:one$
+HOLD:21$
+COMM:[33;1m}[m
+COMM:[33;1m\,two,,\,three, {[m
+COMM:[33;1m\,four,,\,four, {[m
+COMM:[33;1m\,five,,$ {[m
+COMM:[33;1m1,\,three, {[m
+COMM:[33;1mx[m
+PATT:21$
+HOLD:one$
+COMM:[33;1ms/.*/25/p[m
+25
+PATT:25$
+HOLD:one$
+COMM:[33;1mx[m
+PATT:one$
+HOLD:25$
+COMM:[33;1m}[m
+COMM:[33;1m\,four,,6 {[m
+COMM:[33;1m\,one,,/two/ {[m
+COMM:[33;1mx[m
+PATT:25$
+HOLD:one$
+COMM:[33;1ms/.*/27/p[m
+27
+PATT:27$
+HOLD:one$
+COMM:[33;1mx[m
+PATT:one$
+HOLD:27$
+COMM:[33;1m}[m
+COMM:[33;1m/three/,\,four, {[m
+COMM:[33;1m\,five,,// {[m
+COMM:[33;1m\,six,,\,, {[m
+COMM:[33;1m1 {[m
+COMM:[33;1mx[m
+PATT:27$
+HOLD:one$
+COMM:[33;1ms/.*/10s/p[m
+10s
+PATT:10s$
+HOLD:one$
+COMM:[33;1mx[m
+PATT:one$
+HOLD:10s$
+COMM:[33;1m}[m
+COMM:[33;1m2,3 {[m
+COMM:[33;1m4,4 {[m
+COMM:[33;1m5,$ {[m
+COMM:[33;1m/one/ {[m
+COMM:[33;1mx[m
+PATT:10s$
+HOLD:one$
+COMM:[33;1ms/.*/14s/p[m
+14s
+PATT:14s$
+HOLD:one$
+COMM:[33;1mx[m
+PATT:one$
+HOLD:14s$
+COMM:[33;1m}[m
+COMM:[33;1m/two/,/three/ {[m
+COMM:[33;1m/four/,/four/ {[m
+COMM:[33;1m/five/,$ {[m
+COMM:[33;1m1,/three/ {[m
+COMM:[33;1mx[m
+PATT:14s$
+HOLD:one$
+COMM:[33;1ms/.*/18s/p[m
+18s
+PATT:18s$
+HOLD:one$
+COMM:[33;1mx[m
+PATT:one$
+HOLD:18s$
+COMM:[33;1m}[m
+COMM:[33;1m/four/,5 {[m
+COMM:[33;1m/six/,// {[m
+COMM:[33;1m\,one, {[m
+COMM:[33;1mx[m
+PATT:18s$
+HOLD:one$
+COMM:[33;1ms/.*/21s/p[m
+21s
+PATT:21s$
+HOLD:one$
+COMM:[33;1mx[m
+PATT:one$
+HOLD:21s$
+COMM:[33;1m}[m
+COMM:[33;1m\,two,,\,three, {[m
+COMM:[33;1m\,four,,\,four, {[m
+COMM:[33;1m\,five,,$ {[m
+COMM:[33;1m1,\,three, {[m
+COMM:[33;1mx[m
+PATT:21s$
+HOLD:one$
+COMM:[33;1ms/.*/25s/p[m
+25s
+PATT:25s$
+HOLD:one$
+COMM:[33;1mx[m
+PATT:one$
+HOLD:25s$
+COMM:[33;1m}[m
+COMM:[33;1m\,four,,6 {[m
+COMM:[33;1m\,one,,/two/ {[m
+COMM:[33;1mx[m
+PATT:25s$
+HOLD:one$
+COMM:[33;1ms/.*/27s/p[m
+27s
+PATT:27s$
+HOLD:one$
+COMM:[33;1mx[m
+PATT:one$
+HOLD:27s$
+COMM:[33;1m}[m
+COMM:[33;1m/three/,\,four, {[m
+COMM:[33;1m\,five,,// {[m
+COMM:[33;1m\,six,,\,, {[m
+COMM:[33;1md[m
+PATT:two$
+HOLD:27s$
+COMM:[33;1m1 {[m
+COMM:[33;1m2,3 {[m
+COMM:[33;1mx[m
+PATT:27s$
+HOLD:two$
+COMM:[33;1ms/.*/11/p[m
+11
+PATT:11$
+HOLD:two$
+COMM:[33;1mx[m
+PATT:two$
+HOLD:11$
+COMM:[33;1m}[m
+COMM:[33;1m4,4 {[m
+COMM:[33;1m5,$ {[m
+COMM:[33;1m/one/ {[m
+COMM:[33;1m/two/,/three/ {[m
+COMM:[33;1mx[m
+PATT:11$
+HOLD:two$
+COMM:[33;1ms/.*/15/p[m
+15
+PATT:15$
+HOLD:two$
+COMM:[33;1mx[m
+PATT:two$
+HOLD:15$
+COMM:[33;1m}[m
+COMM:[33;1m/four/,/four/ {[m
+COMM:[33;1m/five/,$ {[m
+COMM:[33;1m1,/three/ {[m
+COMM:[33;1mx[m
+PATT:15$
+HOLD:two$
+COMM:[33;1ms/.*/18/p[m
+18
+PATT:18$
+HOLD:two$
+COMM:[33;1mx[m
+PATT:two$
+HOLD:18$
+COMM:[33;1m}[m
+COMM:[33;1m/four/,5 {[m
+COMM:[33;1m/six/,// {[m
+COMM:[33;1m\,one, {[m
+COMM:[33;1m\,two,,\,three, {[m
+COMM:[33;1mx[m
+PATT:18$
+HOLD:two$
+COMM:[33;1ms/.*/22/p[m
+22
+PATT:22$
+HOLD:two$
+COMM:[33;1mx[m
+PATT:two$
+HOLD:22$
+COMM:[33;1m}[m
+COMM:[33;1m\,four,,\,four, {[m
+COMM:[33;1m\,five,,$ {[m
+COMM:[33;1m1,\,three, {[m
+COMM:[33;1mx[m
+PATT:22$
+HOLD:two$
+COMM:[33;1ms/.*/25/p[m
+25
+PATT:25$
+HOLD:two$
+COMM:[33;1mx[m
+PATT:two$
+HOLD:25$
+COMM:[33;1m}[m
+COMM:[33;1m\,four,,6 {[m
+COMM:[33;1m\,one,,/two/ {[m
+COMM:[33;1mx[m
+PATT:25$
+HOLD:two$
+COMM:[33;1ms/.*/27/p[m
+27
+PATT:27$
+HOLD:two$
+COMM:[33;1mx[m
+PATT:two$
+HOLD:27$
+COMM:[33;1m}[m
+COMM:[33;1m/three/,\,four, {[m
+COMM:[33;1m\,five,,// {[m
+COMM:[33;1m\,six,,\,, {[m
+COMM:[33;1m1 {[m
+COMM:[33;1m2,3 {[m
+COMM:[33;1mx[m
+PATT:27$
+HOLD:two$
+COMM:[33;1ms/.*/11s/p[m
+11s
+PATT:11s$
+HOLD:two$
+COMM:[33;1mx[m
+PATT:two$
+HOLD:11s$
+COMM:[33;1m}[m
+COMM:[33;1m4,4 {[m
+COMM:[33;1m5,$ {[m
+COMM:[33;1m/one/ {[m
+COMM:[33;1m/two/,/three/ {[m
+COMM:[33;1mx[m
+PATT:11s$
+HOLD:two$
+COMM:[33;1ms/.*/15s/p[m
+15s
+PATT:15s$
+HOLD:two$
+COMM:[33;1mx[m
+PATT:two$
+HOLD:15s$
+COMM:[33;1m}[m
+COMM:[33;1m/four/,/four/ {[m
+COMM:[33;1m/five/,$ {[m
+COMM:[33;1m1,/three/ {[m
+COMM:[33;1mx[m
+PATT:15s$
+HOLD:two$
+COMM:[33;1ms/.*/18s/p[m
+18s
+PATT:18s$
+HOLD:two$
+COMM:[33;1mx[m
+PATT:two$
+HOLD:18s$
+COMM:[33;1m}[m
+COMM:[33;1m/four/,5 {[m
+COMM:[33;1m/six/,// {[m
+COMM:[33;1m\,one, {[m
+COMM:[33;1m\,two,,\,three, {[m
+COMM:[33;1mx[m
+PATT:18s$
+HOLD:two$
+COMM:[33;1ms/.*/22s/p[m
+22s
+PATT:22s$
+HOLD:two$
+COMM:[33;1mx[m
+PATT:two$
+HOLD:22s$
+COMM:[33;1m}[m
+COMM:[33;1m\,four,,\,four, {[m
+COMM:[33;1m\,five,,$ {[m
+COMM:[33;1m1,\,three, {[m
+COMM:[33;1mx[m
+PATT:22s$
+HOLD:two$
+COMM:[33;1ms/.*/25s/p[m
+25s
+PATT:25s$
+HOLD:two$
+COMM:[33;1mx[m
+PATT:two$
+HOLD:25s$
+COMM:[33;1m}[m
+COMM:[33;1m\,four,,6 {[m
+COMM:[33;1m\,one,,/two/ {[m
+COMM:[33;1mx[m
+PATT:25s$
+HOLD:two$
+COMM:[33;1ms/.*/27s/p[m
+27s
+PATT:27s$
+HOLD:two$
+COMM:[33;1mx[m
+PATT:two$
+HOLD:27s$
+COMM:[33;1m}[m
+COMM:[33;1m/three/,\,four, {[m
+COMM:[33;1m\,five,,// {[m
+COMM:[33;1m\,six,,\,, {[m
+COMM:[33;1md[m
+PATT:three$
+HOLD:27s$
+COMM:[33;1m1 {[m
+COMM:[33;1m2,3 {[m
+COMM:[33;1mx[m
+PATT:27s$
+HOLD:three$
+COMM:[33;1ms/.*/11/p[m
+11
+PATT:11$
+HOLD:three$
+COMM:[33;1mx[m
+PATT:three$
+HOLD:11$
+COMM:[33;1m}[m
+COMM:[33;1m4,4 {[m
+COMM:[33;1m5,$ {[m
+COMM:[33;1m/one/ {[m
+COMM:[33;1m/two/,/three/ {[m
+COMM:[33;1mx[m
+PATT:11$
+HOLD:three$
+COMM:[33;1ms/.*/15/p[m
+15
+PATT:15$
+HOLD:three$
+COMM:[33;1mx[m
+PATT:three$
+HOLD:15$
+COMM:[33;1m}[m
+COMM:[33;1m/four/,/four/ {[m
+COMM:[33;1m/five/,$ {[m
+COMM:[33;1m1,/three/ {[m
+COMM:[33;1mx[m
+PATT:15$
+HOLD:three$
+COMM:[33;1ms/.*/18/p[m
+18
+PATT:18$
+HOLD:three$
+COMM:[33;1mx[m
+PATT:three$
+HOLD:18$
+COMM:[33;1m}[m
+COMM:[33;1m/four/,5 {[m
+COMM:[33;1m/six/,// {[m
+COMM:[33;1m\,one, {[m
+COMM:[33;1m\,two,,\,three, {[m
+COMM:[33;1mx[m
+PATT:18$
+HOLD:three$
+COMM:[33;1ms/.*/22/p[m
+22
+PATT:22$
+HOLD:three$
+COMM:[33;1mx[m
+PATT:three$
+HOLD:22$
+COMM:[33;1m}[m
+COMM:[33;1m\,four,,\,four, {[m
+COMM:[33;1m\,five,,$ {[m
+COMM:[33;1m1,\,three, {[m
+COMM:[33;1mx[m
+PATT:22$
+HOLD:three$
+COMM:[33;1ms/.*/25/p[m
+25
+PATT:25$
+HOLD:three$
+COMM:[33;1mx[m
+PATT:three$
+HOLD:25$
+COMM:[33;1m}[m
+COMM:[33;1m\,four,,6 {[m
+COMM:[33;1m\,one,,/two/ {[m
+COMM:[33;1m/three/,\,four, {[m
+COMM:[33;1mx[m
+PATT:25$
+HOLD:three$
+COMM:[33;1ms/.*/28/p[m
+28
+PATT:28$
+HOLD:three$
+COMM:[33;1mx[m
+PATT:three$
+HOLD:28$
+COMM:[33;1m}[m
+COMM:[33;1m\,five,,// {[m
+COMM:[33;1m\,six,,\,, {[m
+COMM:[33;1m1 {[m
+COMM:[33;1m2,3 {[m
+COMM:[33;1mx[m
+PATT:28$
+HOLD:three$
+COMM:[33;1ms/.*/11s/p[m
+11s
+PATT:11s$
+HOLD:three$
+COMM:[33;1mx[m
+PATT:three$
+HOLD:11s$
+COMM:[33;1m}[m
+COMM:[33;1m4,4 {[m
+COMM:[33;1m5,$ {[m
+COMM:[33;1m/one/ {[m
+COMM:[33;1m/two/,/three/ {[m
+COMM:[33;1mx[m
+PATT:11s$
+HOLD:three$
+COMM:[33;1ms/.*/15s/p[m
+15s
+PATT:15s$
+HOLD:three$
+COMM:[33;1mx[m
+PATT:three$
+HOLD:15s$
+COMM:[33;1m}[m
+COMM:[33;1m/four/,/four/ {[m
+COMM:[33;1m/five/,$ {[m
+COMM:[33;1m1,/three/ {[m
+COMM:[33;1mx[m
+PATT:15s$
+HOLD:three$
+COMM:[33;1ms/.*/18s/p[m
+18s
+PATT:18s$
+HOLD:three$
+COMM:[33;1mx[m
+PATT:three$
+HOLD:18s$
+COMM:[33;1m}[m
+COMM:[33;1m/four/,5 {[m
+COMM:[33;1m/six/,// {[m
+COMM:[33;1m\,one, {[m
+COMM:[33;1m\,two,,\,three, {[m
+COMM:[33;1mx[m
+PATT:18s$
+HOLD:three$
+COMM:[33;1ms/.*/22s/p[m
+22s
+PATT:22s$
+HOLD:three$
+COMM:[33;1mx[m
+PATT:three$
+HOLD:22s$
+COMM:[33;1m}[m
+COMM:[33;1m\,four,,\,four, {[m
+COMM:[33;1m\,five,,$ {[m
+COMM:[33;1m1,\,three, {[m
+COMM:[33;1mx[m
+PATT:22s$
+HOLD:three$
+COMM:[33;1ms/.*/25s/p[m
+25s
+PATT:25s$
+HOLD:three$
+COMM:[33;1mx[m
+PATT:three$
+HOLD:25s$
+COMM:[33;1m}[m
+COMM:[33;1m\,four,,6 {[m
+COMM:[33;1m\,one,,/two/ {[m
+COMM:[33;1m/three/,\,four, {[m
+COMM:[33;1mx[m
+PATT:25s$
+HOLD:three$
+COMM:[33;1ms/.*/28s/p[m
+28s
+PATT:28s$
+HOLD:three$
+COMM:[33;1mx[m
+PATT:three$
+HOLD:28s$
+COMM:[33;1m}[m
+COMM:[33;1m\,five,,// {[m
+COMM:[33;1m\,six,,\,, {[m
+COMM:[33;1md[m
+PATT:four$
+HOLD:28s$
+COMM:[33;1m1 {[m
+COMM:[33;1m2,3 {[m
+COMM:[33;1m4,4 {[m
+COMM:[33;1mx[m
+PATT:28s$
+HOLD:four$
+COMM:[33;1ms/.*/12/p[m
+12
+PATT:12$
+HOLD:four$
+COMM:[33;1mx[m
+PATT:four$
+HOLD:12$
+COMM:[33;1m}[m
+COMM:[33;1m5,$ {[m
+COMM:[33;1m/one/ {[m
+COMM:[33;1m/two/,/three/ {[m
+COMM:[33;1m/four/,/four/ {[m
+COMM:[33;1mx[m
+PATT:12$
+HOLD:four$
+COMM:[33;1ms/.*/16/p[m
+16
+PATT:16$
+HOLD:four$
+COMM:[33;1mx[m
+PATT:four$
+HOLD:16$
+COMM:[33;1m}[m
+COMM:[33;1m/five/,$ {[m
+COMM:[33;1m1,/three/ {[m
+COMM:[33;1m/four/,5 {[m
+COMM:[33;1mx[m
+PATT:16$
+HOLD:four$
+COMM:[33;1ms/.*/19/p[m
+19
+PATT:19$
+HOLD:four$
+COMM:[33;1mx[m
+PATT:four$
+HOLD:19$
+COMM:[33;1m}[m
+COMM:[33;1m/six/,// {[m
+COMM:[33;1m\,one, {[m
+COMM:[33;1m\,two,,\,three, {[m
+COMM:[33;1m\,four,,\,four, {[m
+COMM:[33;1mx[m
+PATT:19$
+HOLD:four$
+COMM:[33;1ms/.*/23/p[m
+23
+PATT:23$
+HOLD:four$
+COMM:[33;1mx[m
+PATT:four$
+HOLD:23$
+COMM:[33;1m}[m
+COMM:[33;1m\,five,,$ {[m
+COMM:[33;1m1,\,three, {[m
+COMM:[33;1m\,four,,6 {[m
+COMM:[33;1mx[m
+PATT:23$
+HOLD:four$
+COMM:[33;1ms/.*/26/p[m
+26
+PATT:26$
+HOLD:four$
+COMM:[33;1mx[m
+PATT:four$
+HOLD:26$
+COMM:[33;1m}[m
+COMM:[33;1m\,one,,/two/ {[m
+COMM:[33;1m/three/,\,four, {[m
+COMM:[33;1mx[m
+PATT:26$
+HOLD:four$
+COMM:[33;1ms/.*/28/p[m
+28
+PATT:28$
+HOLD:four$
+COMM:[33;1mx[m
+PATT:four$
+HOLD:28$
+COMM:[33;1m}[m
+COMM:[33;1m\,five,,// {[m
+COMM:[33;1m\,six,,\,, {[m
+COMM:[33;1m1 {[m
+COMM:[33;1m2,3 {[m
+COMM:[33;1m4,4 {[m
+COMM:[33;1mx[m
+PATT:28$
+HOLD:four$
+COMM:[33;1ms/.*/12s/p[m
+12s
+PATT:12s$
+HOLD:four$
+COMM:[33;1mx[m
+PATT:four$
+HOLD:12s$
+COMM:[33;1m}[m
+COMM:[33;1m5,$ {[m
+COMM:[33;1m/one/ {[m
+COMM:[33;1m/two/,/three/ {[m
+COMM:[33;1m/four/,/four/ {[m
+COMM:[33;1mx[m
+PATT:12s$
+HOLD:four$
+COMM:[33;1ms/.*/16s/p[m
+16s
+PATT:16s$
+HOLD:four$
+COMM:[33;1mx[m
+PATT:four$
+HOLD:16s$
+COMM:[33;1m}[m
+COMM:[33;1m/five/,$ {[m
+COMM:[33;1m1,/three/ {[m
+COMM:[33;1m/four/,5 {[m
+COMM:[33;1mx[m
+PATT:16s$
+HOLD:four$
+COMM:[33;1ms/.*/19s/p[m
+19s
+PATT:19s$
+HOLD:four$
+COMM:[33;1mx[m
+PATT:four$
+HOLD:19s$
+COMM:[33;1m}[m
+COMM:[33;1m/six/,// {[m
+COMM:[33;1m\,one, {[m
+COMM:[33;1m\,two,,\,three, {[m
+COMM:[33;1m\,four,,\,four, {[m
+COMM:[33;1mx[m
+PATT:19s$
+HOLD:four$
+COMM:[33;1ms/.*/23s/p[m
+23s
+PATT:23s$
+HOLD:four$
+COMM:[33;1mx[m
+PATT:four$
+HOLD:23s$
+COMM:[33;1m}[m
+COMM:[33;1m\,five,,$ {[m
+COMM:[33;1m1,\,three, {[m
+COMM:[33;1m\,four,,6 {[m
+COMM:[33;1mx[m
+PATT:23s$
+HOLD:four$
+COMM:[33;1ms/.*/26s/p[m
+26s
+PATT:26s$
+HOLD:four$
+COMM:[33;1mx[m
+PATT:four$
+HOLD:26s$
+COMM:[33;1m}[m
+COMM:[33;1m\,one,,/two/ {[m
+COMM:[33;1m/three/,\,four, {[m
+COMM:[33;1mx[m
+PATT:26s$
+HOLD:four$
+COMM:[33;1ms/.*/28s/p[m
+28s
+PATT:28s$
+HOLD:four$
+COMM:[33;1mx[m
+PATT:four$
+HOLD:28s$
+COMM:[33;1m}[m
+COMM:[33;1m\,five,,// {[m
+COMM:[33;1m\,six,,\,, {[m
+COMM:[33;1md[m
+PATT:five$
+HOLD:28s$
+COMM:[33;1m1 {[m
+COMM:[33;1m2,3 {[m
+COMM:[33;1m4,4 {[m
+COMM:[33;1m5,$ {[m
+COMM:[33;1mx[m
+PATT:28s$
+HOLD:five$
+COMM:[33;1ms/.*/13/p[m
+13
+PATT:13$
+HOLD:five$
+COMM:[33;1mx[m
+PATT:five$
+HOLD:13$
+COMM:[33;1m}[m
+COMM:[33;1m/one/ {[m
+COMM:[33;1m/two/,/three/ {[m
+COMM:[33;1m/four/,/four/ {[m
+COMM:[33;1mx[m
+PATT:13$
+HOLD:five$
+COMM:[33;1ms/.*/16/p[m
+16
+PATT:16$
+HOLD:five$
+COMM:[33;1mx[m
+PATT:five$
+HOLD:16$
+COMM:[33;1m}[m
+COMM:[33;1m/five/,$ {[m
+COMM:[33;1mx[m
+PATT:16$
+HOLD:five$
+COMM:[33;1ms/.*/17/p[m
+17
+PATT:17$
+HOLD:five$
+COMM:[33;1mx[m
+PATT:five$
+HOLD:17$
+COMM:[33;1m}[m
+COMM:[33;1m1,/three/ {[m
+COMM:[33;1m/four/,5 {[m
+COMM:[33;1mx[m
+PATT:17$
+HOLD:five$
+COMM:[33;1ms/.*/19/p[m
+19
+PATT:19$
+HOLD:five$
+COMM:[33;1mx[m
+PATT:five$
+HOLD:19$
+COMM:[33;1m}[m
+COMM:[33;1m/six/,// {[m
+COMM:[33;1m\,one, {[m
+COMM:[33;1m\,two,,\,three, {[m
+COMM:[33;1m\,four,,\,four, {[m
+COMM:[33;1mx[m
+PATT:19$
+HOLD:five$
+COMM:[33;1ms/.*/23/p[m
+23
+PATT:23$
+HOLD:five$
+COMM:[33;1mx[m
+PATT:five$
+HOLD:23$
+COMM:[33;1m}[m
+COMM:[33;1m\,five,,$ {[m
+COMM:[33;1mx[m
+PATT:23$
+HOLD:five$
+COMM:[33;1ms/.*/24/p[m
+24
+PATT:24$
+HOLD:five$
+COMM:[33;1mx[m
+PATT:five$
+HOLD:24$
+COMM:[33;1m}[m
+COMM:[33;1m1,\,three, {[m
+COMM:[33;1m\,four,,6 {[m
+COMM:[33;1mx[m
+PATT:24$
+HOLD:five$
+COMM:[33;1ms/.*/26/p[m
+26
+PATT:26$
+HOLD:five$
+COMM:[33;1mx[m
+PATT:five$
+HOLD:26$
+COMM:[33;1m}[m
+COMM:[33;1m\,one,,/two/ {[m
+COMM:[33;1m/three/,\,four, {[m
+COMM:[33;1m\,five,,// {[m
+COMM:[33;1mx[m
+PATT:26$
+HOLD:five$
+COMM:[33;1ms/.*/29/p[m
+29
+PATT:29$
+HOLD:five$
+COMM:[33;1mx[m
+PATT:five$
+HOLD:29$
+COMM:[33;1m}[m
+COMM:[33;1m\,six,,\,, {[m
+COMM:[33;1m1 {[m
+COMM:[33;1m2,3 {[m
+COMM:[33;1m4,4 {[m
+COMM:[33;1m5,$ {[m
+COMM:[33;1mx[m
+PATT:29$
+HOLD:five$
+COMM:[33;1ms/.*/13s/p[m
+13s
+PATT:13s$
+HOLD:five$
+COMM:[33;1mx[m
+PATT:five$
+HOLD:13s$
+COMM:[33;1m}[m
+COMM:[33;1m/one/ {[m
+COMM:[33;1m/two/,/three/ {[m
+COMM:[33;1m/four/,/four/ {[m
+COMM:[33;1mx[m
+PATT:13s$
+HOLD:five$
+COMM:[33;1ms/.*/16s/p[m
+16s
+PATT:16s$
+HOLD:five$
+COMM:[33;1mx[m
+PATT:five$
+HOLD:16s$
+COMM:[33;1m}[m
+COMM:[33;1m/five/,$ {[m
+COMM:[33;1mx[m
+PATT:16s$
+HOLD:five$
+COMM:[33;1ms/.*/17s/p[m
+17s
+PATT:17s$
+HOLD:five$
+COMM:[33;1mx[m
+PATT:five$
+HOLD:17s$
+COMM:[33;1m}[m
+COMM:[33;1m1,/three/ {[m
+COMM:[33;1m/four/,5 {[m
+COMM:[33;1mx[m
+PATT:17s$
+HOLD:five$
+COMM:[33;1ms/.*/19s/p[m
+19s
+PATT:19s$
+HOLD:five$
+COMM:[33;1mx[m
+PATT:five$
+HOLD:19s$
+COMM:[33;1m}[m
+COMM:[33;1m/six/,// {[m
+COMM:[33;1m\,one, {[m
+COMM:[33;1m\,two,,\,three, {[m
+COMM:[33;1m\,four,,\,four, {[m
+COMM:[33;1mx[m
+PATT:19s$
+HOLD:five$
+COMM:[33;1ms/.*/23s/p[m
+23s
+PATT:23s$
+HOLD:five$
+COMM:[33;1mx[m
+PATT:five$
+HOLD:23s$
+COMM:[33;1m}[m
+COMM:[33;1m\,five,,$ {[m
+COMM:[33;1mx[m
+PATT:23s$
+HOLD:five$
+COMM:[33;1ms/.*/24s/p[m
+24s
+PATT:24s$
+HOLD:five$
+COMM:[33;1mx[m
+PATT:five$
+HOLD:24s$
+COMM:[33;1m}[m
+COMM:[33;1m1,\,three, {[m
+COMM:[33;1m\,four,,6 {[m
+COMM:[33;1mx[m
+PATT:24s$
+HOLD:five$
+COMM:[33;1ms/.*/26s/p[m
+26s
+PATT:26s$
+HOLD:five$
+COMM:[33;1mx[m
+PATT:five$
+HOLD:26s$
+COMM:[33;1m}[m
+COMM:[33;1m\,one,,/two/ {[m
+COMM:[33;1m/three/,\,four, {[m
+COMM:[33;1m\,five,,// {[m
+COMM:[33;1mx[m
+PATT:26s$
+HOLD:five$
+COMM:[33;1ms/.*/29s/p[m
+29s
+PATT:29s$
+HOLD:five$
+COMM:[33;1mx[m
+PATT:five$
+HOLD:29s$
+COMM:[33;1m}[m
+COMM:[33;1m\,six,,\,, {[m
+COMM:[33;1md[m
+PATT:six$
+HOLD:29s$
+COMM:[33;1m1 {[m
+COMM:[33;1m2,3 {[m
+COMM:[33;1m4,4 {[m
+COMM:[33;1m5,$ {[m
+COMM:[33;1mx[m
+PATT:29s$
+HOLD:six$
+COMM:[33;1ms/.*/13/p[m
+13
+PATT:13$
+HOLD:six$
+COMM:[33;1mx[m
+PATT:six$
+HOLD:13$
+COMM:[33;1m}[m
+COMM:[33;1m/one/ {[m
+COMM:[33;1m/two/,/three/ {[m
+COMM:[33;1m/four/,/four/ {[m
+COMM:[33;1mx[m
+PATT:13$
+HOLD:six$
+COMM:[33;1ms/.*/16/p[m
+16
+PATT:16$
+HOLD:six$
+COMM:[33;1mx[m
+PATT:six$
+HOLD:16$
+COMM:[33;1m}[m
+COMM:[33;1m/five/,$ {[m
+COMM:[33;1mx[m
+PATT:16$
+HOLD:six$
+COMM:[33;1ms/.*/17/p[m
+17
+PATT:17$
+HOLD:six$
+COMM:[33;1mx[m
+PATT:six$
+HOLD:17$
+COMM:[33;1m}[m
+COMM:[33;1m1,/three/ {[m
+COMM:[33;1m/four/,5 {[m
+COMM:[33;1m/six/,// {[m
+COMM:[33;1mx[m
+PATT:17$
+HOLD:six$
+COMM:[33;1ms/.*/1A/p[m
+1A
+PATT:1A$
+HOLD:six$
+COMM:[33;1mx[m
+PATT:six$
+HOLD:1A$
+COMM:[33;1m}[m
+COMM:[33;1m\,one, {[m
+COMM:[33;1m\,two,,\,three, {[m
+COMM:[33;1m\,four,,\,four, {[m
+COMM:[33;1mx[m
+PATT:1A$
+HOLD:six$
+COMM:[33;1ms/.*/23/p[m
+23
+PATT:23$
+HOLD:six$
+COMM:[33;1mx[m
+PATT:six$
+HOLD:23$
+COMM:[33;1m}[m
+COMM:[33;1m\,five,,$ {[m
+COMM:[33;1mx[m
+PATT:23$
+HOLD:six$
+COMM:[33;1ms/.*/24/p[m
+24
+PATT:24$
+HOLD:six$
+COMM:[33;1mx[m
+PATT:six$
+HOLD:24$
+COMM:[33;1m}[m
+COMM:[33;1m1,\,three, {[m
+COMM:[33;1m\,four,,6 {[m
+COMM:[33;1mx[m
+PATT:24$
+HOLD:six$
+COMM:[33;1ms/.*/26/p[m
+26
+PATT:26$
+HOLD:six$
+COMM:[33;1mx[m
+PATT:six$
+HOLD:26$
+COMM:[33;1m}[m
+COMM:[33;1m\,one,,/two/ {[m
+COMM:[33;1m/three/,\,four, {[m
+COMM:[33;1m\,five,,// {[m
+COMM:[33;1mx[m
+PATT:26$
+HOLD:six$
+COMM:[33;1ms/.*/29/p[m
+29
+PATT:29$
+HOLD:six$
+COMM:[33;1mx[m
+PATT:six$
+HOLD:29$
+COMM:[33;1m}[m
+COMM:[33;1m\,six,,\,, {[m
+COMM:[33;1mx[m
+PATT:29$
+HOLD:six$
+COMM:[33;1ms/.*/2A/p[m
+2A
+PATT:2A$
+HOLD:six$
+COMM:[33;1mx[m
+PATT:six$
+HOLD:2A$
+COMM:[33;1m}[m
+COMM:[33;1m1 {[m
+COMM:[33;1m2,3 {[m
+COMM:[33;1m4,4 {[m
+COMM:[33;1m5,$ {[m
+COMM:[33;1mx[m
+PATT:2A$
+HOLD:six$
+COMM:[33;1ms/.*/13s/p[m
+13s
+PATT:13s$
+HOLD:six$
+COMM:[33;1mx[m
+PATT:six$
+HOLD:13s$
+COMM:[33;1m}[m
+COMM:[33;1m/one/ {[m
+COMM:[33;1m/two/,/three/ {[m
+COMM:[33;1m/four/,/four/ {[m
+COMM:[33;1mx[m
+PATT:13s$
+HOLD:six$
+COMM:[33;1ms/.*/16s/p[m
+16s
+PATT:16s$
+HOLD:six$
+COMM:[33;1mx[m
+PATT:six$
+HOLD:16s$
+COMM:[33;1m}[m
+COMM:[33;1m/five/,$ {[m
+COMM:[33;1mx[m
+PATT:16s$
+HOLD:six$
+COMM:[33;1ms/.*/17s/p[m
+17s
+PATT:17s$
+HOLD:six$
+COMM:[33;1mx[m
+PATT:six$
+HOLD:17s$
+COMM:[33;1m}[m
+COMM:[33;1m1,/three/ {[m
+COMM:[33;1m/four/,5 {[m
+COMM:[33;1m/six/,// {[m
+COMM:[33;1mx[m
+PATT:17s$
+HOLD:six$
+COMM:[33;1ms/.*/1As/p[m
+1As
+PATT:1As$
+HOLD:six$
+COMM:[33;1mx[m
+PATT:six$
+HOLD:1As$
+COMM:[33;1m}[m
+COMM:[33;1m\,one, {[m
+COMM:[33;1m\,two,,\,three, {[m
+COMM:[33;1m\,four,,\,four, {[m
+COMM:[33;1mx[m
+PATT:1As$
+HOLD:six$
+COMM:[33;1ms/.*/23s/p[m
+23s
+PATT:23s$
+HOLD:six$
+COMM:[33;1mx[m
+PATT:six$
+HOLD:23s$
+COMM:[33;1m}[m
+COMM:[33;1m\,five,,$ {[m
+COMM:[33;1mx[m
+PATT:23s$
+HOLD:six$
+COMM:[33;1ms/.*/24s/p[m
+24s
+PATT:24s$
+HOLD:six$
+COMM:[33;1mx[m
+PATT:six$
+HOLD:24s$
+COMM:[33;1m}[m
+COMM:[33;1m1,\,three, {[m
+COMM:[33;1m\,four,,6 {[m
+COMM:[33;1mx[m
+PATT:24s$
+HOLD:six$
+COMM:[33;1ms/.*/26s/p[m
+26s
+PATT:26s$
+HOLD:six$
+COMM:[33;1mx[m
+PATT:six$
+HOLD:26s$
+COMM:[33;1m}[m
+COMM:[33;1m\,one,,/two/ {[m
+COMM:[33;1m/three/,\,four, {[m
+COMM:[33;1m\,five,,// {[m
+COMM:[33;1mx[m
+PATT:26s$
+HOLD:six$
+COMM:[33;1ms/.*/29s/p[m
+29s
+PATT:29s$
+HOLD:six$
+COMM:[33;1mx[m
+PATT:six$
+HOLD:29s$
+COMM:[33;1m}[m
+COMM:[33;1m\,six,,\,, {[m
+COMM:[33;1mx[m
+PATT:29s$
+HOLD:six$
+COMM:[33;1ms/.*/2As/p[m
+2As
+PATT:2As$
+HOLD:six$
+COMM:[33;1mx[m
+PATT:six$
+HOLD:2As$
+COMM:[33;1m}[m
+COMM:[33;1md[m

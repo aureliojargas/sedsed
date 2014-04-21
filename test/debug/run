@@ -1,0 +1,27 @@
+#!/bin/bash
+
+sed='gsed'
+sedsed='python ../../sedsed.py'
+
+text=$(printf "one\ntwo\nthree\nfour\nfive\nsix\n")
+
+# Always run the tests from this script's folder
+cd $(dirname "$0") || exit 1
+
+# Test files user supplied files ($@) otherwise test everything
+for file_path in ${@:-../parsing/*.sed}; do
+
+    file=$(basename $file_path)
+	output_file=$file.txt
+
+	# Only test *.gnu.sed files when using GNU sed
+	test ${file%.gnu.sed} != $file && test "$sed" != 'gsed' && continue
+
+	echo "Testing ${file%.sed}"
+
+	# Run the debugger and save the results
+	echo "$text" | $sedsed --debug -f $file_path > $output_file
+done
+
+# Use git to show the errors (differences)
+git status --short . | sed 's/^/********** ERROR (use git diff): /'
