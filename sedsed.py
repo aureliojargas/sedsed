@@ -1495,11 +1495,11 @@ class emuSed(object):
             self.EOF = 1
             return
 
-        next = self.inlist[self.linenr]
+        next_line = self.inlist[self.linenr]
         if self.f_joinme:
-            self.line = self.line + '\n' + next
+            self.line = self.line + '\n' + next_line
         else:
-            self.line = next
+            self.line = next_line
         Debug('line read:%d:%s' % (self.linenr, repr(self.line)), 1)
 
     def _getAddress(self, fulladdr):
