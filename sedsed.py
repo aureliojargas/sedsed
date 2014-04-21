@@ -145,7 +145,7 @@ def read_file(file):
     return [re.sub('[\n\r]+$', '', x) for x in data]
 
 
-def write_file(file, lines=[]):
+def write_file(file, lines):
     "Writes a list contents into file, adding correct line breaks"
 
     try:
