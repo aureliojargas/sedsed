@@ -1762,8 +1762,8 @@ elif action in ['emu', 'emudebug']:
         dodebug = 1
     else:
         dodebug = 0
-    for textfile in textfiles:
-        emuSed(ZZ, textfile, dodebug)
+    for input_file in textfiles:
+        emuSed(ZZ, input_file, dodebug)
 
 
 # -----------------------------------------------------------------------------
