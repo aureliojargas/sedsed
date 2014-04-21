@@ -1011,11 +1011,8 @@ def dumpScript(datalist, indent_prefix):
     "Shows the indented script in plain text or HTML!"
     indfmt = {
         'string': indent_prefix,
-        'initlevel': 0,
-        'addrsep': ',',
-        'joinaddrcmd': 0}
+        'initlevel': 0}
     outlist = []
-    adsep = indfmt['addrsep']
     indent = indfmt['initlevel']
 
     if action == 'html':
@@ -1517,7 +1514,6 @@ class emuSed(object):
     def testAddress(self):
         ok = 0
         cmd = self.cmd
-        PS = self.line
 
         if not cmd['addr1']:
             ok = 1              # no address
