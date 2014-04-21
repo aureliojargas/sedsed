@@ -1677,14 +1677,14 @@ class emuSed:
             fullcmd = "%s%s" % (
                 composeSedAddress(cmd),
                 composeSedCommand(cmd).replace('\n', newlineshow + color_YLW))
-            print(commid + color_YLW + fullcmd + color_NO)
+            print('COMM:' + color_YLW + fullcmd + color_NO)
             if cmd['id'] in ':bt' and cmd['content']:
                 showreg = 0
             if cmd['id'] in '{}':
                 showreg = 0
             if showreg:
-                print(pattid + self._makeRawString(PS))
-                print(holdid + self._makeRawString(HS))
+                print('PATT:' + self._makeRawString(PS))
+                print('HOLD:' + self._makeRawString(HS))
 
         self.line = PS
         self.holdspace = HS  # save registers
@@ -1697,8 +1697,8 @@ class emuSed:
                 break
 
             if self.linenr == 1 and self.f_debug:   # debug info
-                print(pattid + self._makeRawString(self.line))
-                print(holdid + self._makeRawString(self.holdspace))
+                print('PATT:' + self._makeRawString(self.line))
+                print('HOLD:' + self._makeRawString(self.holdspace))
 
             while not self.EOS:
                 if self.cmdnr == -1:  # 1st position
