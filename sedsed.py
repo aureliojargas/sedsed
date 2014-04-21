@@ -10,9 +10,9 @@ myversion = '1.0'
 myhome    = 'http://sedsed.sf.net'
 
 
-#-------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #                              User Configuration
-#-------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 
 # Default config - Changeable, but you won't need to do it
@@ -63,9 +63,9 @@ else:
     stdin_id = '/dev/stdin'
 
 
-#-------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #                              General Functions
-#-------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 
 def printUsage(exitcode=1):
@@ -135,14 +135,14 @@ def write_file(file, lines=[]):
     "Writes a list contents into file, adding correct line breaks"
     try: f = open(file, 'w')
     except: Error("Cannot open file for writing: %s"%file)
-    #TODO maybe use os.linesep? - all this is really necessary?
+    # TODO maybe use os.linesep? - all this is really necessary?
     # ensuring line break
     lines = [re.sub('\n$', '', x)+'\n' for x in lines]
     f.writelines(lines); f.close()
 
 
 def runCommand(cmd): # Returns a (#exit_code, program_output[]) tuple
-    #TODO don't use popen()
+    # TODO don't use popen()
     list = [] ; fd = os.popen(cmd)
     for line in fd.readlines():
         list.append(line.rstrip())  # stripping \s*\n
@@ -151,9 +151,9 @@ def runCommand(cmd): # Returns a (#exit_code, program_output[]) tuple
     return ret, list
 
 
-#-------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #                           Command line & Config
-#-------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 
 # Here's all the valid command line options
@@ -222,9 +222,9 @@ for o in opt:
 # Now all Command Line options were successfully parsed
 
 
-#-------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #                              Sanity Checks
-#-------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 
 # There's a SED script?
@@ -239,9 +239,9 @@ textfiles = args or [stdin_id]
 
 # On --debug, check the given script syntax, running SED with it.
 # We will not debug a broken script.
-#XXX there is a problem with popen() and win9x machines
+# XXX there is a problem with popen() and win9x machines
 #    so I'm skipping this check for those machines
-#TODO redo this check using !runCommand
+# TODO redo this check using !runCommand
 if action == 'debug' and os.name != 'nt':
     tmpfile = tempfile.mktemp()
     write_file(tmpfile, sedscript)
@@ -252,9 +252,9 @@ if action == 'debug' and os.name != 'nt':
     os.remove(tmpfile)
 
 
-#-------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #                    Internal Config Adjustments and Magic
-#-------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 
 # Add the leading #n to the sed script, when using -n
@@ -270,7 +270,8 @@ else:
     color_YLW = color_RED = color_REV = color_NO = ''
 
 
-### The SED debugger magic lines
+# The SED debugger magic lines
+# ----------------------------
 #
 # Here is where the 'magic' lives. The heart of this program are the
 # following lines, which are the special SED commands responsible for
@@ -392,9 +393,9 @@ debugger/indenter/tokenizer/HTMLizer</b></font>\n
 del html_colors['SCRIPTNAME']
 
 
-#-------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #                              SED Machine Data
-#-------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 
 # All SED commands grouped by kind
@@ -424,12 +425,12 @@ cmdfields = [
   'id', 'content', 'delimiter', 'pattern', 'replace', 'flag',
   'extrainfo', 'comment'
 ]
-#XXX Don't change the order! There is a piggy cmdfields[6:] ahead
+# XXX Don't change the order! There is a piggy cmdfields[6:] ahead
 
 
-#-------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #                         Auxiliary Functions - Tools
-#-------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 
 def escapeTextCommandsSpecials(str):
@@ -496,9 +497,9 @@ def paintHtml(id, txt=''):
     return txt
 
 
-#-------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #                 SedCommand class - Know All About Commands
-#-------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 
 # TIP: SedCommand already receives lstrip()ed data and data != None
@@ -526,14 +527,14 @@ class SedCommand:
             self.id = self.junk[0]                   # set id again
         self.junk = self.junk[1:]                     # del id@junk
 
-        #self.setId()
+        # self.setId()
         self.doItAll()
 
     def doItAll(self):
         # here, junk arrives without the id, but not lstripped (s///)
         id = self.id
 
-        #TODO put pending comment on the previous command (h ;#comm)
+        # TODO put pending comment on the previous command (h ;#comm)
         if id == '#':
             Debug('type: comment', 3)
             self.comment = self.id+self.junk
@@ -565,8 +566,8 @@ class SedCommand:
                 self.isok = 1
 
         elif id in sedcmds['file']:
-        #TODO deal with valid cmds like 'r bla;bla' and 'r bla ;#comm'
-        #TODO spaces and ; are valid as filename chars
+        # TODO deal with valid cmds like 'r bla;bla' and 'r bla ;#comm'
+        # TODO spaces and ; are valid as filename chars
             Debug('type: file', 3)
             self.junk = self.junk.lstrip()
             m = re.match(patt['filename'], self.junk)
@@ -604,7 +605,7 @@ class SedCommand:
                     Debug('FOUND s/// flag: %s'%(
                        self.flag.strip()))
 
-                    ### now we've got flags also
+                    # now we've got flags also
 
                 if 'w' in self.flag:         # write file flag
                     m = re.match(patt['filename'], self.junk)
@@ -613,8 +614,8 @@ class SedCommand:
                         Debug('FOUND s///w filename: %s'%self.content)
                         self.junk = self.junk[m.end():].lstrip()
 
-                        ### and now, s///w filename
-                        ### is saved also
+                        # and now, s///w filename
+                        # is saved also
 
             if hs and hs.isok: self.isok = 1
 
@@ -635,12 +636,12 @@ class SedCommand:
         Debug('SedCommand: %s'%vars(self), 3)
 
 
-#-------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #                 SedAddress class - Know All About Addresses
-#-------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 
-#TIP an address is NOT multiline
+# TIP an address is NOT multiline
 class SedAddress:
     def __init__(self, abcde, context='address'):
         self.delimiter = ''
@@ -756,9 +757,9 @@ class SedAddress:
             self.isok = 1
 
 
-#-------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #                 Hardcore Address/Command Composer Functions
-#-------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 
 def composeSedAddress(dict):
@@ -831,9 +832,9 @@ def composeSedCommand(dict):
     return cmd
 
 
-#-------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #                    The dump* Functions - They 4mat 4you!
-#-------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 
 def dumpKeyValuePair(datalist):
@@ -942,11 +943,9 @@ def dumpScript(datalist, indent_prefix):
     print('\n'.join(outlist))                          # print the result
 
 
-#-------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #                    doDebug - Here is where the fun begins
-#-------------------------------------------------------------------------------
-#
-### doDebug
+# ------------------------------------------------------------------------------
 #
 # This function performs the --debug action.
 #
@@ -1025,7 +1024,7 @@ def doDebug(datalist):
     # executing sed script
     cmdextra = inputfiles = ''
     if action_modifiers.count('_stdout-only'):
-        #cmdextra = "| egrep -v '^PATT|^HOLD|^COMM|\$$|\\$'"  # sed
+        # cmdextra = "| egrep -v '^PATT|^HOLD|^COMM|\$$|\\$'"  # sed
         cmdextra = "-l 5000 | egrep -v '^PATT|^HOLD|^COMM'"   # gsed
     for file in textfiles: inputfiles = '%s %s'%(inputfiles, file)
     if dump_debug:
@@ -1049,7 +1048,7 @@ def doDebug(datalist):
 #                                                                              #
 ################################################################################
 #
-### Global view of the parser:
+# Global view of the parser:
 #
 # - Load the original sed script to a list, then let the file free
 # - Scan the list (line by line)
@@ -1132,7 +1131,7 @@ for line in sedscript:
             incompleteaddr = cmdid
             continue
 
-        ###----------- Get addresses routine ---------------
+        # ------------- Get addresses routine ---------------
         #
         # To handle ranges, match addresses one by one:
         # - Matched addr at ^   ? Get it and set addr1.
@@ -1179,9 +1178,9 @@ for line in sedscript:
         for key in cmdfields[:6]:  # filling not set addr fields
             if key not in cmddict: cmddict[key] = ''
 
-        ###-------------------------------------------------
-        ### from here, address is no more
-        ###-------------------------------------------------
+        # -------------------------------------------------
+        # from here, address is no more
+        # -------------------------------------------------
 
         if not incompletecmd:
             if not possiblecmd:
@@ -1240,7 +1239,8 @@ ZZ[0]['has_t'] = has_t
 # From now on, all functions and classes will manage this list.
 # If you are curious about it, just uncomment the line below and
 # prepare yourself for an ASCII nightmare ;)
-#print color_YLW + `ZZ` + color_NO ; sys.exit(0)
+#
+# print color_YLW + `ZZ` + color_NO ; sys.exit(0)
 
 
 ################################################################################
@@ -1262,10 +1262,10 @@ ZZ[0]['has_t'] = has_t
 #
 
 class emuSed:
-#TODO check for syntax errors
-#TODO convert regexes
-#TODO organize debug msgs
-#TODO make all this script a valid/callable python module
+# TODO check for syntax errors
+# TODO convert regexes
+# TODO organize debug msgs
+# TODO make all this script a valid/callable python module
     def __init__(self, datalist, textfile, debug=0):
         self.inlist = ['']
         self.outlist = []
@@ -1320,8 +1320,8 @@ class emuSed:
 
     def readNextLine(self):
         self.linenr = self.linenr +1
-        #TODO $ matches every line.
-        #TODO GNUsed retains stdout until next only if there is a $ addr
+        # TODO $ matches every line.
+        # TODO GNUsed retains stdout until next only if there is a $ addr
         if self.f_stdin:                 # reading STDIN interactively
             inputline = sys.stdin.readline()
             if not inputline: self.EOF = 1 ; return
@@ -1387,7 +1387,7 @@ class emuSed:
         cmd = self.cmd ; PS = self.line ; HS = self.holdspace
         Debug('cmdnr: %d'%self.cmdnr, 3)
 
-        #TODO ! r w //
+        # TODO ! r w //
         if   cmd['id'] == ':': pass
         elif cmd['id'] == '=': print(self.linenr)
         elif cmd['id'] == 'p': print(PS)
@@ -1428,12 +1428,12 @@ class emuSed:
         elif cmd['id'] in 'bt':            # jump to...
             if not cmd['content']: self.EOS = 1            #...end
             else: self.cmdnr = self.labels[cmd['content']] #...label
-        #TODO s///3 ; s//\1/ ; s//&/
+        # TODO s///3 ; s//\1/ ; s//&/
         elif cmd['id'] == 's':
             times = 1
             patt = cmd['pattern']
             repl = cmd['replace']
-            #TODO v----- test only, make function
+            # TODO v----- test only, make function
             patt = re.sub(r'\\\(', '(', patt)
             patt = re.sub(r'\\\)', ')', patt)
             repl = re.sub(r'^\\\n', '\n', repl) # NL escaped on repl
@@ -1489,9 +1489,9 @@ class emuSed:
             if not self.f_delme: print(self.line)
 
 
-#-------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #          Script Already Parsed, Now It's Time To Make Decisions
-#-------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #
 # This is the crucial point where the program will perform the action
 # that you choose on the command line.
@@ -1515,15 +1515,15 @@ elif action in ['emu', 'emudebug']:
         emuSed(ZZ, textfile, dodebug)
 
 
-#-------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #                               - THE END -
-#-------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 
-#TODO commenter
-#TODO ignore l command line break?
-#TODO accept \n as addr delimiter
-#TODO more comments, reformat some long lines or depth indent
-#TODO check if there's a SED command
-#TODO check if user script is syntax correct (!popen())
+# TODO commenter
+# TODO ignore l command line break?
+# TODO accept \n as addr delimiter
+# TODO more comments, reformat some long lines or depth indent
+# TODO check if there's a SED command
+# TODO check if user script is syntax correct (!popen())
 #     ^---- how to close stdout on os.system() ?
