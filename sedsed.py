@@ -125,7 +125,7 @@ def read_file(file):
 
 def write_file(file, lines=[]):
 	"Writes a list contents into file, adding correct line breaks" 
-	try: f = open(file, 'wb')
+	try: f = open(file, 'w')
 	except: Error("Cannot open file for writing: %s"%file)
 	#TODO maybe use os.linesep? - all this is really necessary?
 	# ensuring line break
