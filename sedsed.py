@@ -106,7 +106,7 @@ NOTE: The --emu and --emudebug options are still INCOMPLETE and must
 
 def Error(msg):
 	"All error messages are handled by me"
-	print('ERROR:',msg) ; sys.exit(1)
+	print('ERROR: %s'%msg) ; sys.exit(1)
 
 def echo(msg): print("\033[33;1m%s\033[m"%msg)
 
@@ -1391,7 +1391,7 @@ class emuSed:
 			self.rewindScript()               # D forces rewind
 			if not PS:                    # no PS, start next cycle
 				self.f_delme = 1 ; self.EOS = 1
-			print('------',PS)
+			print('------ ' + PS)
 		elif cmd['id'] == 'n':             # n) print patt, read line
 			print(PS)
 			self.readNextLine(); PS = self.line
