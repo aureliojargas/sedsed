@@ -1270,6 +1270,13 @@ class emuSed:
 		self.f_stdin = 0
 		self.rewindScript()
 		
+		# maketrans() is required to emulate the 'y' command
+		try:
+			self.maketrans = str.maketrans  # py3
+		except:
+			from string import maketrans    # py2
+			self.maketrans = maketrans
+
 		# getting input data location (stdin or file)
 		if textfile in (stdin_id, '-'): self.f_stdin = 1
 		else: self.inlist.extend(read_file(textfile))
@@ -1379,7 +1386,7 @@ class emuSed:
 		elif cmd['id'] == 'G': PS = PS+'\n'+HS
 		elif cmd['id'] == 'x': PS, HS = HS, PS
 		elif cmd['id'] == 'y':
-			trtab = string.maketrans(cmd['pattern'], cmd['replace'])
+			trtab = self.maketrans(cmd['pattern'], cmd['replace'])
 			PS = string.translate(PS, trtab)
 		elif cmd['id'] == 'l': print(self._makeRawString(PS))
 		elif cmd['id'] == 'd':
