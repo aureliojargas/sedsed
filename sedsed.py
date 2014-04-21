@@ -517,22 +517,22 @@ cmdfields = [
 # -----------------------------------------------------------------------------
 
 
-def escapeTextCommandsSpecials(str):
-    str = str.replace('\\', '\\\\')                 # escape escape
-    return str
+def escapeTextCommandsSpecials(text):
+    text = text.replace('\\', '\\\\')               # escape escape
+    return text
 
 
-def isOpenBracket(str):
+def isOpenBracket(text):
     # bracket open:  [   \\[   \\\\[ ...
     # not bracket : \[  \\\[  \\\\\[ ...
     isis = 0
     delim = '['
-    str = re.sub(r'\[:[a-z]+:]', '', str)           # del [:charclasses:]
-    if str.find(delim) == -1:                       # hey, no brackets!
+    text = re.sub(r'\[:[a-z]+:]', '', text)         # del [:charclasses:]
+    if text.find(delim) == -1:                      # hey, no brackets!
         return 0
 
     # Only the last two count
-    patterns = str.split(delim)[-2:]
+    patterns = text.split(delim)[-2:]
     Debug('bracketpatts: %s' % patterns, 3)
     possibleescape, bracketpatt = patterns
 
@@ -1559,8 +1559,8 @@ class emuSed(object):
         Debug('cmd: %s' % cmd['id'], 1)
         return ok
 
-    def _makeRawString(self, str):
-        raw = str.replace('\t', '\\t')
+    def _makeRawString(self, text):
+        raw = text.replace('\t', '\\t')
         raw = raw.replace('\n', '\\n')
         return raw + '$'
 
