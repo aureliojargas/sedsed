@@ -14,6 +14,7 @@ myhome    = 'http://sedsed.sf.net'
 #                              User Configuration
 #-------------------------------------------------------------------------------
 
+
 # Default config - Changeable, but you won't need to do it
 sedbin = 'sed'                # name (or full path) of the sed program
 color = 1                     # colored output or not? (--color, --nocolor)
@@ -61,9 +62,11 @@ else:
     # BSD sed fails for '-', use /dev/stdin as the default in Unix
     stdin_id = '/dev/stdin'
 
+
 #-------------------------------------------------------------------------------
 #                              General Functions
 #-------------------------------------------------------------------------------
+
 
 def printUsage(exitcode=1):
     print("""
@@ -104,14 +107,18 @@ NOTE: The --emu and --emudebug options are still INCOMPLETE and must
     print("Homepage: %s\n"%myhome)
     sys.exit(exitcode)
 
+
 def Error(msg):
     "All error messages are handled by me"
     print('ERROR: %s'%msg) ; sys.exit(1)
 
+
 def echo(msg): print("\033[33;1m%s\033[m"%msg)
+
 
 def Debug(msg, level=1):
     if DEBUG and DEBUG >= level: print('+++ DEBUG%d: %s'%(level, msg))
+
 
 def read_file(file):
     "Reads a file into a list, removing line breaks"
@@ -123,6 +130,7 @@ def read_file(file):
         except: Error("Cannot read file: %s"%file)
     return [re.sub('[\n\r]+$', '', x) for x in data]
 
+
 def write_file(file, lines=[]):
     "Writes a list contents into file, adding correct line breaks"
     try: f = open(file, 'w')
@@ -131,6 +139,7 @@ def write_file(file, lines=[]):
     # ensuring line break
     lines = [re.sub('\n$', '', x)+'\n' for x in lines]
     f.writelines(lines); f.close()
+
 
 def runCommand(cmd): # Returns a (#exit_code, program_output[]) tuple
     #TODO don't use popen()
@@ -145,6 +154,7 @@ def runCommand(cmd): # Returns a (#exit_code, program_output[]) tuple
 #-------------------------------------------------------------------------------
 #                           Command line & Config
 #-------------------------------------------------------------------------------
+
 
 # Here's all the valid command line options
 short_options = 'he:f:ditVHn'
@@ -216,6 +226,7 @@ for o in opt:
 #                              Sanity Checks
 #-------------------------------------------------------------------------------
 
+
 # There's a SED script?
 if not sedscript:
     if args:          # the script is the only argument (echo | sed 's///')
@@ -244,6 +255,7 @@ if action == 'debug' and os.name != 'nt':
 #-------------------------------------------------------------------------------
 #                    Internal Config Adjustments and Magic
 #-------------------------------------------------------------------------------
+
 
 # Add the leading #n to the sed script, when using -n
 if quiet_flag: sedscript.insert(0, '#n')
@@ -338,6 +350,7 @@ nullcomm = ['y/!/!/']
 save_t   = ['t zzset\a\n#DEBUG#', 't zzclr\a',
             ':zzset\a\n#DEBUG#', ':zzclr\a' ]
 
+
 def format_debugcmds(cmds):
     "One per line, with prefix (spaces)"
     return debug_prefix + ('\n'+debug_prefix).join(cmds) + '\n'
@@ -383,6 +396,7 @@ del html_colors['SCRIPTNAME']
 #                              SED Machine Data
 #-------------------------------------------------------------------------------
 
+
 # All SED commands grouped by kind
 sedcmds = {
   'file' : 'rw'            ,
@@ -417,9 +431,11 @@ cmdfields = [
 #                         Auxiliary Functions - Tools
 #-------------------------------------------------------------------------------
 
+
 def escapeTextCommandsSpecials(str):
     str = str.replace('\\', '\\\\')                 # escape escape
     return str
+
 
 def isOpenBracket(str):
     # bracket open:  [   \\[   \\\\[ ...
@@ -444,6 +460,7 @@ def isOpenBracket(str):
         isis = 1                                # it is opened! &:)
 
     return isis
+
 
 def paintHtml(id, txt=''):
     # Escape HTML special chars
@@ -482,6 +499,7 @@ def paintHtml(id, txt=''):
 #-------------------------------------------------------------------------------
 #                 SedCommand class - Know All About Commands
 #-------------------------------------------------------------------------------
+
 
 # TIP: SedCommand already receives lstrip()ed data and data != None
 class SedCommand:
@@ -621,6 +639,7 @@ class SedCommand:
 #                 SedAddress class - Know All About Addresses
 #-------------------------------------------------------------------------------
 
+
 #TIP an address is NOT multiline
 class SedAddress:
     def __init__(self, abcde, context='address'):
@@ -741,6 +760,7 @@ class SedAddress:
 #                 Hardcore Address/Command Composer Functions
 #-------------------------------------------------------------------------------
 
+
 def composeSedAddress(dict):
     addr1 = ''
     if action == 'html':
@@ -756,6 +776,7 @@ def composeSedAddress(dict):
 
     if addr: addr = '%s '%(addr)  # visual addr/cmd separation
     return addr
+
 
 def composeSedCommand(dict):
     if dict['delimiter']:         # s///
@@ -814,6 +835,7 @@ def composeSedCommand(dict):
 #                    The dump* Functions - They 4mat 4you!
 #-------------------------------------------------------------------------------
 
+
 def dumpKeyValuePair(datalist):
     "Shows field:value command data line by line (lots of lines!)"
     for data in datalist[1:]:                         # skip headers at 0
@@ -826,6 +848,7 @@ def dumpKeyValuePair(datalist):
             print("%10s:%s"%(key, data[key]))
         print('')
 
+
 # Format: line:ad1:ad1f:ad2:ad2f:mod:cmd:content:delim:patt:rplc:flag:comment
 def dumpOneliner(datalist, fancy=0):
     "Shows a command per line, elements separated by : (looooong lines)"
@@ -837,6 +860,7 @@ def dumpOneliner(datalist, fancy=0):
             for key in datalist[0]['fields'][1:]:     # skip linenr
                 outline = '%s:%s%s%s'%(outline, r, data[key], n)
         print(outline)
+
 
 def dumpCute(datalist):
     "Shows a strange representation of SED commands. Use --dumpcute."
@@ -865,6 +889,7 @@ def dumpCute(datalist):
                    r, data['addr1'], data['addr1flag'], n,
                    r, data['addr2'], data['addr2flag'], n))
             print('cmd: %s%s%s   [%s]'%(r, cmd, n, data['comment']))
+
 
 # dumpScript: This is a handy function, used by --indent AND --htmlize
 # It formats the SED script in a human-friendly way, with one command
@@ -1016,7 +1041,6 @@ def doDebug(datalist):
         os.remove(tmpfile)
 
 
-
 ################################################################################
 #                                                                              #
 #                               SED Script Parser                              #
@@ -1107,7 +1131,6 @@ for line in sedscript:
         if cmdid == '\\' and len(possiblecmd) == 1:  # to get \;addr;
             incompleteaddr = cmdid
             continue
-
 
         ###----------- Get addresses routine ---------------
         #
@@ -1218,7 +1241,6 @@ ZZ[0]['has_t'] = has_t
 # If you are curious about it, just uncomment the line below and
 # prepare yourself for an ASCII nightmare ;)
 #print color_YLW + `ZZ` + color_NO ; sys.exit(0)
-
 
 
 ################################################################################
@@ -1439,7 +1461,6 @@ class emuSed:
                 print(holdid+self._makeRawString(HS))
 
         self.line = PS ; self.holdspace = HS # save registers
-
 
     def run(self):
         while not self.EOF:
