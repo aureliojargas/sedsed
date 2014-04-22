@@ -1,5 +1,5 @@
 # Tester temporary files
 /test/*/sed-output.txt
 /test/*/sedsed-output.txt
-/test/parsing/w.out1
-/test/parsing/w.out2
+/test/*/w.out1
+/test/*/w.out2
