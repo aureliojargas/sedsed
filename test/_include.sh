@@ -13,7 +13,7 @@ sedsed_output='sedsed-output.txt'
 text=$(printf "one\ntwo\nthree\nfour\nfive\nsix\n")
 
 test_message() {
-    echo "$*"
+    echo "                $*"
 }
 
 tests_clean_up() {
@@ -22,5 +22,5 @@ tests_clean_up() {
 
 tests_git_status() {
     # Use git to show the errors (differences)
-    git status --short . | sed 's/^/********** ERROR (use git diff): /'
+    git status --short . | sed 's/^/ERROR (use git diff): /'
 }

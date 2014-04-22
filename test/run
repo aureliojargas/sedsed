@@ -4,6 +4,6 @@
 cd $(dirname "$0") || exit 1
 
 for file in */run; do
-	echo "---- Running $file..."
+	echo "        Running $file..."
 	$file
 done
