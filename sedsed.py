@@ -9,7 +9,7 @@ import os
 import getopt
 import tempfile
 
-myversion = '1.0'
+myversion = '1.1b'
 myname = 'sedsed'
 myhome = 'http://sedsed.sf.net'
 
