@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-# sedsed - the SED mastering script
-# Since 27 November 2001, by Aurelio Marinho Jargas
-# For ChangeLog and Documentation, see http://sedsed.sf.net
+# sedsed - Debugger, indenter and HTMLizer for sed scripts
+# Since 27 November 2001, by Aurelio Jargas
+# https://github.com/aureliojargas/sedsed
 
 import sys
 import re
