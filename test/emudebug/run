@@ -1,11 +1,10 @@
 #!/bin/bash
 
-sedsed='python ../../sedsed.py'
-
-text=$(printf "one\ntwo\nthree\nfour\nfive\nsix\n")
-
 # Always run the tests from this script's folder
 cd $(dirname "$0") || exit 1
+
+# Read default configuration
+source  ../_include.sh
 
 # Test files user supplied files ($@) otherwise test everything
 for file_path in ${@:-../emu/*.sed}; do
@@ -19,5 +18,4 @@ for file_path in ${@:-../emu/*.sed}; do
 	echo "$text" | $sedsed --emudebug -f $file_path > $output_file
 done
 
-# Use git to show the errors (differences)
-git status --short . | sed 's/^/********** ERROR (use git diff): /'
+tests_git_status

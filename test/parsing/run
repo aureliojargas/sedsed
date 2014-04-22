@@ -1,14 +1,10 @@
 #!/bin/bash
 
-sed='gsed'
-sedsed='python ../../sedsed.py'
-
-sed_output='sed-output.txt'
-sedsed_output='sedsed-output.txt'
-text=$(printf "one\ntwo\nthree\nfour\nfive\nsix\n")
-
 # Always run the tests from this script's folder
 cd $(dirname "$0") || exit 1
+
+# Read default configuration
+source  ../_include.sh
 
 # Test files user supplied files ($@) otherwise test everything
 for file in ${@:-*.sed}; do
@@ -24,5 +20,4 @@ for file in ${@:-*.sed}; do
 	diff -U1 $sed_output $sedsed_output
 done
 
-# Clean up
-rm -f $sed_output $sedsed_output w.out1 w.out2
+tests_clean_up
