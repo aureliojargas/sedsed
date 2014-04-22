@@ -1623,7 +1623,6 @@ class SedEmulator(object):
             if not PS:                         # no PS, start next cycle
                 self.f_delme = 1
                 self.EOS = 1
-            print('------ ' + PS)
 
         elif cmd['id'] == 'n':             # n) print patt, read line
             print(PS)
