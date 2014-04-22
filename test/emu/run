@@ -12,7 +12,7 @@ for file in ${@:-*.sed}; do
 	# The emulator do not support GNU sed extensions
 	test ${file%.gnu.sed} != $file && continue
 
-	echo "Testing ${file%.sed}"
+	test_message "Testing ${file%.sed}"
 
 	# Run the same sed script in sed and sedsed -d, results must be equal
 	echo "$text" | $sed -f $file > $sed_output

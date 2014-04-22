@@ -12,6 +12,10 @@ sedsed_output='sedsed-output.txt'
 
 text=$(printf "one\ntwo\nthree\nfour\nfive\nsix\n")
 
+test_message() {
+    echo "$*"
+}
+
 tests_clean_up() {
     rm -f $sed_output $sedsed_output w.out1 w.out2
 }

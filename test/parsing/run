@@ -12,7 +12,7 @@ for file in ${@:-*.sed}; do
 	# Only test *.gnu.sed files when using GNU sed
 	test ${file%.gnu.sed} != $file && test "$sed" != 'gsed' && continue
 
-	echo "Testing ${file%.sed}"
+	test_message "Testing ${file%.sed}"
 
 	# Run the same sed script in sed and sedsed -d, results must be equal
 	echo "$text" | $sed -f $file > $sed_output

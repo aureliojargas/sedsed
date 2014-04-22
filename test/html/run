@@ -12,7 +12,7 @@ for file_path in ${@:-../scripts/*.sed}; do
 	output_file=$(basename $file_path).html
 
 	# Generate the HTML version
-	echo "Generating $output_file"
+	test_message "Generating $output_file"
 	$sedsed --htmlize -f $file_path > $output_file
 done
 

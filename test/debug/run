@@ -15,7 +15,7 @@ for file_path in ${@:-../parsing/*.sed}; do
 	# Only test *.gnu.sed files when using GNU sed
 	test ${file%.gnu.sed} != $file && test "$sed" != 'gsed' && continue
 
-	echo "Testing ${file%.sed}"
+	test_message "Testing ${file%.sed}"
 
 	# Run the debugger and save the results
 	echo "$text" | $sedsed --debug -f $file_path > $output_file
