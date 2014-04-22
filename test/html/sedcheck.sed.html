@@ -15,14 +15,14 @@
 <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>['_&lt;&gt;~]\)[^,]*\1\<font color="#ff00ff"><b>(</b></font>[^,]\)[^,]*,</b></font><font color="#ff6060"><b>/</b></font>'<font color="#00ff00"><b>\2</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>g</b></font>
 
 <font color="#00ffff"><b># consider the hold buffer; initialize line number and issue number</b></font>
-<font color="#ffff00"><b>x</b></font>  
+<font color="#ffff00"><b>x</b></font>
 <font color="#8080ff"><b>1</b></font> <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*</b></font><font color="#ff6060"><b>/</b></font>C~0,0+012345678910999000990090<font color="#ff6060"><b>/</b></font>
 <font color="#00ffff"><b># increment line number</b></font>
 <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>.\)\<font color="#ff00ff"><b>(</b></font>9*\)\<font color="#ff00ff"><b>(</b></font>,[^+]*+[^9]*\1\<font color="#ff00ff"><b>(</b></font>.0*\).*\2\<font color="#ff00ff"><b>(</b></font>0*\)\)</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\4</b></font><font color="#00ff00"><b>\5</b></font><font color="#00ff00"><b>\3</b></font><font color="#ff6060"><b>/</b></font>
-<font color="#ffff00"><b>x</b></font>  
+<font color="#ffff00"><b>x</b></font>
 
 <font color="#00ffff"><b># get back state from previous line</b></font>
-<font color="#ffff00"><b>G</b></font>  
+<font color="#ffff00"><b>G</b></font>
 <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>.*\)\n\<font color="#ff00ff"><b>(</b></font>[^~]*~\).*</b></font><font color="#ff6060"><b>/</b></font>_<font color="#00ff00"><b>\2</b></font><font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
 
 <font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="loop">loop</a></b></font>
@@ -254,7 +254,7 @@
 
     <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>_?</b></font><font color="#ff6060"><b>/</b></font>_<font color="#ff6060"><b>/</b></font>
     <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>_[rRB]</b></font><font color="#ff6060"><b>/</b></font> <font color="#ffff00"><b>t</b></font> <a href="#reloop">reloop</a>
-<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>}</b></font>
 
 <font color="#00ffff"><b># force re-cycle</b></font>
 <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>_?</b></font><font color="#ff6060"><b>/</b></font>_<font color="#ff6060"><b>/</b></font>
@@ -267,22 +267,22 @@
 
 <font color="#00ffff"><b># update state in the hold buffer, removing any leading \ in the state</b></font>
 <font color="#00ffff"><b># (these are used to control when a command can extend to the next line) </b></font>
-<font color="#ffff00"><b>G</b></font>  
+<font color="#ffff00"><b>G</b></font>
 <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>[^_]*\)_\\*\<font color="#ff00ff"><b>(</b></font>.*\)\<font color="#ff00ff"><b>(</b></font>\n\)[^~]*~\<font color="#ff00ff"><b>(</b></font>.*\)</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\2</b></font><font color="#00ff00"><b>\4</b></font><font color="#00ff00"><b>\3</b></font><font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
-<font color="#ffff00"><b>h</b></font>  
+<font color="#ffff00"><b>h</b></font>
 <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>&lt;</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>!</b></font><font color="#ffff00"><b>b</b></font> <a href="#noerror">noerror</a>
 
 <font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="error">error</a></b></font>
 <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>[^~]*~\<font color="#ff00ff"><b>(</b></font>[0-9]*\)[^&lt;]*&lt;\<font color="#ff00ff"><b>(</b></font>[^&gt;]*\).*</b></font><font color="#ff6060"><b>/</b></font>line <font color="#00ff00"><b>\1</b></font>: <font color="#00ff00"><b>\2</b></font><font color="#ff6060"><b>/</b></font>
 <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>'\<font color="#ff00ff"><b>(</b></font>[^']*\)'</b></font><font color="#ff6060"><b>/</b></font>&lt;<font color="#00ff00"><b>\1</b></font>&gt;<font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>g</b></font>
-<font color="#ffff00"><b>p</b></font>  
-<font color="#ffff00"><b>g</b></font>  
+<font color="#ffff00"><b>p</b></font>
+<font color="#ffff00"><b>g</b></font>
 <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*\n</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font>
 <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>&lt;[^&gt;]*&gt;</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>g</b></font>
 <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>'.</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>&amp;</b></font>'a_b&lt;c&gt;d~e,<font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>g</b></font>
 <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>'\<font color="#ff00ff"><b>(</b></font>.\)[^,]*\<font color="#ff00ff"><b>(</b></font>[^,]\)\1[^,]*,</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\2</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>g</b></font>
-<font color="#ffff00"><b>p</b></font>  
-<font color="#ffff00"><b>g</b></font>  
+<font color="#ffff00"><b>p</b></font>
+<font color="#ffff00"><b>g</b></font>
 <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*\n</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font>
 <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>[^&lt;]*\)&lt;.*</b></font><font color="#ff6060"><b>/</b></font>&gt;<font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
 <font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="tospace">tospace</a></b></font>
@@ -290,17 +290,17 @@
 <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>&gt;\<font color="#ff00ff"><b>(</b></font>		*\)</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\1</b></font>&gt;<font color="#ff6060"><b>/</b></font>
 <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>&gt;$</b></font><font color="#ff6060"><b>/</b></font>^<font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>p</b></font>
 <font color="#ffff00"><b>t</b></font> <a href="#tospace">tospace</a>
-<font color="#ffff00"><b>g</b></font>  
+<font color="#ffff00"><b>g</b></font>
 <font color="#00ffff"><b># remove first issue and increment issue count</b></font>
 <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>&lt;[^&gt;]*&gt;</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font>
 <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>.\)\<font color="#ff00ff"><b>(</b></font>9*\)\<font color="#ff00ff"><b>(</b></font>+[0-8]*\1\<font color="#ff00ff"><b>(</b></font>[0-9]0*\)[0-9]*\2\<font color="#ff00ff"><b>(</b></font>0*\).*\n\)</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\4</b></font><font color="#00ff00"><b>\5</b></font><font color="#00ff00"><b>\3</b></font><font color="#ff6060"><b>/</b></font>
-<font color="#ffff00"><b>h</b></font>  
+<font color="#ffff00"><b>h</b></font>
 <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>&lt;</b></font><font color="#ff6060"><b>/</b></font> <font color="#ffff00"><b>b</b></font> <a href="#error">error</a>
 
 <font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="noerror">noerror</a></b></font>
 <font color="#00ffff"><b># remove the line from the future hold buffer</b></font>
 <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\n.*</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font>
-<font color="#ffff00"><b>h</b></font>  
+<font color="#ffff00"><b>h</b></font>
 
 <font color="#8080ff"><b>$</b></font> <font color="#ff6060"><b>!</b></font><font color="#ffff00"><b>d</b></font>
 
@@ -309,8 +309,8 @@
     <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\1</b></font> issues reported.<font color="#ff6060"><b>/</b></font>
     <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^\<font color="#ff00ff"><b>(</b></font>1 issue\)s</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
     <font color="#ffff00"><b>q</b></font>
-<font color="#ff6060"><b>}</b></font>  
-<font color="#ffff00"><b>d</b></font>  
+<font color="#ff6060"><b>}</b></font>
+<font color="#ffff00"><b>d</b></font>
 
 
 

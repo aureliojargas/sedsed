@@ -44,41 +44,41 @@
 # 
 
 # setup 
-H                                      
-$ !d                                   
-g                                      
-s/.//                                  
-s/\n/&L&l/g                            
+H
+$ !d
+g
+s/.//
+s/\n/&L&l/g
 s/^/\
-a/                               
+a/
 s/\nL/\
-A/                             
+A/
 s/$/\
-L/                               
+L/
 
 # have now: \na ln1 \nA \nl ln2 \nL \nl ln3 \nL ... 
 
-b start                                
+b start
 
 # advance \na .. \nA to next line
-:inca                                  
+:inca
 s/\(\na\)\(.*\)\(\nA\)\(\n[lb]\)\([^\n]*\)\(\n[LB]\)/\4\2\6\1\5\3/
 
 # ln_a is at the end, then sort is over
-:start                                 
-/\nA$/ b exit                          
+:start
+/\nA$/ b exit
 
 # b = a+1
 s/\nb/\
-l/                             
+l/
 s/\nB/\
-L/                             
+L/
 s/\(\na.*\nA\)\nl\([^\n]*\)\nL/\1\
 b\2\
 B/
 
-:sort                                  
-h                                      
+:sort
+h
 s/.*\na\(.*\)\nA.*\nb\(.*\)\nB.*/\1\
 \2\
          !"#$%\&()*+,-.\/0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~/
@@ -88,38 +88,38 @@ s/^\(.*\)\(.*\n\)\1\(.*\n.*\)/\1\
 \2\3/
 
 # a is empty and b not: keep this order
-/.*\n\n..*\n/ b keep                   
+/.*\n\n..*\n/ b keep
 
 # a is not empty and b is: swap order
-/.*\n..*\n\n/ b swap                   
+/.*\n..*\n\n/ b swap
 
 # if RE fail, swap, else keep order.. 
 /.*\n\(.\).*\n\(.\).*\n.*\1.*\2/ b keep
 
-:swap                                  
+:swap
 s/\(\n.*\)\(\n.*\)\n/\2\1\
-/           
+/
 
-:keep                                  
+:keep
 s/\(.*\)\n\(.*\)\n\(.*\)\n.*/\1\2\
 c\1\3\
 d/
 
 # merge with main buffer
-G                                      
+G
 s/^\(.*\)\nc\(.*\na\)\(.*\)\(\nA\)/\2\1\4/
 s/^\(.*\)\nd\n\(.*\nb\)\(.*\)\(\nB\)/\2\1\4/
 
 # b at end? 
-/\nB$/ b inca                          
+/\nB$/ b inca
 
 # nope, then make b = b+1
 s/\(\nb\)\(.*\)\(\nB\)\(\nl\)\([^\n]*\)\(\nL\)/\4\2\6\1\5\3/
-b sort                                 
+b sort
 
 # here: ^ \nl..\nL...\na..\nA $
-:exit                                  
-s/\n[ablA]//g                          
+:exit
+s/\n[ablA]//g
 s/\n[BL]/\
-/g                          
+/g
 

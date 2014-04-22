@@ -23,59 +23,59 @@
 # Main focus is small memory usage
 
 # escape Quoted and generate entities
-s,&,&amp;,g                            
-s,<,&lt;,g                             
-s,>,&gt;,g                             
-s,\\{,&obrace;,g                       
-s,\\},&cbrace;,g                       
+s,&,&amp;,g
+s,<,&lt;,g
+s,>,&gt;,g
+s,\\{,&obrace;,g
+s,\\},&cbrace;,g
 
 # uninteresting line, jump to end
-/[{}]/ !b unescape                     
+/[{}]/ !b unescape
 
-:open                                  
+:open
 
-/{/ {                                  
+/{/ {
     s,\( *\)\([^|<>}{ ]*\){,\1\
 \2\
-,  
+,
     # Isolate tag
     # Patternspace: text \n newtag \n text
-    H                                  
+    H
     # append to holdspace
-    s,\n\([^\n]*\)\n,<\1>,             
+    s,\n\([^\n]*\)\n,<\1>,
     # generate XML tag
 
     # Holdspace: ..\tagN \n text \n newtag \n text
     # We only want oldtags + newtag
-    x                                  
+    x
     s,\(.*\n\)[^\n]*\n\([^\n]*\)\n[^\n]*$,\1\2,
-    x                                  
+    x
 
-    /^[^{]*}/ b close                  
-    /{/ b open                         
-}                                      
+    /^[^{]*}/ b close
+    /{/ b open
+}
 
-:close                                 
+:close
 
-/}/ {                                  
+/}/ {
     s,},\
 \
 \
-,                        
+,
     # text1 \n\n\n text2 \n\n tag0 \n tag1 text2 may be empty
-    G                                  
+    G
     s,\n\n\n\([^\n]*\)\n.*\n\([^\n]*\)$,</\2>\1,
-    x                                  
-    s,\n[^\n]*$,,                      
+    x
+    s,\n[^\n]*$,,
     # delete tag from holdspace
-    x                                  
+    x
 
-    /^[^}]*{/ b open                   
+    /^[^}]*{/ b open
     # if next bracket is an open one
-    /}/ b close                        
+    /}/ b close
     # another one?
-}                                      
+}
 
-:unescape                              
-s,&obrace;,{,g                         
-s,&cbrace;,},g                         
+:unescape
+s,&obrace;,{,g
+s,&cbrace;,},g

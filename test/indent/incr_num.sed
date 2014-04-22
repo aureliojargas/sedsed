@@ -22,26 +22,26 @@
 
 # replace all leading 9s by _ (any other char except digits, could be used)
 #
-:d                                     
-s/9\(_*\)$/_\1/                        
-t d                                    
+:d
+s/9\(_*\)$/_\1/
+t d
 
 # if there aren't any digits left, add a MostSign Digit 0
 #
-s/^\(_*\)$/0\1/                        
+s/^\(_*\)$/0\1/
 
 # incr last digit only - there is no need for more
 #
-s/8\(_*\)$/9\1/                        
-s/7\(_*\)$/8\1/                        
-s/6\(_*\)$/7\1/                        
-s/5\(_*\)$/6\1/                        
-s/4\(_*\)$/5\1/                        
-s/3\(_*\)$/4\1/                        
-s/2\(_*\)$/3\1/                        
-s/1\(_*\)$/2\1/                        
-s/0\(_*\)$/1\1/                        
+s/8\(_*\)$/9\1/
+s/7\(_*\)$/8\1/
+s/6\(_*\)$/7\1/
+s/5\(_*\)$/6\1/
+s/4\(_*\)$/5\1/
+s/3\(_*\)$/4\1/
+s/2\(_*\)$/3\1/
+s/1\(_*\)$/2\1/
+s/0\(_*\)$/1\1/
 
 # replace all _ to 0s
 #
-s/_/0/g                                
+s/_/0/g

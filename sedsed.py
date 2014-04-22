@@ -1062,11 +1062,13 @@ def dump_script(datalist, indent_prefix):
             addr = compose_sed_address(data)
 
             # saving full line
-            comm = ''
-            if data['comment']:
-                comm = ';' + data['comment']
             cmd = '%s%s%s' % (indentstr, addr, cmd)
-            outlist.append('%-39s%s' % (cmd, comm))
+            if data['comment']:
+                # Inline comments are aligned at column 40
+                # The leading ; before # is required by non-GNU seds
+                outlist.append('%-39s;%s' % (cmd, data['comment']))
+            else:
+                outlist.append(cmd)
 
     if action == 'html':
         outlist.append(html_data['footer'])

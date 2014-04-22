@@ -14,13 +14,13 @@
 <font color="#00ffff"><b># Multiple lines are handled by storing a flag in hold space</b></font>
 <font color="#00ffff"><b># Fool the regexps below by adding a leading &lt; (we'll remove</b></font>
 <font color="#00ffff"><b># it later)</b></font>
-<font color="#ffff00"><b>x</b></font>  
+<font color="#ffff00"><b>x</b></font>
 <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^j</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
     <font color="#ffff00"><b>x</b></font>
     <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^</b></font><font color="#ff6060"><b>/</b></font>&lt;<font color="#ff6060"><b>/</b></font>
     <font color="#ffff00"><b>x</b></font>
-<font color="#ff6060"><b>}</b></font>  
-<font color="#ffff00"><b>x</b></font>  
+<font color="#ff6060"><b>}</b></font>
+<font color="#ffff00"><b>x</b></font>
 
 <font color="#00ffff"><b># put ° before each tag name</b></font>
 <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>&lt;[ 	]*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>&amp;</b></font>°<font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>g</b></font>
@@ -58,21 +58,21 @@
     <font color="#ffff00"><b>x</b></font>
     <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>$</b></font><font color="#ff6060"><b>/</b></font>J<font color="#ff6060"><b>/</b></font>
     <font color="#ffff00"><b>x</b></font>
-<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>}</b></font>
 
 <font color="#00ffff"><b># If the hold space `j' flag was set, remove it, and also delete</b></font>
 <font color="#00ffff"><b># the leading &lt; from pattern space</b></font>
-<font color="#ffff00"><b>x</b></font>  
+<font color="#ffff00"><b>x</b></font>
 <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^j</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
     <font color="#ffff00"><b>x</b></font>
     <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^.</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font>
     <font color="#ffff00"><b>x</b></font>
     <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>j</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font>
-<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>}</b></font>
 
 <font color="#00ffff"><b># Change the `J' flag to `j' and go on with the next line</b></font>
 <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>J</b></font><font color="#ff6060"><b>/</b></font>j<font color="#ff6060"><b>/</b></font>
-<font color="#ffff00"><b>x</b></font>  
+<font color="#ffff00"><b>x</b></font>
 
 <font color="#00ffff"><b>### colorized by <a href="http://sedsed.sf.net">sedsed</a>, a SED script debugger/indenter/tokenizer/HTMLizer</b></font>
 

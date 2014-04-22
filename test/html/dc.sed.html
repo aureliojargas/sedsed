@@ -64,13 +64,13 @@
 <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>|??</b></font><font color="#ff6060"><b>/</b></font> <font color="#ffff00"><b>b</b></font> <a href="#input">input</a>
 <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>|?Q</b></font><font color="#ff6060"><b>/</b></font> <font color="#ffff00"><b>b</b></font> <a href="#break">break</a>
 <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>|?q</b></font><font color="#ff6060"><b>/</b></font> <font color="#ffff00"><b>b</b></font> <a href="#quit">quit</a>
-<font color="#ffff00"><b>h</b></font>  
+<font color="#ffff00"><b>h</b></font>
 <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>|?[XZz]</b></font><font color="#ff6060"><b>/</b></font> <font color="#ffff00"><b>b</b></font> <a href="#count">count</a>
 <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>|?v</b></font><font color="#ff6060"><b>/</b></font> <font color="#ffff00"><b>b</b></font> <a href="#sqrt">sqrt</a>
 <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*|?\<font color="#ff00ff"><b>(</b></font>[^Y]\).*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\1</b></font> is unimplemented<font color="#ff6060"><b>/</b></font>
 <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\n</b></font><font color="#ff6060"><b>/</b></font>\\n<font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>g</b></font>
-<font color="#ffff00"><b>l</b></font>  
-<font color="#ffff00"><b>g</b></font>  
+<font color="#ffff00"><b>l</b></font>
+<font color="#ffff00"><b>g</b></font>
 <font color="#ffff00"><b>b</b></font> <a href="#next">next</a>
 
 <font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="print">print</a></b></font>
@@ -96,15 +96,15 @@
 <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>.*|P\)\<font color="#ff00ff"><b>(</b></font>[^|]*\)</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\
 </b></font><font color="#00ff00"><b>\2</b></font><font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
 <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>[^~]*\)\n\<font color="#ff00ff"><b>(</b></font>[^~]*\)\<font color="#ff00ff"><b>(</b></font>.*|P\)</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\1</b></font><font color="#00ff00"><b>\3</b></font><font color="#00ff00"><b>\2</b></font><font color="#ff6060"><b>/</b></font>
-<font color="#ffff00"><b>h</b></font>  
+<font color="#ffff00"><b>h</b></font>
 <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>~.*</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font>
 <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>{</b></font>
     <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font>
     <font color="#ffff00"><b>p</b></font>
-<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>}</b></font>
 <font color="#00ffff"><b>#  Just s/.//p would work if we knew we were running under the -n option.</b></font>
 <font color="#00ffff"><b>#  Using l vs p would kind of do \ continuations, but would break strings.</b></font>
-<font color="#ffff00"><b>g</b></font>  
+<font color="#ffff00"><b>g</b></font>
 
 <font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="pop">pop</a></b></font>
 <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>[^~]*~</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font>
@@ -137,7 +137,7 @@
 <font color="#ffff00"><b>t</b></font> <a href="#next">next</a>
 <font color="#00ffff"><b>#  Really should be using the -n option to avoid printing a final newline.</b></font>
 <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.*|P\<font color="#ff00ff"><b>(</b></font>[^|]*\).*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
-<font color="#ffff00"><b>q</b></font>  
+<font color="#ffff00"><b>q</b></font>
 
 <font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="break">break</a></b></font>
 <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>[0-9]*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>&amp;</b></font>;987654321009;<font color="#ff6060"><b>/</b></font>
@@ -147,7 +147,7 @@
 <font color="#ffff00"><b>b</b></font> <a href="#pop">pop</a>
 
 <font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="input">input</a></b></font>
-<font color="#ffff00"><b>N</b></font>  
+<font color="#ffff00"><b>N</b></font>
 <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>|??\<font color="#ff00ff"><b>(</b></font>.*\)\<font color="#ff00ff"><b>(</b></font>\n.*\)</b></font><font color="#ff6060"><b>/</b></font>|?<font color="#00ff00"><b>\2</b></font>~<font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
 <font color="#ffff00"><b>b</b></font> <a href="#next">next</a>
 
@@ -165,7 +165,7 @@
 <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>a.\{9\}\<font color="#ff00ff"><b>(</b></font>.\).*;</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
 <font color="#ffff00"><b>y</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>b</b></font><font color="#ff6060"><b>/</b></font>a<font color="#ff6060"><b>/</b></font>
 <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>a</b></font><font color="#ff6060"><b>/</b></font> <font color="#ffff00"><b>b</b></font> <a href="#count1">count1</a>
-<font color="#ffff00"><b>G</b></font>  
+<font color="#ffff00"><b>G</b></font>
 <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>|?z</b></font><font color="#ff6060"><b>/</b></font> <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\n</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>&amp;</b></font>~<font color="#ff6060"><b>/</b></font>
 <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\n[^~]*</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font>
 <font color="#ffff00"><b>b</b></font> <a href="#next">next</a>
@@ -207,7 +207,7 @@
 <font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>!</b></font><font color="#ffff00"><b>b</b></font> <a href="#next">next</a>
 <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^-\{0,1\}[0-9]*\.\{0,1\}[0-9]\{1,\}~</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>!</b></font><font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>[^~]*\<font color="#ff00ff"><b>(</b></font>.*|?!*[^!=&lt;&gt;]\)</b></font><font color="#ff6060"><b>/</b></font>0<font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
 <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^[^~]*~-\{0,1\}[0-9]*\.\{0,1\}[0-9]\{1,\}~</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>!</b></font><font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>~[^~]*\<font color="#ff00ff"><b>(</b></font>.*|?!*[^!=&lt;&gt;]\)</b></font><font color="#ff6060"><b>/</b></font>~0<font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
-<font color="#ffff00"><b>h</b></font>  
+<font color="#ffff00"><b>h</b></font>
 <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>|?\*</b></font><font color="#ff6060"><b>/</b></font> <font color="#ffff00"><b>b</b></font> <a href="#mul">mul</a>
 <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>|?\/</b></font><font color="#ff6060"><b>/</b></font> <font color="#ffff00"><b>b</b></font> <a href="#div">div</a>
 <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>|?%</b></font><font color="#ff6060"><b>/</b></font> <font color="#ffff00"><b>b</b></font> <a href="#rem">rem</a>
@@ -226,7 +226,7 @@
     <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>|?![^!]\<font color="#ff00ff"><b>(</b></font>.\)</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>&amp;</b></font>l<font color="#00ff00"><b>\1</b></font>x<font color="#ff6060"><b>/</b></font>
     <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>[^~]*~[^~]*~\<font color="#ff00ff"><b>(</b></font>.*|?\)!*.\<font color="#ff00ff"><b>(</b></font>.*\)|=.*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\1</b></font><font color="#00ff00"><b>\2</b></font><font color="#ff6060"><b>/</b></font>
     <font color="#ffff00"><b>b</b></font> <a href="#next">next</a>
-<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>}</b></font>
 <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>-*\)\1|=.*</b></font><font color="#ff6060"><b>/</b></font>;9876543210;9876543210<font color="#ff6060"><b>/</b></font>
 <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>o-</b></font><font color="#ff6060"><b>/</b></font> <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>;9876543210</b></font><font color="#ff6060"><b>/</b></font>;0123456789<font color="#ff6060"><b>/</b></font>
 <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^&gt;\<font color="#ff00ff"><b>(</b></font>[^~]*~\)\<font color="#ff00ff"><b>(</b></font>[^~]*~\)s\<font color="#ff00ff"><b>(</b></font>-*\)\<font color="#ff00ff"><b>(</b></font>-*o\3\<font color="#ff00ff"><b>(</b></font>-*\)\)</b></font><font color="#ff6060"><b>/</b></font>&gt;<font color="#00ff00"><b>\2</b></font><font color="#00ff00"><b>\1</b></font>s<font color="#00ff00"><b>\5</b></font><font color="#00ff00"><b>\4</b></font><font color="#ff6060"><b>/</b></font>
@@ -245,7 +245,7 @@
 
 <font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="endbin">endbin</a></b></font>
 <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>.\<font color="#ff00ff"><b>(</b></font>[^,]*\),\<font color="#ff00ff"><b>(</b></font>[0-9.]*\).*</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\1</b></font><font color="#00ff00"><b>\2</b></font><font color="#ff6060"><b>/</b></font>
-<font color="#ffff00"><b>G</b></font>  
+<font color="#ffff00"><b>G</b></font>
 <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\n[^~]*~[^~]*</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font>
 
 <font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="normal">normal</a></b></font>
@@ -309,7 +309,7 @@
 <font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="exp1">exp1</a></b></font>
 <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\<font color="#ff00ff"><b>(</b></font>[0-9]\);\<font color="#ff00ff"><b>(</b></font>.*\1\<font color="#ff00ff"><b>(</b></font>[d*]*\)[^l]*\<font color="#ff00ff"><b>(</b></font>[^*]*\)\<font color="#ff00ff"><b>(</b></font>\**\)\)</b></font><font color="#ff6060"><b>/</b></font>;dd*d**d*<font color="#00ff00"><b>\4</b></font><font color="#00ff00"><b>\3</b></font><font color="#00ff00"><b>\5</b></font><font color="#00ff00"><b>\2</b></font><font color="#ff6060"><b>/</b></font>
 <font color="#ffff00"><b>t</b></font> <a href="#exp1">exp1</a>
-<font color="#ffff00"><b>G</b></font>  
+<font color="#ffff00"><b>G</b></font>
 <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>,</b></font><font color="#8080ff"><b>-*.\{9\}\<font color="#ff00ff"><b>(</b></font>[^9]*\)[^0]*0.\<font color="#ff00ff"><b>(</b></font>.*|?.\)</b></font><font color="#ff6060"><b>,</b></font><font color="#00ff00"><b>\2</b></font>~saSaKdsaLb0kLbkK*+k1<font color="#00ff00"><b>\1</b></font>LaktsbkLax<font color="#ff6060"><b>,</b></font>
 <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>,</b></font><font color="#8080ff"><b>|?.</b></font><font color="#ff6060"><b>,</b></font><font color="#00ff00"><b>&amp;</b></font>SadSbdXSaZla-SbKLaLadSb[0Lb-d1lb-*d+K+0kkSb[1Lb/]q]Sa0&gt;a[dk]sadK&lt;a[Lb]<font color="#ff6060"><b>,</b></font>
 <font color="#ffff00"><b>b</b></font> <a href="#next">next</a>
@@ -322,7 +322,7 @@
 <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>~.*</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font>
 <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^\.</b></font><font color="#ff6060"><b>/</b></font> <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>0\<font color="#ff00ff"><b>(</b></font>[0-9]\)</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>g</b></font>
 <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^\.</b></font><font color="#ff6060"><b>/</b></font> <font color="#ff6060"><b>!</b></font><font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>[0-9][0-9]</b></font><font color="#ff6060"><b>/</b></font>7<font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>g</b></font>
-<font color="#ffff00"><b>G</b></font>  
+<font color="#ffff00"><b>G</b></font>
 <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\n</b></font><font color="#ff6060"><b>/</b></font>~<font color="#ff6060"><b>/</b></font>
 <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>,</b></font><font color="#8080ff"><b>|?.</b></font><font color="#ff6060"><b>,</b></font><font color="#00ff00"><b>&amp;</b></font>KSbSb[dk]SadXdK&lt;asadlb/lb+[.5]*[sbdlb/lb+[.5]*dlb&gt;a]dsaxsasaLbsaLatLbk<font color="#ff6060"><b>,</b></font>
 <font color="#ffff00"><b>b</b></font> <a href="#next">next</a>

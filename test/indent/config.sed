@@ -168,12 +168,12 @@
 
 # process a blank line
 #
-/^[	 ]*$/ b is_eof                     
+/^[	 ]*$/ b is_eof
 
 
 # process a comment
 #
-/^[	 ]*#/ b is_eof                     
+/^[	 ]*#/ b is_eof
 
 
 # process an assignment via equals ('=')
@@ -183,64 +183,64 @@
     # copy the name into the hold space, removing both extraneous whitespace
     # and the operator
     #
-    h                                  
-    s/^[	 ]*\([^	 =]*\).*$/\1/         
-    x                                  
-    s/^[^=]*=[	 ]*\(.*\)$/\1/          
+    h
+    s/^[	 ]*\([^	 =]*\).*$/\1/
+    x
+    s/^[^=]*=[	 ]*\(.*\)$/\1/
 
     # unfold lines before the value
     #
-    :unfold                            
-    /^\\$/ {                           
-        $ {                            
-            s/^.*$/2/                  
-            b quit                     
-        }                              
-        N                              
-        s/\\\n[	 ]*//                  
-        b unfold                       
-    }                                  
+    :unfold
+    /^\\$/ {
+        $ {
+            s/^.*$/2/
+            b quit
+        }
+        N
+        s/\\\n[	 ]*//
+        b unfold
+    }
 
     # process a null value
     #
-    /^$/ b is_eof                      
+    /^$/ b is_eof
 
     # process a null value with a comment
     #
-    /^#/ b is_eof                      
+    /^#/ b is_eof
 
     # process an unquoted value
     #
-    /^[^"']/ {                         
-        :unfold0                       
+    /^[^"']/ {
+        :unfold0
 
         # reset the replacement test
         #
-        t reset0                       
-        :reset0                        
+        t reset0
+        :reset0
 
         # replace a trailing comment with a space (the space prevents
         # unintended line folding)
         #
         s/\([^\\]\)\(\\*\)\2#.*$/\1\2\2 /
-        t trim0                        
+        t trim0
 
         # unfold lines within the value
         #
-        /[^\\]\(\\*\)\1\\$/ {          
-            $ {                        
-                s/^.*$/3/              
-                b quit                 
-            }                          
-            N                          
-            s/\\\n//                   
-            b unfold0                  
-        }                              
+        /[^\\]\(\\*\)\1\\$/ {
+            $ {
+                s/^.*$/3/
+                b quit
+            }
+            N
+            s/\\\n//
+            b unfold0
+        }
 
-        :trim0                         
+        :trim0
         # remove trailing whitespace
         #
-        s/[	 ]*$//                     
+        s/[	 ]*$//
 
         # remove each backslash used to escape a pound sign or a single
         # quote
@@ -248,115 +248,115 @@
         s/^\(\\*\)\1\\\([#']\)/\1\1\2/g
         s/\([^\\]\)\(\\*\)\1\\\([#']\)/\1\2\2\3/g
 
-        b decode                       
-    }                                  
+        b decode
+    }
 
     # process a single-quoted value
     #
-    /^'/ {                             
-        :unfold1                       
+    /^'/ {
+        :unfold1
 
         # reset the replacement test
         #
-        t reset1                       
-        :reset1                        
+        t reset1
+        :reset1
 
         # remove a trailing comment
         #
-        s/\(.'[	 ]*\)#.*$/\1/          
-        t trim1                        
+        s/\(.'[	 ]*\)#.*$/\1/
+        t trim1
 
         # handle an extraneous quote
         #
-        /.'[	 ]*[^	 ]/ {               
-            s/^.*$/6/                  
-            b quit                     
-        }                              
+        /.'[	 ]*[^	 ]/ {
+            s/^.*$/6/
+            b quit
+        }
 
         # unfold lines within the value
         #
-        /\\$/ {                        
-            $ {                        
-                s/^.*$/4/              
-                b quit                 
-            }                          
-            N                          
-            s/\\\n//                   
-            b unfold1                  
-        }                              
+        /\\$/ {
+            $ {
+                s/^.*$/4/
+                b quit
+            }
+            N
+            s/\\\n//
+            b unfold1
+        }
 
-        :trim1                         
+        :trim1
         # remove trailing whitespace
         #
-        s/[	 ]*$//                     
+        s/[	 ]*$//
 
         # handle a missing closing quote
         #
-        /'$/ !{                        
-            s/^.*$/5/                  
-            b quit                     
-        }                              
+        /'$/ !{
+            s/^.*$/5/
+            b quit
+        }
 
         # remove the opening quote and the closing quote
         #
-        s/^'\(.*\)'$/\1/               
+        s/^'\(.*\)'$/\1/
 
-        b encode                       
-    }                                  
+        b encode
+    }
 
     # process a double-quoted value
     #
-    /^"/ {                             
-        :unfold2                       
+    /^"/ {
+        :unfold2
 
         # reset the replacement test
         #
-        t reset2                       
-        :reset2                        
+        t reset2
+        :reset2
 
         # remove a trailing comment
         #
         s/\([^\\]\)\(\\*\)\2"[	 ]*#.*$/\1\2\2"/
-        t trim2                        
+        t trim2
 
         # handle an extraneous quote
         #
-        /[^\\]\(\\*\)\1"[	 ]*[^	 ]/ {  
-            s/^.*$/9/                  
-            b quit                     
-        }                              
+        /[^\\]\(\\*\)\1"[	 ]*[^	 ]/ {
+            s/^.*$/9/
+            b quit
+        }
 
         # unfold lines within the value
         #
-        /[^\\]\(\\*\)\1\\$/ {          
-            $ {                        
-                s/^.*$/7/              
-                b quit                 
-            }                          
-            N                          
-            s/\\\n//                   
-            b unfold2                  
-        }                              
+        /[^\\]\(\\*\)\1\\$/ {
+            $ {
+                s/^.*$/7/
+                b quit
+            }
+            N
+            s/\\\n//
+            b unfold2
+        }
 
-        :trim2                         
+        :trim2
         # remove trailing whitespace
         #
-        s/[	 ]*$//                     
+        s/[	 ]*$//
 
         # handle a missing closing quote
         #
-        /"$/ !{                        
-            s/^.*$/8/                  
-            b quit                     
-        }                              
+        /"$/ !{
+            s/^.*$/8/
+            b quit
+        }
 
         # remove the opening quote and the closing quote
         #
-        s/^"\(.*\)"$/\1/               
+        s/^"\(.*\)"$/\1/
 
-        b decode                       
-    }                                  
-}                                      
+        b decode
+    }
+}
 
 
 # process an assignment via here document ('<<' or '<<-')
@@ -366,78 +366,78 @@
     # copy the name into the hold space, removing extraneous whitespace
     # while retaining the operator
     #
-    h                                  
-    s/^[	 ]*\([^	 <]*\).*$/\1/         
-    x                                  
-    s/^[^<]*\(<<.*\)$/\1/              
+    h
+    s/^[	 ]*\([^	 <]*\).*$/\1/
+    x
+    s/^[^<]*\(<<.*\)$/\1/
 
     # process a null value
     #
-    /^<<-\{0,1\}[	 ]*$/ b is_eof       
+    /^<<-\{0,1\}[	 ]*$/ b is_eof
 
     # process a value as an unindented here document
     #
-    /^<<[^-]/ {                        
+    /^<<[^-]/ {
 
         # remove the operator
         #
-        s/^<<[	 ]*\(.*\)$/\1/          
+        s/^<<[	 ]*\(.*\)$/\1/
 
         # add each line of the here document
         #
-        :here0                         
-        $ {                            
-            s/^.*$/10/                 
-            b quit                     
-        }                              
-        N                              
-        /^\(.*\)\n.*\n\1$/ !{          
-            b here0                    
-        }                              
+        :here0
+        $ {
+            s/^.*$/10/
+            b quit
+        }
+        N
+        /^\(.*\)\n.*\n\1$/ !{
+            b here0
+        }
 
         # remove the opening word, the final newline, and the closing
         # word
         #
-        s/^\(.*\)\n\(.*\)\n\1$/\2/     
+        s/^\(.*\)\n\(.*\)\n\1$/\2/
 
-        b encode                       
-    }                                  
+        b encode
+    }
 
     # process a value as an indented here document
     #
-    /^<<-.*$/ {                        
+    /^<<-.*$/ {
 
         # remove the operator
         #
-        s/^<<-[	 ]*\(.*\)$/\1/         
+        s/^<<-[	 ]*\(.*\)$/\1/
 
         # add each line of the here document, removing leading tabs
         #
-        :here1                         
-        $ {                            
-            s/^.*$/11/                 
-            b quit                     
-        }                              
-        N                              
-        s/^\(.*\n\)	*\(.*\)$/\1\2/     
-        /^\(.*\)\n.*\n\1$/ !{          
-            b here1                    
-        }                              
+        :here1
+        $ {
+            s/^.*$/11/
+            b quit
+        }
+        N
+        s/^\(.*\n\)	*\(.*\)$/\1\2/
+        /^\(.*\)\n.*\n\1$/ !{
+            b here1
+        }
 
         # remove the opening word, the final newline, and the closing
         # word
         #
-        s/^\(.*\)\n\(.*\)\n\1$/\2/     
+        s/^\(.*\)\n\(.*\)\n\1$/\2/
 
-        b encode                       
-    }                                  
-}                                      
+        b encode
+    }
+}
 
 
 # process an invalid line
 #
-h                                      
-s/^.*$/1/                              
+h
+s/^.*$/1/
 
 
 # output the results of an invalid assignment and quit; the hold space should
@@ -445,46 +445,46 @@ s/^.*$/1/
 # assigned an invalid value, and the pattern space should contain a status code
 # that indicates the error
 #
-:quit                                  
-x                                      
-p                                      
-=                                      
-x                                      
-p                                      
-q                                      
+:quit
+x
+p
+=
+x
+p
+q
 
 
 # decode the value; remove each backslash used to escape a double quote, a
 # dollar sign, a grave accent, or another backslash
 #
-:decode                                
-s/^\(\\*\)\1\\\(["$`]\)/\1\1\2/g       
+:decode
+s/^\(\\*\)\1\\\(["$`]\)/\1\1\2/g
 s/\([^\\]\)\(\\*\)\1\\\(["$`]\)/\1\2\2\3/g
-s/\\\\/\\/g                            
+s/\\\\/\\/g
 
 # encode the value; add a backslash to escape each double quote, dollar sign,
 # grave accent, and backslash; replace each newlin with the escape sequence '\n'
 #
-:encode                                
-s/\\/\\\\/g                            
-s/\(["$`]\)/\\\1/g                     
-s/\n/\\n/g                             
+:encode
+s/\\/\\\\/g
+s/\(["$`]\)/\\\1/g
+s/\n/\\n/g
 
 # output the results of a valid assignment; the hold space contains the name,
 # name, and the pattern space contains the encoded value
 #
-x                                      
-s/^\(.*\)$/\1=/                        
-G                                      
-s/\n//                                 
-p                                      
+x
+s/^\(.*\)$/\1=/
+G
+s/\n//
+p
 
 
 # determine if the last line was just processed; if so, output a status code
 # that indicates success
 #
-:is_eof                                
-$ {                                    
-    s/^.*$/0/                          
-    p                                  
-}                                      
+:is_eof
+$ {
+    s/^.*$/0/
+    p
+}

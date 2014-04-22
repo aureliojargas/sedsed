@@ -3,19 +3,19 @@
 
 #----------------- gather the lines in hold space
 
-H                                      
-$ !b                                   
+H
+$ !b 
 
 #----------------- sort them
 
 # Append a new-line and the look-up table to hold space, get everything
 # in pattern space
 s/.*/° !"#$%\&'()*+,-.\/0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~/
-H                                      
-g                                      
+H
+g
 
-t sort                                 
-:sort                                  
+t sort
+:sort
 # This regexp performs an insertion sort pass!!!
 # It searches for two lines with a common (possibly empty) prefix and
 # compares the first differing char using a lookup table -- if the
@@ -33,15 +33,15 @@ t sort
 s/\(\n\([ -~]*\)\([ -~]\)[ -~]*\)\(\n.*\)\?\(\n\2\([ -~]\)[ -~]*\)\(\n.*°.*\6.*\3\)/\5\1\4\7/
 #   1----------------------------  4---      5------------------    7------------
 #       2-----    3----                            6----
-t sort                                 
+t sort
 
 # Remove the last new-line and the lookup table
 # Leave the leading new-line
-s/^\(.*\)\n°.*$/\1/                   
+s/^\(.*\)\n°.*$/\1/
 
 # ----------------- delimit and number them
 
-:number                                
+:number
 
 # Remove the first line, move the last number to the beginning of the
 # new first line together with the lookup table
@@ -49,7 +49,7 @@ s/\([0-9]*\)[ -~]*\n/\1;9876543210990090 /
 
 # This regexp does the incrementing -- see tutorials for its explanation
 s/\([0-8]\{0,1\}\)\(9*\);[^1]*\(.\)\1[0-9]*X*\2\(0*\)[^ ]*/\3\4/
-P                                      
+P
 
 # If the first char changes, we replace the first line with
 # a single new-line character.  The pattern space will look the
@@ -58,7 +58,7 @@ P
 # The leading new-line is printed by the second line, which
 # can only match if the first did (if it didn't, the first 
 # character will still be a digit).
-/^[0-9]* \(.\).*\n\1/ !s/[ -~]*//      
-/^\n/ P                                
+/^[0-9]* \(.\).*\n\1/ !s/[ -~]*//
+/^\n/ P
 
-/./ b number                           
+/./ b number

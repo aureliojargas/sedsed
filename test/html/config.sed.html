@@ -362,7 +362,7 @@
 
         <font color="#ffff00"><b>b</b></font> <a href="#decode">decode</a>
     <font color="#ff6060"><b>}</b></font>
-<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>}</b></font>
 
 
 <font color="#00ffff"><b># process an assignment via here document ('&lt;&lt;' or '&lt;&lt;-')</b></font>
@@ -437,12 +437,12 @@
 
         <font color="#ffff00"><b>b</b></font> <a href="#encode">encode</a>
     <font color="#ff6060"><b>}</b></font>
-<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>}</b></font>
 
 
 <font color="#00ffff"><b># process an invalid line</b></font>
 <font color="#00ffff"><b>#</b></font>
-<font color="#ffff00"><b>h</b></font>  
+<font color="#ffff00"><b>h</b></font>
 <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^.*$</b></font><font color="#ff6060"><b>/</b></font>1<font color="#ff6060"><b>/</b></font>
 
 
@@ -452,12 +452,12 @@
 <font color="#00ffff"><b># that indicates the error</b></font>
 <font color="#00ffff"><b>#</b></font>
 <font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="quit">quit</a></b></font>
-<font color="#ffff00"><b>x</b></font>  
-<font color="#ffff00"><b>p</b></font>  
-<font color="#ffff00"><b>=</b></font>  
-<font color="#ffff00"><b>x</b></font>  
-<font color="#ffff00"><b>p</b></font>  
-<font color="#ffff00"><b>q</b></font>  
+<font color="#ffff00"><b>x</b></font>
+<font color="#ffff00"><b>p</b></font>
+<font color="#ffff00"><b>=</b></font>
+<font color="#ffff00"><b>x</b></font>
+<font color="#ffff00"><b>p</b></font>
+<font color="#ffff00"><b>q</b></font>
 
 
 <font color="#00ffff"><b># decode the value; remove each backslash used to escape a double quote, a</b></font>
@@ -479,11 +479,11 @@
 <font color="#00ffff"><b># output the results of a valid assignment; the hold space contains the name,</b></font>
 <font color="#00ffff"><b># name, and the pattern space contains the encoded value</b></font>
 <font color="#00ffff"><b>#</b></font>
-<font color="#ffff00"><b>x</b></font>  
+<font color="#ffff00"><b>x</b></font>
 <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^\<font color="#ff00ff"><b>(</b></font>.*\)$</b></font><font color="#ff6060"><b>/</b></font><font color="#00ff00"><b>\1</b></font>=<font color="#ff6060"><b>/</b></font>
-<font color="#ffff00"><b>G</b></font>  
+<font color="#ffff00"><b>G</b></font>
 <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>\n</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>/</b></font>
-<font color="#ffff00"><b>p</b></font>  
+<font color="#ffff00"><b>p</b></font>
 
 
 <font color="#00ffff"><b># determine if the last line was just processed; if so, output a status code</b></font>
@@ -493,7 +493,7 @@
 <font color="#8080ff"><b>$</b></font> <font color="#ff6060"><b>{</b></font>
     <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^.*$</b></font><font color="#ff6060"><b>/</b></font>0<font color="#ff6060"><b>/</b></font>
     <font color="#ffff00"><b>p</b></font>
-<font color="#ff6060"><b>}</b></font>  
+<font color="#ff6060"><b>}</b></font>
 
 <font color="#00ffff"><b>### colorized by <a href="http://sedsed.sf.net">sedsed</a>, a SED script debugger/indenter/tokenizer/HTMLizer</b></font>
 
