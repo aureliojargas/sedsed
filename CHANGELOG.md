@@ -1,6 +1,20 @@
 sedsed changelog
 ================
 
+GitHub live version, 2014
+
+- Added Python 3 support. Now sedsed runs in Python versions 2.6, 2.7 and 3.x.
+- New test suite.
+- Source code reformatted, now following PEP-8.
+- Source code improved, now following pylint recomendations.
+- Fixed to work with BSD sed (Mac OS X).
+
+<!--
+- Add support for GNU sed `s///` flags: `M`, `m`, `e`.
+- Bugfix: Address ranges with spaces before the comma.
+- Bugfix: `I` char removed in some cases.
+-->
+
 [Version 1.0](https://github.com/aureliojargas/sedsed/releases/tag/v1.0)
 released in 2004-12-09
 
@@ -16,7 +30,7 @@ released in 2004-12-09
 - Default indent prefix for `--indent` has changed from 2 to 4 spaces.
 - Now the system's sed path is configurable.
 - Added `--dump-debug` option to inspect the generated debug file
-  (implies --nocolor and --debug).
+  (implies `--nocolor` and `--debug`).
 - Bugfix: Now parses `a`, `c`, `i` commands with `;` on the text
   (thanks Leo Mulders for reporting)
 
