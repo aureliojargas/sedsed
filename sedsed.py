@@ -107,7 +107,7 @@ NOTE: The --emu and --emudebug options are still INCOMPLETE and must
       be used with care. Mainly regexes and address $ (last line)
       are not handled right by the emulator.
 """)
-    print("Homepage: %s\n" % myhome)
+    print("Website: %s\n" % myhome)
     sys.exit(exitcode)
 
 
