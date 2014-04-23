@@ -32,7 +32,8 @@ input () {
 }
 
 # Test files user supplied files ($@) otherwise test everything
-for file in ${@:-*.sed}; do
+for file in ${@:-*.sed}
+do
 
 	# Only test *.gnu.sed files when using GNU sed
 	test ${file%.gnu.sed} != $file && test "$sed" != 'gsed' && continue

@@ -7,7 +7,8 @@ cd $(dirname "$0") || exit 1
 source  ../_include.sh
 
 # Test files user supplied files ($@) otherwise test everything
-for file in ${@:-*.sed}; do
+for file in ${@:-*.sed}
+do
 
 	# The emulator do not support GNU sed extensions
 	test ${file%.gnu.sed} != $file && continue
