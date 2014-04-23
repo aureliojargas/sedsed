@@ -7,7 +7,7 @@ cd $(dirname "$0") || exit 1
 source  ../_include.sh
 
 # Test files user supplied files ($@) otherwise test everything
-for file_path in ${@:-../scripts/*.sed}; do
+for file_path in ${@:-../scripts/*.sed ../parsing/*.sed}; do
 
 	output_file=$(basename $file_path).html
 
