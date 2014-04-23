@@ -1084,7 +1084,7 @@ def dump_script(datalist, indent_prefix):
 #
 # This function performs the --debug action.
 #
-# After the SED script was parsed by the parsed (below), this function
+# After the SED script was parsed by the parser (below), this function
 # is called with the script data found. It loops, shouts and screams,
 # inserting the nice DEBUG lines between the SED script commands.
 #
@@ -1402,7 +1402,7 @@ ZZ[0]['has_t'] = has_t
 # If you are curious about it, just uncomment the line below and
 # prepare yourself for an ASCII nightmare ;)
 #
-# print color_YLW + `ZZ` + color_NO ; sys.exit(0)
+# print color_YLW + repr(ZZ) + color_NO ; sys.exit(0)
 
 
 ###############################################################################
@@ -1773,12 +1773,3 @@ elif action in ['emu', 'emudebug']:
 # -----------------------------------------------------------------------------
 #                               - THE END -
 # -----------------------------------------------------------------------------
-
-
-# TODO commenter
-# TODO ignore l command line break?
-# TODO accept \n as addr delimiter
-# TODO more comments, reformat some long lines or depth indent
-# TODO check if there's a SED command
-# TODO check if user script is syntax correct (!popen())
-#     ^---- how to close stdout on os.system() ?
