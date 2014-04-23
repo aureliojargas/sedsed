@@ -227,7 +227,7 @@ for o in opt:
         quiet_flag = 1
 
     elif o[0] in ('-e', '--expression'):
-        sedscript.append(o[1])
+        sedscript.extend(o[1].split('\n'))
 
     elif o[0] in ('-f', '--file'):
         sedscript.extend(read_file(o[1]))
