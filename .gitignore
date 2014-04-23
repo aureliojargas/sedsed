@@ -1,3 +1,6 @@
+*.pyc
+*.pyo
+
 # Tester temporary files
 /test/*/sed-output.txt
 /test/*/sedsed-output.txt
