@@ -550,11 +550,13 @@ def is_open_bracket(text):
 
 
 def paint_html(element, txt=''):
+    if not txt:
+        return txt  # nothing to paint
+
     # Escape HTML special chars
-    if txt:
-        txt = txt.replace('&', '&amp;')
-        txt = txt.replace('>', '&gt;')
-        txt = txt.replace('<', '&lt;')
+    txt = txt.replace('&', '&amp;')
+    txt = txt.replace('>', '&gt;')
+    txt = txt.replace('<', '&lt;')
 
     # Some color adjustments and emphasis
     if element == 'id' and txt in sedcmds['block']:
