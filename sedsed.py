@@ -881,25 +881,27 @@ class SedAddress(object):
 
 
 def compose_sed_address(data):
-    addr1 = ''
+    """Format the full sed address as plain text or HTML."""
+    if not data['addr1']:
+        return ''  # no address
+
     if action == 'html':
-        if data['addr1']:
-            addr1 = data['addr1html']
-        if data['addr2']:
-            addr2 = data['addr2html']
+        address1 = '%s%s' % (
+            data['addr1html'],
+            paint_html('addr1flag', data.get('addr1flag')))
+        address2 = '%s%s' % (
+            data.get('addr2html'),
+            paint_html('addr2flag', data.get('addr2flag')))
     else:
-        addr1 = '%s%s' % (data['addr1'], data['addr1flag'])
-        if data['addr2']:
-            addr2 = '%s%s' % (data['addr2'], data['addr2flag'])
+        address1 = '%s%s' % (data.get('addr1'), data.get('addr1flag'))
+        address2 = '%s%s' % (data.get('addr2'), data.get('addr2flag'))
 
     if data['addr2']:
-        addr = '%s,%s' % (addr1, addr2)
+        address = '%s,%s' % (address1, address2)
     else:
-        addr = addr1
+        address = address1
 
-    if addr:
-        addr = '%s ' % (addr)  # visual addr/cmd separation
-    return addr
+    return address + ' '  # address, space, (command)
 
 
 def compose_sed_command(data):
