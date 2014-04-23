@@ -1,0 +1,381 @@
+#!/usr/bin/sed -f
+# algorithm by :
+# Bruno <Haible@ma2s2.mathematik.uni-karlsruhe.de>
+# incrementing one number, is just add 1 to first digit, i.e. replacing
+# it by the following digit
+#
+# there is one exception, when carry does happen, on that case, all
+# following digits must be added with one
+#
+# now this solution by `Bruno <Haible@ma2s2.mathematik.uni-karlsruhe.de>'
+# is very clever and smart
+#
+# the only way to happen carry, is when the first digit is a 9
+# all others cases are just fine
+#
+# for a number beginning with any digit except 9, just replace it (the digit)
+# by the next digit, for each number beginning with a 9, just "remove" it and
+# proceed as above for all others, i.e. all leadings 9s are "removes" until
+# a non-9 is found, if any 9 did not remain, a 0 is insert
+# replace all leading 9s by _ (any other char except digits, could be used)
+#
+		t zzset001
+		s/^/PATT:/
+		l
+		s/^PATT://
+		x
+		s/^/HOLD:/
+		l
+		s/^HOLD://
+		x
+		i\
+COMM::d
+
+		t zzclr001
+		:zzset001
+		s/^/PATT:/
+		l
+		s/^PATT://
+		x
+		s/^/HOLD:/
+		l
+		s/^HOLD://
+		x
+		i\
+COMM::d
+
+		:zzclr001
+#--------------------------------------------------
+:d
+		i\
+COMM:s/9\\(_*\\)$/_\\1/
+#--------------------------------------------------
+s/9\(_*\)$/_\1/
+		t zzset002
+		s/^/PATT:/
+		l
+		s/^PATT://
+		x
+		s/^/HOLD:/
+		l
+		s/^HOLD://
+		x
+		i\
+COMM:t d
+
+		t zzclr002
+		:zzset002
+		s/^/PATT:/
+		l
+		s/^PATT://
+		x
+		s/^/HOLD:/
+		l
+		s/^HOLD://
+		x
+		i\
+COMM:t d
+
+		:zzclr002
+#--------------------------------------------------
+t d
+# if there aren't any digits left, add a MostSign Digit 0
+#
+		i\
+COMM:s/^\\(_*\\)$/0\\1/
+#--------------------------------------------------
+s/^\(_*\)$/0\1/
+# incr last digit only - there is no need for more
+#
+		t zzset003
+		s/^/PATT:/
+		l
+		s/^PATT://
+		x
+		s/^/HOLD:/
+		l
+		s/^HOLD://
+		x
+		i\
+COMM:s/8\\(_*\\)$/9\\1/
+
+		t zzclr003
+		:zzset003
+		s/^/PATT:/
+		l
+		s/^PATT://
+		x
+		s/^/HOLD:/
+		l
+		s/^HOLD://
+		x
+		i\
+COMM:s/8\\(_*\\)$/9\\1/
+
+		:zzclr003
+#--------------------------------------------------
+s/8\(_*\)$/9\1/
+		t zzset004
+		s/^/PATT:/
+		l
+		s/^PATT://
+		x
+		s/^/HOLD:/
+		l
+		s/^HOLD://
+		x
+		i\
+COMM:s/7\\(_*\\)$/8\\1/
+
+		t zzclr004
+		:zzset004
+		s/^/PATT:/
+		l
+		s/^PATT://
+		x
+		s/^/HOLD:/
+		l
+		s/^HOLD://
+		x
+		i\
+COMM:s/7\\(_*\\)$/8\\1/
+
+		:zzclr004
+#--------------------------------------------------
+s/7\(_*\)$/8\1/
+		t zzset005
+		s/^/PATT:/
+		l
+		s/^PATT://
+		x
+		s/^/HOLD:/
+		l
+		s/^HOLD://
+		x
+		i\
+COMM:s/6\\(_*\\)$/7\\1/
+
+		t zzclr005
+		:zzset005
+		s/^/PATT:/
+		l
+		s/^PATT://
+		x
+		s/^/HOLD:/
+		l
+		s/^HOLD://
+		x
+		i\
+COMM:s/6\\(_*\\)$/7\\1/
+
+		:zzclr005
+#--------------------------------------------------
+s/6\(_*\)$/7\1/
+		t zzset006
+		s/^/PATT:/
+		l
+		s/^PATT://
+		x
+		s/^/HOLD:/
+		l
+		s/^HOLD://
+		x
+		i\
+COMM:s/5\\(_*\\)$/6\\1/
+
+		t zzclr006
+		:zzset006
+		s/^/PATT:/
+		l
+		s/^PATT://
+		x
+		s/^/HOLD:/
+		l
+		s/^HOLD://
+		x
+		i\
+COMM:s/5\\(_*\\)$/6\\1/
+
+		:zzclr006
+#--------------------------------------------------
+s/5\(_*\)$/6\1/
+		t zzset007
+		s/^/PATT:/
+		l
+		s/^PATT://
+		x
+		s/^/HOLD:/
+		l
+		s/^HOLD://
+		x
+		i\
+COMM:s/4\\(_*\\)$/5\\1/
+
+		t zzclr007
+		:zzset007
+		s/^/PATT:/
+		l
+		s/^PATT://
+		x
+		s/^/HOLD:/
+		l
+		s/^HOLD://
+		x
+		i\
+COMM:s/4\\(_*\\)$/5\\1/
+
+		:zzclr007
+#--------------------------------------------------
+s/4\(_*\)$/5\1/
+		t zzset008
+		s/^/PATT:/
+		l
+		s/^PATT://
+		x
+		s/^/HOLD:/
+		l
+		s/^HOLD://
+		x
+		i\
+COMM:s/3\\(_*\\)$/4\\1/
+
+		t zzclr008
+		:zzset008
+		s/^/PATT:/
+		l
+		s/^PATT://
+		x
+		s/^/HOLD:/
+		l
+		s/^HOLD://
+		x
+		i\
+COMM:s/3\\(_*\\)$/4\\1/
+
+		:zzclr008
+#--------------------------------------------------
+s/3\(_*\)$/4\1/
+		t zzset009
+		s/^/PATT:/
+		l
+		s/^PATT://
+		x
+		s/^/HOLD:/
+		l
+		s/^HOLD://
+		x
+		i\
+COMM:s/2\\(_*\\)$/3\\1/
+
+		t zzclr009
+		:zzset009
+		s/^/PATT:/
+		l
+		s/^PATT://
+		x
+		s/^/HOLD:/
+		l
+		s/^HOLD://
+		x
+		i\
+COMM:s/2\\(_*\\)$/3\\1/
+
+		:zzclr009
+#--------------------------------------------------
+s/2\(_*\)$/3\1/
+		t zzset010
+		s/^/PATT:/
+		l
+		s/^PATT://
+		x
+		s/^/HOLD:/
+		l
+		s/^HOLD://
+		x
+		i\
+COMM:s/1\\(_*\\)$/2\\1/
+
+		t zzclr010
+		:zzset010
+		s/^/PATT:/
+		l
+		s/^PATT://
+		x
+		s/^/HOLD:/
+		l
+		s/^HOLD://
+		x
+		i\
+COMM:s/1\\(_*\\)$/2\\1/
+
+		:zzclr010
+#--------------------------------------------------
+s/1\(_*\)$/2\1/
+		t zzset011
+		s/^/PATT:/
+		l
+		s/^PATT://
+		x
+		s/^/HOLD:/
+		l
+		s/^HOLD://
+		x
+		i\
+COMM:s/0\\(_*\\)$/1\\1/
+
+		t zzclr011
+		:zzset011
+		s/^/PATT:/
+		l
+		s/^PATT://
+		x
+		s/^/HOLD:/
+		l
+		s/^HOLD://
+		x
+		i\
+COMM:s/0\\(_*\\)$/1\\1/
+
+		:zzclr011
+#--------------------------------------------------
+s/0\(_*\)$/1\1/
+# replace all _ to 0s
+#
+		t zzset012
+		s/^/PATT:/
+		l
+		s/^PATT://
+		x
+		s/^/HOLD:/
+		l
+		s/^HOLD://
+		x
+		i\
+COMM:s/_/0/g
+
+		t zzclr012
+		:zzset012
+		s/^/PATT:/
+		l
+		s/^PATT://
+		x
+		s/^/HOLD:/
+		l
+		s/^HOLD://
+		x
+		i\
+COMM:s/_/0/g
+
+		:zzclr012
+#--------------------------------------------------
+s/_/0/g
+		s/^/PATT:/
+		l
+		s/^PATT://
+		x
+		s/^/HOLD:/
+		l
+		s/^HOLD://
+		x
+
+# Debugged SED script generated by sedsed-1.1-dev (http://aurelio.net/projects/sedsed/)
