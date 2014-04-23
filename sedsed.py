@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # sedsed - Debugger, indenter and HTMLizer for sed scripts
 # Since 27 November 2001, by Aurelio Jargas
-# https://github.com/aureliojargas/sedsed
 
 import sys
 import re
@@ -11,7 +10,7 @@ import tempfile
 
 myversion = '1.1b'
 myname = 'sedsed'
-myhome = 'http://sedsed.sf.net'
+myhome = 'http://aurelio.net/projects/sedsed/'
 
 
 # -----------------------------------------------------------------------------
@@ -470,10 +469,10 @@ html_data = {
 
     'footer': """
 <font color="%s"><b>### colorized by <a \
-href="http://sedsed.sf.net">sedsed</a>, a SED script \
+href="%s">sedsed</a>, a SED script \
 debugger/indenter/tokenizer/HTMLizer</b></font>\n
 </pre></body></html>\
-""" % html_colors['comment']
+""" % (html_colors['comment'], myhome)
 }
 del html_colors['SCRIPTNAME']
 
