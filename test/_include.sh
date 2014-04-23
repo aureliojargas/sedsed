@@ -22,5 +22,6 @@ tests_clean_up() {
 
 tests_git_status() {
     # Use git to show the errors (differences)
+    tests_clean_up
     git status --short . | sed 's/^/ERROR (use git diff): /'
 }
