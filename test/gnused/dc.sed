@@ -1,4 +1,4 @@
-#!/bin/sed -nf
+#n
 #  dc.sed - an arbitrary precision RPN calculator
 #  Created by Greg Ubben <gsu@romulus.ncsc.mil> early 1995, late 1996
 #

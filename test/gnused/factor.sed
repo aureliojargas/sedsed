@@ -1,4 +1,4 @@
-#! /bin/sed -nf
+#n
 
 s/.*/&;9aaaaaaaaa8aaaaaaaa7aaaaaaa6aaaaaa5aaaaa4aaaa3aaa2aa1a0/
 :encode
