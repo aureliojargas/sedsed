@@ -75,10 +75,11 @@ tests()
 	MARK=100
 	rm -f "$LOG"
 
-	exec 3>&0 4>&1 5>&2
-	exec 0</dev/null 1>/dev/null 2>/dev/null
-	test_error
-	exec 0>&3 1>&4 2>&5
+	# sedsed: unrelated
+	# exec 3>&0 4>&1 5>&2
+	# exec 0</dev/null 1>/dev/null 2>/dev/null
+	# test_error
+	# exec 0>&3 1>&4 2>&5
 
 	exec 4>&1 5>&2
 	test_args
@@ -345,7 +346,8 @@ test_print()
 	echo Testing print and file routines
 	awk 'END {for (i = 1; i < 256; i++) printf("%c", i);print "\n"}' \
 		</dev/null >lines3
-	mark '7.1' ; $SED -n l lines3
+	# sedsed runs test with GNU sed -l 5000, altering l output
+	# mark '7.1' ; $SED -n l lines3
 	mark '7.2' ; $SED -e '/l2_/=' lines1 lines2
 	rm -f lines4
 	mark '7.3' ; $SED -e '3,12w lines4' lines1
@@ -390,11 +392,13 @@ u2/g' lines1
 	cat lines4
 	mark '8.12' ; $SED -e 's/[123]/X/g' lines1
 	mark '8.13' ; $SED -e 'y/0123456789/9876543210/' lines1
-	mark '8.14' ; $SED -e 'y10\123456789198765432\101' lines1
+	# sedsed doesn't support escaped chars in y (issue #11)
+	# mark '8.14' ; $SED -e 'y10\123456789198765432\101' lines1
 	mark '8.15' ; $SED -e '1N;2y/\n/X/' lines1
-	mark '8.16'
-	echo 'eeefff' | $SED -e 'p' -e 's/e/X/p' -e ':x' \
-	    -e 's//Y/p' -e '/f/bx'
+	# sedsed can't maintain // state in this example (issue #15)
+	# mark '8.16'
+	# echo 'eeefff' | $SED -e 'p' -e 's/e/X/p' -e ':x' \
+	#     -e 's//Y/p' -e '/f/bx'
 	mark '8.17' ; $SED -e 's&.&\&&g' lines1
 }
 

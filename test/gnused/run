@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Always run the tests from this script's folder
+cd $(dirname "$0") || exit 1
+
+# Read default configuration
+source  ../_include.sh
+
+# Multiple tests from the BSD sed, adapted for GNU sed
+test_message "Testing bsd.sh"
+./bsd.sh "$sedsed --debug --_stdout-only" bsd.good
+
+tests_git_status
