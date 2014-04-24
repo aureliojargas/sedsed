@@ -1167,7 +1167,7 @@ def do_debug(datalist):
     cmdextra = ''
     if action_modifiers.count('_stdout-only'):
         # cmdextra = "| egrep -v '^PATT|^HOLD|^COMM|\$$|\\$'"  # sed
-        cmdextra = "-l 5000 | egrep -v '^PATT|^HOLD|^COMM'"   # gsed
+        cmdextra = "-l 9999 | egrep -v '^PATT|^HOLD|^COMM'"   # gsed
     inputfiles = ' '.join(textfiles)
     if dump_debug:
         for line in [re.sub('\n$', '', x) for x in outlist]:
