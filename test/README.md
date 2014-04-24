@@ -1,4 +1,4 @@
-# sedsed tester
+# sedsed Regression Tests
 
 
 ## Requirements
