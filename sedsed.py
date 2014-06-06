@@ -870,6 +870,12 @@ class SedAddress(object):
                     # yes, a flag, set addr flag
                     self.flag = m.group()
                     devdebug('FOUND addr flag: %s' % (self.flag.strip()))
+                else:
+                    m = re.match(r'\s*M\s*', patterns[0])
+                    if m:
+                        # yes, a flag, set addr flag
+                        self.flag = m.group()
+                        devdebug('FOUND addr flag: %s' % (self.flag.strip()))
 
             self.pattern = possiblepatt
             self.isok = 1
