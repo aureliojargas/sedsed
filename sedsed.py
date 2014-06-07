@@ -22,6 +22,7 @@ myhome = 'http://aurelio.net/projects/sedsed/'
 # Default config - Changeable, but you won't need to do it
 sedbin = 'sed'                # name (or full path) of the sed program
 color = 1                     # colored output or not? (--color, --nocolor)
+printline = 'l'               # print line in an unambiguous form
 dump_debug = 0                # dump debug script to screen? (--dump-debug)
 indent_prefix = ' '*4         # default indent prefix for blocks (--prefix)
 debug_prefix = '\t\t'         # default prefix for debug commands
@@ -82,6 +83,8 @@ OPTIONS:
      -e, --expression    add the script to the commands to be parsed
      -n, --quiet         suppress automatic printing of pattern space
          --silent        alias to --quiet
+
+         --plain         use p instead of l to print current line
 
      -d, --debug         debug the sed script
          --hide          hide some debug info (options: PATT,HOLD,COMM)
@@ -183,6 +186,7 @@ long_options = [
     'debug', 'tokenize', 'htmlize', 'indent',                       # actions
     'version', 'help', 'file=', 'expression=', 'silent', 'quiet',   # sed-like
     'nocolor', 'color', 'hide=', 'prefix=', 'emu', 'emudebug',      # misc
+    'plain',                                                        #
     'dump-debug',                                                   # other
     '_debuglevel=', '_emudebuglevel=', '_stdout-only', 'dumpcute']  # admin
 
@@ -239,6 +243,9 @@ for o in opt:
     elif o[0] in ('-V', '--version'):
         print('%s v%s' % (myname, __version__))
         sys.exit(0)
+
+    elif o[0] == '--plain':
+        printline = 'p'
 
     elif o[0] == '--emu':
         action = 'emu'
@@ -343,12 +350,22 @@ if quiet_flag:
 
 # Add the terminal escapes for color (or not)
 if color:
-    color_YLW = '\033[33;1m'  # yellow text
-    color_RED = '\033[31;1m'  # red text
-    color_REV = '\033[7m'     # reverse video
-    color_NO  = '\033[m'      # back to default
+    color_YLW   = '\033[33;1m'  # yellow text
+    color_RED   = '\033[31;1m'  # red text
+    color_BLUE  = '\033[34;1m'  # blue text
+    color_GREEN = '\033[32;1m'  # green text
+    color_REV   = '\033[7m'     # reverse video
+    color_NO    = '\033[m'      # back to default
+
+    if printline == 'p':
+       color_BLUE_INSIDE_SED  = '\033\[34;1m'  # blue text
+       color_GREEN_INSIDE_SED = '\033\[32;1m'  # green text
+       color_NO_INSIDE_SED    = '\033\[m'      # back to default
+    else:
+        color_BLUE_INSIDE_SED = color_GREEN_INSIDE_SED = color_NO_INSIDE_SED = ''
 else:
-    color_YLW = color_RED = color_REV = color_NO = ''
+    color_YLW = color_RED = color_BLUE = color_GREEN = color_REV = color_NO = ''
+    color_BLUE_INSIDE_SED = color_GREEN_INSIDE_SED = color_NO_INSIDE_SED = ''
 
 
 # The SED debugger magic lines
@@ -425,8 +442,9 @@ else:
 
 # show pattern space, show hold space, show sed command
 # null sed command to restore last address, 't' status trick
-showpatt = [     's/^/PATT:/', 'l', 's/^PATT://'     ]
-showhold = ['x', 's/^/HOLD:/', 'l', 's/^HOLD://', 'x']
+
+showpatt = ['s/\\(.\\|\\n\\)*/PATT:%s&%s/M' % (color_GREEN_INSIDE_SED, color_NO_INSIDE_SED), printline, 's/^PATT:%s\\(\\(.\\|\\n\\)*\\)%s/\\1/' % (color_GREEN_INSIDE_SED, color_NO_INSIDE_SED)]
+showhold = ['x', 's/\\(.\\|\\n\\)*/HOLD:%s&%s/M' % (color_BLUE_INSIDE_SED, color_NO_INSIDE_SED), printline, 's/^HOLD:%s\\(\\(.\\|\\n\\)*\\)%s/\\1/' % (color_BLUE_INSIDE_SED, color_NO_INSIDE_SED), 'x']
 showcomm = ['i\\', 'COMM:%s\a%s' % (color_YLW, color_NO)]
 nullcomm = ['y/!/!/']
 save_t   = ['t zzset\a\n#DEBUG#', 't zzclr\a',
@@ -870,6 +888,12 @@ class SedAddress(object):
                     # yes, a flag, set addr flag
                     self.flag = m.group()
                     devdebug('FOUND addr flag: %s' % (self.flag.strip()))
+                else:
+                    m = re.match(r'\s*M\s*', patterns[0])
+                    if m:
+                        # yes, a flag, set addr flag
+                        self.flag = m.group()
+                        devdebug('FOUND addr flag: %s' % (self.flag.strip()))
 
             self.pattern = possiblepatt
             self.isok = 1
