@@ -343,12 +343,18 @@ if quiet_flag:
 
 # Add the terminal escapes for color (or not)
 if color:
-    color_YLW = '\033[33;1m'  # yellow text
-    color_RED = '\033[31;1m'  # red text
-    color_REV = '\033[7m'     # reverse video
-    color_NO  = '\033[m'      # back to default
+    color_YLW   = '\033[33;1m'  # yellow text
+    color_RED   = '\033[31;1m'  # red text
+    color_BLUE  = '\033[34;1m'  # blue text
+    color_GREEN = '\033[32;1m'  # green text
+    color_REV   = '\033[7m'     # reverse video
+    color_NO    = '\033[m'      # back to default
+
+    color_BLUE_INSIDE_SED  = '\033\[34;1m'  # blue text
+    color_GREEN_INSIDE_SED = '\033\[32;1m'  # green text
+    color_NO_INSIDE_SED    = '\033\[m'      # back to default
 else:
-    color_YLW = color_RED = color_REV = color_NO = ''
+    color_YLW = color_RED = color_BLUE = color_GREEN = color_REV = color_NO = ''
 
 
 # The SED debugger magic lines
@@ -425,8 +431,13 @@ else:
 
 # show pattern space, show hold space, show sed command
 # null sed command to restore last address, 't' status trick
-showpatt = [     's/^/PATT:/', 'l', 's/^PATT://'     ]
-showhold = ['x', 's/^/HOLD:/', 'l', 's/^HOLD://', 'x']
+if(False):
+    printline = 'l'
+else:
+    printline = 'p'
+
+showpatt = ['s/.*/PATT:%s&%s/' % (color_GREEN_INSIDE_SED, color_NO_INSIDE_SED), printline, 's/^PATT:%s//' % color_GREEN_INSIDE_SED]
+showhold = ['x', 's/.*/HOLD:%s&%s/' % (color_BLUE_INSIDE_SED, color_NO_INSIDE_SED), printline, 's/^HOLD:%s//' % color_BLUE_INSIDE_SED, 'x']
 showcomm = ['i\\', 'COMM:%s\a%s' % (color_YLW, color_NO)]
 nullcomm = ['y/!/!/']
 save_t   = ['t zzset\a\n#DEBUG#', 't zzclr\a',
