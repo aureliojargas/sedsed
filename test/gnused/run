@@ -13,78 +13,78 @@ test_message "Testing bsd.sh"
 # Test all the individual sed files
 for ok_file in *.good
 do
-	base=${ok_file%.good}
-	input_file=$base.inp
-	script_file=$base.sed
+    base=${ok_file%.good}
+    input_file=$base.inp
+    script_file=$base.sed
 
-	# Skip some files from testing
-	case $ok_file in
-		badenc.good)
-			# sedsed doesn't support GNU sed 'z' command (issue #14)
-			continue
-		;;
-		bsd.good)
-			# Already done
-			continue
-		;;
-		eval.good)
-			# sedsed doesn't support GNU sed 'e' command
-			continue
-		;;
-		inclib.good)
-			# Bug: sedsed can't handle s;foo;bar; (issue #12)
-			continue
-		;;
-		insert.good)
-			# Bug: sedsed can't handle i\ at EOF
-			continue
-		;;
-		mac-mf.good)
-			# Non-UTF-8 file that breaks my GNU sed in Mac OS X
-			# sed: file mac-mf.sed line 152: unterminated `s' command
-			continue
-		;;
-		manis.good)
-			# Bug: sedsed can't handle ;<space> at the end (issue #13)
-			continue
-		;;
-		modulo.good)
-			# sedsed doesn't support GNU sed '~' address operator
-			continue
-		;;
-		recall.good)
-			# Bug: sedsed can't maintain // state in this example (issue #15)
-			continue
-		;;
-		subwrt[12].good)
-			# ERROR: Cannot read file: subwrt1.sed
-			continue
-		;;
-		noeol.good)
-			# No EOL outputs can't be matched when using sedsed --_stdout-only
-			continue
-		;;
-		noeolw.good)
-			# No EOL outputs can't be matched when using sedsed --_stdout-only
-			input_file=noeol.inp
-			continue
-		;;
-		noeolw.[12]good)
-			# Files created by the 'w' command
-			continue
-		;;
-		wrtout[12].good)
-			# ERROR: Cannot read file: wrtout1.sed
-			continue
-		;;
-		y-bracket.good)
-			# Bug: sedsed parser breaks on [ inside y (issue #16)
-			continue
-		;;
-	esac
+    # Skip some files from testing
+    case $ok_file in
+        badenc.good)
+            # sedsed doesn't support GNU sed 'z' command (issue #14)
+            continue
+        ;;
+        bsd.good)
+            # Already done
+            continue
+        ;;
+        eval.good)
+            # sedsed doesn't support GNU sed 'e' command
+            continue
+        ;;
+        inclib.good)
+            # Bug: sedsed can't handle s;foo;bar; (issue #12)
+            continue
+        ;;
+        insert.good)
+            # Bug: sedsed can't handle i\ at EOF
+            continue
+        ;;
+        mac-mf.good)
+            # Non-UTF-8 file that breaks my GNU sed in Mac OS X
+            # sed: file mac-mf.sed line 152: unterminated `s' command
+            continue
+        ;;
+        manis.good)
+            # Bug: sedsed can't handle ;<space> at the end (issue #13)
+            continue
+        ;;
+        modulo.good)
+            # sedsed doesn't support GNU sed '~' address operator
+            continue
+        ;;
+        recall.good)
+            # Bug: sedsed can't maintain // state in this example (issue #15)
+            continue
+        ;;
+        subwrt[12].good)
+            # ERROR: Cannot read file: subwrt1.sed
+            continue
+        ;;
+        noeol.good)
+            # No EOL outputs can't be matched when using sedsed --_stdout-only
+            continue
+        ;;
+        noeolw.good)
+            # No EOL outputs can't be matched when using sedsed --_stdout-only
+            input_file=noeol.inp
+            continue
+        ;;
+        noeolw.[12]good)
+            # Files created by the 'w' command
+            continue
+        ;;
+        wrtout[12].good)
+            # ERROR: Cannot read file: wrtout1.sed
+            continue
+        ;;
+        y-bracket.good)
+            # Bug: sedsed parser breaks on [ inside y (issue #16)
+            continue
+        ;;
+    esac
 
-	test_message "Testing $script_file"
-	$sedsed --debug --_stdout-only -f $script_file $input_file > $ok_file
+    test_message "Testing $script_file"
+    $sedsed --debug --_stdout-only -f $script_file $input_file > $ok_file
 done
 
 tests_git_status

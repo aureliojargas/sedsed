@@ -10,11 +10,11 @@ source  ../_include.sh
 for file_path in ${@:-../scripts/*.sed ../parsing/*.sed}
 do
 
-	output_file=$(basename $file_path).html
+    output_file=$(basename $file_path).html
 
-	# Generate the HTML version
-	test_message "Generating $output_file"
-	$sedsed --htmlize -f $file_path > $output_file
+    # Generate the HTML version
+    test_message "Generating $output_file"
+    $sedsed --htmlize -f $file_path > $output_file
 done
 
 tests_git_status

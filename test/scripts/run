@@ -7,43 +7,43 @@ cd $(dirname "$0") || exit 1
 source  ../_include.sh
 
 input () {
-	case $file in
-		  anagrams.gnu.sed) printf 'over\nlove\nvero\n' ;;
-		          bf2c.sed) echo '+[>>+++++[<++++++>-]<[>++++[>++++++++<-]' ;;
-		           cal.sed) echo '2 07'; echo '-m 2004' ;;
-		        config.sed) echo "aa='abc" ;;
-		            dc.sed) echo '4 4 + p' ;;
-		        expand.sed) printf 'one\ttwo\tthree\t4\tfive\n' ;;
-		           fmt.sed) head -n 5 /etc/passwd ;;
-		   html_uc.gnu.sed) printf '<b>bold\n</b>\n' ;;
-		impossible.gnu.sed) printf 'john smith\nmary anne\njohn wayne\njohn doe\n' ;;
-		      incr_num.sed) echo '9999' ;;
-		      revlines.sed) printf 'one\ntwo\nthree\nfour\n' ;;
-		      sedcheck.sed) cat expand.sed ;;
-		  sodelnum.gnu.sed) printf 'one\ntwo\nthree\nfour\n' ;;
-		       sokoban.sed) printf '.\n1\nkhhhkkkhkhhjhhjjjllllllllllllll:q\n' ;;
-		      sort.gnu.sed) printf 'one\ntwo\nthree\nfour\n' ;;
-		   tex2xml.gnu.sed) echo 'a{b{c{bla}}}' ;;
-		       tolower.sed) echo '/a/b/c/FOO' ;;
-		        ttest1.sed) printf 'a\nb\n' ;;
-		        ttest2.sed) echo 'DDD' ;;
-		                 *) echo "*** Unregistered file $file - Aborting." >&2 ;;
-	esac
+    case $file in
+          anagrams.gnu.sed) printf 'over\nlove\nvero\n' ;;
+                  bf2c.sed) echo '+[>>+++++[<++++++>-]<[>++++[>++++++++<-]' ;;
+                   cal.sed) echo '2 07'; echo '-m 2004' ;;
+                config.sed) echo "aa='abc" ;;
+                    dc.sed) echo '4 4 + p' ;;
+                expand.sed) printf 'one\ttwo\tthree\t4\tfive\n' ;;
+                   fmt.sed) head -n 5 /etc/passwd ;;
+           html_uc.gnu.sed) printf '<b>bold\n</b>\n' ;;
+        impossible.gnu.sed) printf 'john smith\nmary anne\njohn wayne\njohn doe\n' ;;
+              incr_num.sed) echo '9999' ;;
+              revlines.sed) printf 'one\ntwo\nthree\nfour\n' ;;
+              sedcheck.sed) cat expand.sed ;;
+          sodelnum.gnu.sed) printf 'one\ntwo\nthree\nfour\n' ;;
+               sokoban.sed) printf '.\n1\nkhhhkkkhkhhjhhjjjllllllllllllll:q\n' ;;
+              sort.gnu.sed) printf 'one\ntwo\nthree\nfour\n' ;;
+           tex2xml.gnu.sed) echo 'a{b{c{bla}}}' ;;
+               tolower.sed) echo '/a/b/c/FOO' ;;
+                ttest1.sed) printf 'a\nb\n' ;;
+                ttest2.sed) echo 'DDD' ;;
+                         *) echo "*** Unregistered file $file - Aborting." >&2 ;;
+    esac
 }
 
 # Test files user supplied files ($@) otherwise test everything
 for file in ${@:-*.sed}
 do
 
-	# Only test *.gnu.sed files when using GNU sed
-	test ${file%.gnu.sed} != $file && test "$sed" != 'gsed' && continue
+    # Only test *.gnu.sed files when using GNU sed
+    test ${file%.gnu.sed} != $file && test "$sed" != 'gsed' && continue
 
-	test_message "Testing $file"
+    test_message "Testing $file"
 
-	# Run the same sed script in sed and sedsed -d, results must be equal
-	input $file | $sed -f $file > $sed_output
-	input $file | $sedsed -d --_stdout-only -f $file > $sedsed_output
-	diff -U1 $sed_output $sedsed_output
+    # Run the same sed script in sed and sedsed -d, results must be equal
+    input $file | $sed -f $file > $sed_output
+    input $file | $sedsed -d --_stdout-only -f $file > $sedsed_output
+    diff -U1 $sed_output $sedsed_output
 done
 
 tests_clean_up

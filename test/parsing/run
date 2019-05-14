@@ -10,15 +10,15 @@ source  ../_include.sh
 for file in ${@:-*.sed}
 do
 
-	# Only test *.gnu.sed files when using GNU sed
-	test ${file%.gnu.sed} != $file && test "$sed" != 'gsed' && continue
+    # Only test *.gnu.sed files when using GNU sed
+    test ${file%.gnu.sed} != $file && test "$sed" != 'gsed' && continue
 
-	test_message "Testing ${file%.sed}"
+    test_message "Testing ${file%.sed}"
 
-	# Run the same sed script in sed and sedsed -d, results must be equal
-	echo "$text" | $sed -f $file > $sed_output
-	echo "$text" | $sedsed -d --_stdout-only -f $file > $sedsed_output
-	diff -U1 $sed_output $sedsed_output
+    # Run the same sed script in sed and sedsed -d, results must be equal
+    echo "$text" | $sed -f $file > $sed_output
+    echo "$text" | $sedsed -d --_stdout-only -f $file > $sedsed_output
+    diff -U1 $sed_output $sedsed_output
 done
 
 tests_clean_up

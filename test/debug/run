@@ -11,15 +11,15 @@ for file_path in ${@:-../parsing/*.sed}
 do
 
     file=$(basename $file_path)
-	output_file=$file.txt
+    output_file=$file.txt
 
-	# Only test *.gnu.sed files when using GNU sed
-	test ${file%.gnu.sed} != $file && test "$sed" != 'gsed' && continue
+    # Only test *.gnu.sed files when using GNU sed
+    test ${file%.gnu.sed} != $file && test "$sed" != 'gsed' && continue
 
-	test_message "Testing ${file%.sed}"
+    test_message "Testing ${file%.sed}"
 
-	# Run the debugger and save the results
-	echo "$text" | $sedsed --debug -f $file_path > $output_file
+    # Run the debugger and save the results
+    echo "$text" | $sedsed --debug -f $file_path > $output_file
 done
 
 tests_git_status

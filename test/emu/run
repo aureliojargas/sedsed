@@ -10,15 +10,15 @@ source  ../_include.sh
 for file in ${@:-*.sed}
 do
 
-	# The emulator do not support GNU sed extensions
-	test ${file%.gnu.sed} != $file && continue
+    # The emulator do not support GNU sed extensions
+    test ${file%.gnu.sed} != $file && continue
 
-	test_message "Testing ${file%.sed}"
+    test_message "Testing ${file%.sed}"
 
-	# Run the same sed script in sed and sedsed -d, results must be equal
-	echo "$text" | $sed -f $file > $sed_output
-	echo "$text" | $sedsed --emu -f $file > $sedsed_output
-	diff -U1 $sed_output $sedsed_output
+    # Run the same sed script in sed and sedsed -d, results must be equal
+    echo "$text" | $sed -f $file > $sed_output
+    echo "$text" | $sedsed --emu -f $file > $sedsed_output
+    diff -U1 $sed_output $sedsed_output
 done
 
 tests_clean_up

@@ -11,12 +11,12 @@ for file_path in ${@:-../emu/*.sed}
 do
 
     file=$(basename $file_path)
-	output_file=$file.txt
+    output_file=$file.txt
 
-	test_message "Testing ${file%.sed}"
+    test_message "Testing ${file%.sed}"
 
-	# Run the sed emulator debugger and save the results
-	echo "$text" | $sedsed --emudebug -f $file_path > $output_file
+    # Run the sed emulator debugger and save the results
+    echo "$text" | $sedsed --emudebug -f $file_path > $output_file
 done
 
 tests_git_status

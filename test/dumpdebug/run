@@ -10,11 +10,11 @@ source  ../_include.sh
 for file_path in ${@:-../scripts/*.sed ../parsing/*.sed}
 do
 
-	output_file=$(basename $file_path)
+    output_file=$(basename $file_path)
 
-	# Generate the debug file
-	test_message "Generating $output_file"
-	$sedsed --dump-debug -f $file_path > $output_file
+    # Generate the debug file
+    test_message "Generating $output_file"
+    $sedsed --dump-debug -f $file_path > $output_file
 done
 
 tests_git_status
