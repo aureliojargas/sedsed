@@ -1,0 +1,22 @@
+language: python
+python:
+  - "3.6"
+install:
+  - pip install -q pylint
+  - ln -s /bin/sed ~/bin/gsed
+script:
+  - ./ci.sh
+
+### Environment
+# Ubuntu 14.04.5 LTS
+# /bin/sed v4.2.2
+# uid=2000(travis) groups=2000(travis),999(docker)
+# PWD=/home/travis/build/aureliojargas/sedsed
+# PATH=/home/travis/bin
+#      /home/travis/.local/bin
+#      /usr/local/sbin
+#      /usr/local/bin
+#      /usr/sbin
+#      /usr/bin
+#      /sbin
+#      /bin
