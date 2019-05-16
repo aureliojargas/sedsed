@@ -4,7 +4,7 @@
 cd $(dirname "$0") || exit 1
 
 # Read default configuration
-source  ../_include.sh
+source ../_include.sh
 
 input () {
     case $file in

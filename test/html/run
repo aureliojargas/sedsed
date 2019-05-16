@@ -4,7 +4,7 @@
 cd $(dirname "$0") || exit 1
 
 # Read default configuration
-source  ../_include.sh
+source ../_include.sh
 
 # Test files user supplied files ($@) otherwise test everything
 for file_path in ${@:-../scripts/*.sed ../parsing/*.sed}
