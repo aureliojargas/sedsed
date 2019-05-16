@@ -3,8 +3,13 @@
 # Always run the tests from this script's folder
 cd $(dirname "$0") || exit 1
 
+# Read default configuration
+source _include.sh
+
 for file in */run
 do
 	echo "        Running $file..."
-	$file
+	$file || failed=1
 done
+
+tests_exit

@@ -16,7 +16,8 @@ do
     test_message "Testing ${file%.sed}"
 
     # Run the sed emulator debugger and save the results
-    echo "$text" | $sedsed --emudebug -f $file_path > $output_file
+    echo "$text" | $sedsed --emudebug -f $file_path > $output_file || failed=1
 done
 
 tests_git_status
+tests_exit

@@ -1,5 +1,8 @@
 # Include file used by all the sedsed tests.
 
+# Turn strict mode on for all scripts
+set -o errexit -o nounset -o pipefail
+
 sed='gsed'
 
 sedsed='python ../../sedsed.py'
@@ -7,6 +10,7 @@ sedsed='python ../../sedsed.py'
 # sedsed='python2.7 ../../sedsed.py'
 # sedsed='python3   ../../sedsed.py'
 
+failed=0
 sed_output='sed-output.txt'
 sedsed_output='sedsed-output.txt'
 
@@ -21,7 +25,17 @@ tests_clean_up() {
 }
 
 tests_git_status() {
+    local problems
     # Use git to show the errors (differences)
     tests_clean_up
-    git status --short . | sed 's/^/ERROR (use git diff): /'
+    problems=$(git status --short . | sed 's/^/ERROR (use git diff): /')
+    if test -n "$problems"
+    then
+        failed=1
+        echo "$problems"
+    fi
+}
+
+tests_exit() {
+    exit $failed
 }

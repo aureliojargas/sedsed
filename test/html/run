@@ -14,7 +14,8 @@ do
 
     # Generate the HTML version
     test_message "Generating $output_file"
-    $sedsed --htmlize -f $file_path > $output_file
+    $sedsed --htmlize -f $file_path > $output_file || failed=1
 done
 
 tests_git_status
+tests_exit

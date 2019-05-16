@@ -19,7 +19,8 @@ do
     test_message "Testing ${file%.sed}"
 
     # Run the debugger and save the results
-    echo "$text" | $sedsed --debug -f $file_path > $output_file
+    echo "$text" | $sedsed --debug -f $file_path > $output_file || failed=1
 done
 
 tests_git_status
+tests_exit
