@@ -14,7 +14,8 @@ do
 
     # Generate the debug file
     test_message "Generating $output_file"
-    $sedsed --dump-debug -f $file_path > $output_file
+    $sedsed --dump-debug -f $file_path > $output_file || failed=1
 done
 
 tests_git_status
+tests_exit

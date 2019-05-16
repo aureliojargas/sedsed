@@ -16,9 +16,10 @@ do
     test_message "Testing ${file%.sed}"
 
     # Run the same sed script in sed and sedsed -d, results must be equal
-    echo "$text" | $sed -f $file > $sed_output
-    echo "$text" | $sedsed --emu -f $file > $sedsed_output
-    diff -U1 $sed_output $sedsed_output
+    echo "$text" | $sed -f $file > $sed_output || failed=1
+    echo "$text" | $sedsed --emu -f $file > $sedsed_output || failed=1
+    diff -U1 $sed_output $sedsed_output || failed=1
 done
 
 tests_clean_up
+tests_exit

@@ -8,7 +8,7 @@ source  ../_include.sh
 
 # Multiple tests from the BSD sed, adapted for GNU sed
 test_message "Testing bsd.sh"
-./bsd.sh "$sedsed --debug --_stdout-only" bsd.good
+./bsd.sh "$sedsed --debug --_stdout-only" bsd.good || failed=1
 
 # Test all the individual sed files
 for ok_file in *.good
@@ -84,7 +84,8 @@ do
     esac
 
     test_message "Testing $script_file"
-    $sedsed --debug --_stdout-only -f $script_file $input_file > $ok_file
+    $sedsed --debug --_stdout-only -f $script_file $input_file > $ok_file || failed=1
 done
 
 tests_git_status
+tests_exit
