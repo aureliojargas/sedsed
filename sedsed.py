@@ -59,12 +59,12 @@ html_colors = {
 }
 
 # The identifier recognized by sed as STDIN
-if os.name == 'nt':
-    # Windows do not have /dev/stdin, maybe '-' is supported by sed
-    stdin_id = '-'
-else:
-    # BSD sed fails for '-', use /dev/stdin as the default in Unix
+# - BSD sed does not support '-'
+# - Windows, Termux and others does not have /dev/stdin
+if os.path.exists('/dev/stdin'):
     stdin_id = '/dev/stdin'
+else:
+    stdin_id = '-'
 
 
 # -----------------------------------------------------------------------------
