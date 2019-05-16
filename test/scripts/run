@@ -14,7 +14,7 @@ input () {
                 config.sed) echo "aa='abc" ;;
                     dc.sed) echo '4 4 + p' ;;
                 expand.sed) printf 'one\ttwo\tthree\t4\tfive\n' ;;
-                   fmt.sed) head -n 5 /etc/passwd ;;
+                   fmt.sed) head "$file" ;;
            html_uc.gnu.sed) printf '<b>bold\n</b>\n' ;;
               incr_num.sed) echo '9999' ;;
               revlines.sed) printf 'one\ntwo\nthree\nfour\n' ;;
