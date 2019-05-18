@@ -12,5 +12,5 @@
    replace:.
       flag:gpw
  extrainfo:
-   comment:# comment
+   comment:
 
