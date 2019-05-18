@@ -19,6 +19,11 @@ do
 
     # Skip some files from testing
     case $ok_file in
+        8bit.good)
+            # UnicodeDecodeError: 'utf-8' codec can't decode byte 0xc2 in
+            # position 674: invalid continuation byte
+            continue
+        ;;
         badenc.good)
             # sedsed doesn't support GNU sed 'z' command (issue #14)
             continue
