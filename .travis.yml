@@ -7,10 +7,11 @@ python:
   - "3.5"
   - "3.6"
 install:
-  - pip install -q pylint
+  - if test $TRAVIS_PYTHON_VERSION = 3.6; then pip install -q pylint; fi
   - ln -s /bin/sed ~/bin/gsed
 script:
-  - ./ci.sh
+  - if test $TRAVIS_PYTHON_VERSION = 3.6; then pylint sedsed.py; fi
+  - ./test/run
 
 ### Environment
 # Ubuntu 14.04.5 LTS

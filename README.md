@@ -17,4 +17,4 @@ Sedsed has a homemade custom testing solution, comprised of multiple shell scrip
 
 ## CI
 
-For every new commit, Travis CI runs the code linter and all the tests. See [.travis.yml](.travis.yml) and [ci.sh](ci.sh) files.
+For every new commit, Travis CI runs the code linter and all the tests. See [.travis.yml](.travis.yml).
