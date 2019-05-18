@@ -702,11 +702,18 @@ class SedCommand(object):
 
                     # great, s/patt/rplc/ successfully taken
 
-            # there are flags?
+            # are there flags?
             if hs and hs.isok and self.junk:
                 devdebug('possible s/// flag: %s' % self.junk, 3)
 
-                m = re.match(r'(%s\s*)+' % patt['flag'], self.junk)
+                # 'w' is the only flag that accepts an argument, so it will be
+                # handled after the other flags. Usually it is the last flag
+                # on the command, because other flags would be interpreted as
+                # part of a filename if put after 'w'.
+
+                flags_except_w = patt['flag'].replace('w', '')
+
+                m = re.match(r'^(%s\s*)+' % flags_except_w, self.junk)
                 if m:
                     self.flag = m.group()
                     self.junk = self.junk[m.end():].lstrip()  # del flag
@@ -716,15 +723,18 @@ class SedCommand(object):
                     # now we've got flags also
 
                 # write file flag
-                if 'w' in self.flag:
-                    m = re.match(patt['filename'], self.junk)
+                if self.junk.startswith('w'):
+                    m = re.match(r'^w\s*(%s)' % patt['filename'], self.junk)
                     if m:
-                        self.content = m.group()
+                        self.flag = self.flag + 'w'
+                        self.content = m.group(1)
                         devdebug('FOUND s///w filename: %s' % self.content)
                         self.junk = self.junk[m.end():].lstrip()
+                    else:
+                        fatal_error("missing filename for s///w at line %d" %
+                            linenr)
 
-                        # and now, s///w filename
-                        # is saved also
+                    # and now, s///w filename is saved also
 
             if hs and hs.isok:
                 self.isok = 1

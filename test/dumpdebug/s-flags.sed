@@ -67,9 +67,9 @@ s/w/W/gp
 		s/^HOLD://
 		x
 		i\
-COMM:s/./&/ww .out1
+COMM:s/./&/w w.out1
 #--------------------------------------------------
-s/./&/ww .out1
+s/./&/w w.out1
 		s/^/PATT:/
 		l
 		s/^PATT://

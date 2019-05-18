@@ -7,10 +7,10 @@
 		s/^HOLD://
 		x
 		i\
-COMM:\\,addr1,,// !s/a/./gpww .out1
+COMM:\\,addr1,,// !s/a/./gpw w.out1
 		\,addr1,y/!/!/
 #--------------------------------------------------
-\,addr1,,// !s/a/./gpww .out1
+\,addr1,,// !s/a/./gpw w.out1
 		s/^/PATT:/
 		l
 		s/^PATT://

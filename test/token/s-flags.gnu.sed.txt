@@ -86,11 +86,11 @@
   lastaddr:
   modifier:
         id:s
-   content:.out1
+   content:w.out1
  delimiter:/
    pattern:.
    replace:&
-      flag:ww
+      flag:w
  extrainfo:
    comment:
 
@@ -198,11 +198,11 @@
   lastaddr:
   modifier:
         id:s
-   content:.out2
+   content:w.out2
  delimiter:/
    pattern:^T
    replace:t
-      flag:MmIipgww
+      flag:MmIipgw
  extrainfo:
    comment:
 

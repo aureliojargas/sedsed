@@ -15,7 +15,7 @@ HOLD:$
 COMM:[33;1ms/w/W/gp[m
 PATT:onE$
 HOLD:$
-COMM:[33;1ms/./&/ww .out1[m
+COMM:[33;1ms/./&/w w.out1[m
 PATT:onE$
 HOLD:$
 COMM:[33;1ms/O/0/i[m
@@ -33,7 +33,7 @@ HOLD:$
 COMM:[33;1ms/^t/T/m[m
 PATT:0nE$
 HOLD:$
-COMM:[33;1ms/^T/t/MmIipgww .out2[m
+COMM:[33;1ms/^T/t/MmIipgw w.out2[m
 PATT:0nE$
 HOLD:$
 0nE
@@ -55,7 +55,7 @@ COMM:[33;1ms/w/W/gp[m
 tWo
 PATT:tWo$
 HOLD:$
-COMM:[33;1ms/./&/ww .out1[m
+COMM:[33;1ms/./&/w w.out1[m
 PATT:tWo$
 HOLD:$
 COMM:[33;1ms/O/0/i[m
@@ -73,7 +73,7 @@ HOLD:$
 COMM:[33;1ms/^t/T/m[m
 PATT:TW0$
 HOLD:$
-COMM:[33;1ms/^T/t/MmIipgww .out2[m
+COMM:[33;1ms/^T/t/MmIipgw w.out2[m
 tW0
 PATT:tW0$
 HOLD:$
@@ -95,7 +95,7 @@ HOLD:$
 COMM:[33;1ms/w/W/gp[m
 PATT:thrE3$
 HOLD:$
-COMM:[33;1ms/./&/ww .out1[m
+COMM:[33;1ms/./&/w w.out1[m
 PATT:thrE3$
 HOLD:$
 COMM:[33;1ms/O/0/i[m
@@ -113,7 +113,7 @@ HOLD:$
 COMM:[33;1ms/^t/T/m[m
 PATT:ThrE3$
 HOLD:$
-COMM:[33;1ms/^T/t/MmIipgww .out2[m
+COMM:[33;1ms/^T/t/MmIipgw w.out2[m
 thrE3
 PATT:thrE3$
 HOLD:$
@@ -135,7 +135,7 @@ HOLD:$
 COMM:[33;1ms/w/W/gp[m
 PATT:four$
 HOLD:$
-COMM:[33;1ms/./&/ww .out1[m
+COMM:[33;1ms/./&/w w.out1[m
 PATT:four$
 HOLD:$
 COMM:[33;1ms/O/0/i[m
@@ -153,7 +153,7 @@ HOLD:$
 COMM:[33;1ms/^t/T/m[m
 PATT:f0|_|r$
 HOLD:$
-COMM:[33;1ms/^T/t/MmIipgww .out2[m
+COMM:[33;1ms/^T/t/MmIipgw w.out2[m
 PATT:f0|_|r$
 HOLD:$
 f0|_|r
@@ -175,7 +175,7 @@ HOLD:$
 COMM:[33;1ms/w/W/gp[m
 PATT:f1vE$
 HOLD:$
-COMM:[33;1ms/./&/ww .out1[m
+COMM:[33;1ms/./&/w w.out1[m
 PATT:f1vE$
 HOLD:$
 COMM:[33;1ms/O/0/i[m
@@ -193,7 +193,7 @@ HOLD:$
 COMM:[33;1ms/^t/T/m[m
 PATT:f1vE$
 HOLD:$
-COMM:[33;1ms/^T/t/MmIipgww .out2[m
+COMM:[33;1ms/^T/t/MmIipgw w.out2[m
 PATT:f1vE$
 HOLD:$
 f1vE
@@ -216,7 +216,7 @@ HOLD:$
 COMM:[33;1ms/w/W/gp[m
 PATT:s1X$
 HOLD:$
-COMM:[33;1ms/./&/ww .out1[m
+COMM:[33;1ms/./&/w w.out1[m
 PATT:s1X$
 HOLD:$
 COMM:[33;1ms/O/0/i[m
@@ -234,7 +234,7 @@ HOLD:$
 COMM:[33;1ms/^t/T/m[m
 PATT:s1X$
 HOLD:$
-COMM:[33;1ms/^T/t/MmIipgww .out2[m
+COMM:[33;1ms/^T/t/MmIipgw w.out2[m
 PATT:s1X$
 HOLD:$
 s1X

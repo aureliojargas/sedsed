@@ -15,7 +15,7 @@ HOLD:$
 COMM:[33;1ms/w/W/gp[m
 PATT:onE$
 HOLD:$
-COMM:[33;1ms/./&/ww .out1[m
+COMM:[33;1ms/./&/w w.out1[m
 PATT:onE$
 HOLD:$
 onE
@@ -37,7 +37,7 @@ COMM:[33;1ms/w/W/gp[m
 tWo
 PATT:tWo$
 HOLD:$
-COMM:[33;1ms/./&/ww .out1[m
+COMM:[33;1ms/./&/w w.out1[m
 PATT:tWo$
 HOLD:$
 tWo
@@ -58,7 +58,7 @@ HOLD:$
 COMM:[33;1ms/w/W/gp[m
 PATT:thrE3$
 HOLD:$
-COMM:[33;1ms/./&/ww .out1[m
+COMM:[33;1ms/./&/w w.out1[m
 PATT:thrE3$
 HOLD:$
 thrE3
@@ -79,7 +79,7 @@ HOLD:$
 COMM:[33;1ms/w/W/gp[m
 PATT:four$
 HOLD:$
-COMM:[33;1ms/./&/ww .out1[m
+COMM:[33;1ms/./&/w w.out1[m
 PATT:four$
 HOLD:$
 four
@@ -101,7 +101,7 @@ HOLD:$
 COMM:[33;1ms/w/W/gp[m
 PATT:f1vE$
 HOLD:$
-COMM:[33;1ms/./&/ww .out1[m
+COMM:[33;1ms/./&/w w.out1[m
 PATT:f1vE$
 HOLD:$
 f1vE
@@ -124,7 +124,7 @@ HOLD:$
 COMM:[33;1ms/w/W/gp[m
 PATT:s1X$
 HOLD:$
-COMM:[33;1ms/./&/ww .out1[m
+COMM:[33;1ms/./&/w w.out1[m
 PATT:s1X$
 HOLD:$
 s1X

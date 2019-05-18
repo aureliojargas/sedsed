@@ -67,9 +67,9 @@ s/w/W/gp
 		s/^HOLD://
 		x
 		i\
-COMM:s/./&/ww .out1
+COMM:s/./&/w w.out1
 #--------------------------------------------------
-s/./&/ww .out1
+s/./&/w w.out1
 # GNU sed extensions
 		s/^/PATT:/
 		l
@@ -140,9 +140,9 @@ s/^t/T/m
 		s/^HOLD://
 		x
 		i\
-COMM:s/^T/t/MmIipgww .out2
+COMM:s/^T/t/MmIipgw w.out2
 #--------------------------------------------------
-s/^T/t/MmIipgww .out2
+s/^T/t/MmIipgw w.out2
 # http://www.gnu.org/software/sed/manual/sed.html -- 3.5 The s Command
 		s/^/PATT:/
 		l

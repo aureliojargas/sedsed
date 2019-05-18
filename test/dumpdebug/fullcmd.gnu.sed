@@ -8,10 +8,10 @@
 		s/^HOLD://
 		x
 		i\
-COMM:\\,addr1,I,// !s/a/./igpww .out1
+COMM:\\,addr1,I,// !s/a/./igpw w.out1
 		\,addr1,y/!/!/
 #--------------------------------------------------
-\,addr1,I,// !s/a/./igpww .out1
+\,addr1,I,// !s/a/./igpw w.out1
 		s/^/PATT:/
 		l
 		s/^PATT://

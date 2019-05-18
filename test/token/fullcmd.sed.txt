@@ -6,11 +6,11 @@
   lastaddr:\,addr1,
   modifier:!
         id:s
-   content:.out1
+   content:w.out1
  delimiter:/
    pattern:a
    replace:.
-      flag:gpww
+      flag:gpw
  extrainfo:
    comment:# comment
 
