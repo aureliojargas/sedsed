@@ -1,6 +1,9 @@
 *.pyc
 *.pyo
 
+# Vim temporary files
+*.swp
+
 # Tester temporary files
 /test/*/sed-output.txt
 /test/*/sedsed-output.txt
