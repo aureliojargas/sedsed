@@ -60,7 +60,7 @@ html_colors = {
 
 # The identifier recognized by sed as STDIN
 # - BSD sed does not support '-'
-# - Windows, Termux and others does not have /dev/stdin
+# - Windows, Termux and others do not have /dev/stdin
 if os.path.exists('/dev/stdin'):
     stdin_id = '/dev/stdin'
 else:
