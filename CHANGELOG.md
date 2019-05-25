@@ -1,6 +1,18 @@
 # sedsed changelog
 
-## [Version 1.1](https://github.com/aureliojargas/sedsed/releases/tag/v1.1) released in 2019-05-25
+[Version 1.1]: https://github.com/aureliojargas/sedsed/releases/tag/v1.1
+[Version 1.0]: https://github.com/aureliojargas/sedsed/releases/tag/v1.0
+[Version 0.8]: https://github.com/aureliojargas/sedsed/releases/tag/v0.8
+[Version 0.7]: https://github.com/aureliojargas/sedsed/releases/tag/v0.7
+[Version 0.6]: https://github.com/aureliojargas/sedsed/releases/tag/v0.6
+[Version 0.5]: https://github.com/aureliojargas/sedsed/releases/tag/v0.5
+[Version 0.4]: https://github.com/aureliojargas/sedsed/releases/tag/v0.4
+[Version 0.3]: https://github.com/aureliojargas/sedsed/releases/tag/v0.3
+[Version 0.2]: https://github.com/aureliojargas/sedsed/releases/tag/v0.2
+[Version 0.1]: https://github.com/aureliojargas/sedsed/releases/tag/v0.1
+
+
+## [Version 1.1][] released in 2019-05-25
 
 - Added Python 3 support. Now sedsed runs in Python versions 2.6, 2.7
   and 3.x.
@@ -28,7 +40,7 @@
 - Bugfix: emulator: fixed command `D` (#7)
 
 
-## [Version 1.0](https://github.com/aureliojargas/sedsed/releases/tag/v1.0) released in 2004-12-09
+## [Version 1.0][] released in 2004-12-09
 
 - Portable: Huge changes to make the debug file portable, so now it
   works even in old UNIX versions of sed.
@@ -53,7 +65,7 @@
   (thanks Leo Mulders for reporting)
 
 
-## [Version 0.8](https://github.com/aureliojargas/sedsed/releases/tag/v0.8) released in 2003-11-15
+## [Version 0.8][] released in 2003-11-15
 
 - Huge code cleanup and rearrange, now it is readable
 
@@ -70,14 +82,14 @@
 - Bugfix: Script previous checking was broken (thanks Eric Pement)
 
 
-## [Version 0.7](https://github.com/aureliojargas/sedsed/releases/tag/v0.7) released in 2003-01-21
+## [Version 0.7][] released in 2003-01-21
 
 - Added `--color` option (for Windows users)
 
 - Bugfix: Debug file line break on Windows (thanks Eric Pement)
 
 
-## [Version 0.6](https://github.com/aureliojargas/sedsed/releases/tag/v0.6) released in 2002-11-19
+## [Version 0.6][] released in 2002-11-19
 
 - Now sedsed works on Windows/DOS
 
@@ -86,7 +98,7 @@
 - Option `-v` REALLY changed to `-V` (lamer...)
 
 
-## [Version 0.5](https://github.com/aureliojargas/sedsed/releases/tag/v0.5) released in 2002-05-08
+## [Version 0.5][] released in 2002-05-08
 
 - The sedsed program is now compatible with old Python v1.5
 
@@ -101,12 +113,12 @@
 - Now sed script is read from `-f <file>` and/or `-e <script>`, like sed
 
 
-## [Version 0.4](https://github.com/aureliojargas/sedsed/releases/tag/v0.4) released in 2002-03-27
+## [Version 0.4][] released in 2002-03-27
 
 - Added `--htmlize` option
 
 
-## [Version 0.3](https://github.com/aureliojargas/sedsed/releases/tag/v0.3) released in 2002-02-22
+## [Version 0.3][] released in 2002-02-22
 
 - Added `--version` option
 
@@ -115,11 +127,11 @@
 - Added i386 binary version
 
 
-## [Version 0.2](https://github.com/aureliojargas/sedsed/releases/tag/v0.2) released in 2001-12-22
+## [Version 0.2][] released in 2001-12-22
 
 - Status of `t` command preserved correctly (thanks Paolo Bonzini)
 
 
-## [Version 0.1](https://github.com/aureliojargas/sedsed/releases/tag/v0.1) released in 2001-12-21
+## [Version 0.1][] released in 2001-12-21
 
 - First release on sed-users list
