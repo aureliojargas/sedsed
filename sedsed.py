@@ -2,7 +2,7 @@
 # sedsed - Debugger, indenter and HTMLizer for sed scripts
 # Since 27 November 2001, by Aurelio Jargas
 
-__version__ = '1.1'
+__version__ = '1.2-dev'
 
 import sys
 import re
