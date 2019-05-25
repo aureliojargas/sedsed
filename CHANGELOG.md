@@ -1,19 +1,23 @@
 sedsed changelog
 ================
 
-GitHub live version, 2014
+[Version 1.1](https://github.com/aureliojargas/sedsed/releases/tag/v1.1)
+released in 2019-05-25
 
-- Added Python 3 support. Now sedsed runs in Python versions 2.6, 2.7 and 3.x.
-- New test suite.
-- Source code reformatted, now following PEP-8.
-- Source code improved, now following pylint recomendations.
-- Fixed to work with BSD sed (Mac OS X).
+- Added Python 3 support. Now sedsed runs in Python versions 2.6, 2.7
+  and 3.x.
+- New extensive test suite, including original tests from BSD and GNU sed.
+- Source code reformatted (PEP-8) and improved (pylint).
 
-<!--
-- Add support for GNU sed `s///` flags: `M`, `m`, `e`.
-- Bugfix: Address ranges with spaces before the comma.
-- Bugfix: `I` char removed in some cases.
--->
+- Add support for GNU sed `s///` flags: `M`, `m`, `e` (45f6dea)
+- Add support for multiline script in `-e` option (#10)
+- Bugfix: Improved STDIN handling for BSD sed and Termux (a49703d)
+- Bugfix: Now correctly parsing `s///w` flag (#4)
+- Bugfix: Address ranges with spaces before the comma (#2)
+- Bugfix: `I` char removed in some cases (#1)
+- Bugfix: htmlize: address `I` flag not removed anymore (#6)
+- Bugfix: indent: no more trailing spaces (#5)
+- Bugfix: emulator: fixed command `D` (#7)
 
 [Version 1.0](https://github.com/aureliojargas/sedsed/releases/tag/v1.0)
 released in 2004-12-09
