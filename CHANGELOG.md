@@ -22,23 +22,32 @@
 
 - Source code reformatted (PEP-8) and improved (pylint).
 
-- Add support for GNU sed `s///` flags: `M`, `m`, `e` (45f6dea)
+- Add support for GNU sed `s///` flags: `M`, `m`, `e`
+  [45f6dea](https://github.com/aureliojargas/sedsed/commit/45f6dea)
 
-- Add support for multiline script in `-e` option (#10)
+- Add support for multiline script in `-e` option
+  [#10](https://github.com/aureliojargas/sedsed/issues/10)
 
-- Bugfix: Improved STDIN handling for BSD sed and Termux (a49703d)
+- Bugfix: Improved STDIN handling for BSD sed and Termux
+  [a49703d](https://github.com/aureliojargas/sedsed/commit/a49703d)
 
-- Bugfix: Now correctly parsing `s///w` flag (#4)
+- Bugfix: Now correctly parsing `s///w` flag
+  [#4](https://github.com/aureliojargas/sedsed/issues/4)
 
-- Bugfix: Address ranges with spaces before the comma (#2)
+- Bugfix: Address ranges with spaces before the comma
+  [#2](https://github.com/aureliojargas/sedsed/issues/2)
 
-- Bugfix: `I` char removed in some cases (#1)
+- Bugfix: `I` char removed in some cases
+  [#1](https://github.com/aureliojargas/sedsed/issues/1)
 
-- Bugfix: htmlize: address `I` flag not removed anymore (#6)
+- Bugfix: htmlize: address `I` flag not removed anymore
+  [#6](https://github.com/aureliojargas/sedsed/issues/6)
 
-- Bugfix: indent: no more trailing spaces (#5)
+- Bugfix: indent: no more trailing spaces
+  [#5](https://github.com/aureliojargas/sedsed/issues/5)
 
-- Bugfix: emulator: fixed command `D` (#7)
+- Bugfix: emulator: fixed command `D`
+  [#7](https://github.com/aureliojargas/sedsed/issues/7)
 
 
 ## [Version 1.0][] released in 2004-12-09
