@@ -11,7 +11,7 @@ import getopt
 import tempfile
 
 myname = 'sedsed'
-myhome = 'http://aurelio.net/projects/sedsed/'
+myhome = 'https://aurelio.net/projects/sedsed/'
 
 
 # -----------------------------------------------------------------------------

@@ -3,7 +3,7 @@
 Debugger, indenter and HTMLizer for sed scripts, by Aurelio Jargas.
 
 Website:
-http://aurelio.net/projects/sedsed/
+https://aurelio.net/projects/sedsed/
 
 ## Code linter
 
