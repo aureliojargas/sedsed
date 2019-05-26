@@ -17,7 +17,8 @@
 - Added Python 3 support. Now sedsed runs in Python versions 2.6, 2.7
   and 3.x.
 
-- New extensive test suite, including original tests from BSD and GNU sed.
+- New extensive test suite, including original tests from BSD and GNU
+  sed.
 
 - Source code reformatted (PEP-8) and improved (pylint).
 
@@ -42,26 +43,28 @@
 
 ## [Version 1.0][] released in 2004-12-09
 
-- Portable: Huge changes to make the debug file portable, so now it
+- Portable: Many changes to make the debug file portable, so now it
   works even in old UNIX versions of sed.
   (thanks Gudermez for requesting)
   (thanks Laurent Voguel for his excellent sedcheck tool)
 
-- Better debug: The debug command to show the current sed command was
-  simplified from `s///;P;s///` to a single `i` command, reducing the
-  debug file size and increasing execution speed.
+- Debug diet and faster: The debug command to show the current sed
+  command was simplified from `s///;P;s///` to a single `i` command,
+  reducing the debug file size and increasing execution speed.
   (thanks Thobias Salazar Trevisan for the idea)
 
-- Generated debug file more readable, with indented debug commands.
+- Now the sed program location on the system is configurable inside the
+  script (if needed).
 
-- Default indent prefix for `--indent` has changed from 2 to 4 spaces.
-
-- Now the system's sed path is configurable.
+- The default indent prefix for `--indent` has changed from 2 to 4
+  spaces.
 
 - Added `--dump-debug` option to inspect the generated debug file
   (implies `--nocolor` and `--debug`).
 
-- Bugfix: Now parses `a`, `c`, `i` commands with `;` on the text
+- Generated debug file more readable, with indented debug commands.
+
+- Bugfix: Now parses `a`, `c`, `i` commands with `;` on the text.
   (thanks Leo Mulders for reporting)
 
 
@@ -108,9 +111,10 @@
 
 - Added `i` flag for `s///` command
 
-- Now input text is read from STDIN and/or file(s), like sed
+- Now the input text is read from STDIN and/or file(s), as in sed
 
-- Now sed script is read from `-f <file>` and/or `-e <script>`, like sed
+- Now the sed script is read from `-f <file>` and/or `-e <script>`, as
+  in sed
 
 
 ## [Version 0.4][] released in 2002-03-27
@@ -135,3 +139,6 @@
 ## [Version 0.1][] released in 2001-12-21
 
 - First release on sed-users list
+
+
+<!-- vim: set textwidth=72: -->
