@@ -732,7 +732,7 @@ class SedCommand(object):
                         self.junk = self.junk[m.end():].lstrip()
                     else:
                         fatal_error("missing filename for s///w at line %d" %
-                            linenr)
+                                    linenr)
 
                     # and now, s///w filename is saved also
 
@@ -945,10 +945,10 @@ def compose_sed_command(data):
         if data['id'] in spaceme:
             idsep = ' '
         cmd = '%s%s%s%s' % (
-              data['modifier'],
-              data['id'],
-              idsep,
-              data['content'])
+            data['modifier'],
+            data['id'],
+            idsep,
+            data['content'])
         if action == 'html':
             if data['id'] in sedcmds['text']:
                 content_type = 'plaintext'
@@ -1014,10 +1014,10 @@ def dump_cute(datalist):
             if data['id'] in 'bt':
                 idsep = ' '
             cmd = '%s%s%s%s' % (
-                  data['modifier'],
-                  data['id'],
-                  idsep,
-                  data['content'])
+                data['modifier'],
+                data['id'],
+                idsep,
+                data['content'])
             if data['delimiter']:
                 cmd = '%s%s%s%s%s%s%s' % (
                     cmd,
@@ -1055,14 +1055,10 @@ def dump_script(datalist, indent_prefix):
         if data['id'] == '#':
             indentstr = indfmt['string']*indent
             if action != 'html':
-                outlist.append('%s%s' % (
-                               indentstr,
-                               data['comment']))
+                outlist.append(indentstr + data['comment'])
             else:
-                outlist.append('%s%s' % (
-                               indentstr,
-                               paint_html('comment',
-                                          data['comment'])))
+                outlist.append(indentstr +
+                               paint_html('comment', data['comment']))
         else:
             if data['id'] == '}':
                 indent = indent - 1

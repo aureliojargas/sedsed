@@ -4,7 +4,6 @@
 enable=all
 disable=
     attribute-defined-outside-init,
-    bad-continuation,
     bad-whitespace,
     bare-except,
     consider-using-enumerate,
