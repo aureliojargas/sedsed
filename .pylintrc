@@ -3,7 +3,6 @@
 [MESSAGES CONTROL]
 enable=all
 disable=
-    attribute-defined-outside-init,
     bad-whitespace,
     bare-except,
     fixme,

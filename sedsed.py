@@ -1447,6 +1447,11 @@ class SedEmulator(object):
         self.holdspace = ''
         self.line = ''
         self.cmd = ''
+        self.EOS = 0  # end of script
+        self.EOF = 0  # end of file
+        self.f_delme = 0
+        self.f_inrange = 0
+        self.f_joinme = 0
 
         self.f_debug = debug
         self.f_stdin = 0
