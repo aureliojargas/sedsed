@@ -18,7 +18,6 @@ disable=
     too-many-lines,
     too-many-locals,
     too-many-statements,
-    unsubscriptable-object,
     useless-object-inheritance,
 
 # No reports, please

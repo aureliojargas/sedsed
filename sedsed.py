@@ -1517,11 +1517,12 @@ class SedEmulator(object):
         devdebug('line read:%d:%s' % (self.linenr, repr(self.line)), 1)
 
     def _get_address(self, fulladdr):
-        addr = fulladdr  # number
-        if addr[0] == '/':
-            addr = addr[1:-1]  # del //
-        elif addr[0] == '\\':
-            addr = addr[2:-1]  # del \xx
+        if fulladdr[0] == '/':
+            addr = fulladdr[1:-1]  # del //
+        elif fulladdr[0] == '\\':
+            addr = fulladdr[2:-1]  # del \xx
+        else:
+            addr = fulladdr  # number
         return addr
 
     def _match_address(self, addr):
