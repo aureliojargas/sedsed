@@ -1119,10 +1119,9 @@ def do_debug(datalist):
     if datalist[0]['has_t']:
         t_count = 1
 
-    for i in range(len(datalist)):
+    for i, data in enumerate(datalist):
         if i == 0:
             continue                                # skip headers at 0
-        data = datalist[i]
         if not data['id']:
             continue                                # ignore blank line
         if data['id'] == '#':

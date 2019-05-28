@@ -6,7 +6,6 @@ disable=
     attribute-defined-outside-init,
     bad-whitespace,
     bare-except,
-    consider-using-enumerate,
     fixme,
     invalid-name,
     missing-docstring,
