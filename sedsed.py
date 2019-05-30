@@ -140,8 +140,8 @@ def read_file(file_path):
             f = open(file_path)
             data = f.readlines()
             f.close()
-        except:
-            fatal_error("Cannot read file: %s" % file_path)
+        except IOError as e:
+            fatal_error("Cannot read file: %s\n%s" % (file_path, e))
     return [re.sub('[\n\r]+$', '', x) for x in data]
 
 
@@ -150,8 +150,8 @@ def write_file(file_path, lines):
 
     try:
         f = open(file_path, 'w')
-    except:
-        fatal_error("Cannot open file for writing: %s" % file_path)
+    except IOError as e:
+        fatal_error("Cannot write file: %s\n%s" % (file_path, e))
 
     # TODO maybe use os.linesep? - all this is really necessary?
     # ensuring line break
