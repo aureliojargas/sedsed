@@ -133,8 +133,10 @@ def read_file(file_path):
     if file_path in (stdin_id, '-'):
         try:
             data = sys.stdin.readlines()
-        except:
-            fatal_error('I was expecting data on STDIN!')
+        except KeyboardInterrupt:  # ^C
+            sys.exit(1)
+            # Ideally the exit code should be 128+signal.SIGINT in Unix, but
+            # I'm not sure about other platforms. So I'll keep it simple.
     else:
         try:
             f = open(file_path)
