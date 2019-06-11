@@ -1,8 +1,0 @@
-PATT:one$
-HOLD:$
-one
-two
-COMM:[33;1m3 q[m
-PATT:three$
-HOLD:$
-three

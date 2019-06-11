@@ -27,7 +27,6 @@ indent_prefix = ' '*4         # default indent prefix for blocks (--prefix)
 debug_prefix = '\t\t'         # default prefix for debug commands
 action = 'indent'             # default action if none specified (-d,-i,-t,-H)
 DEBUG = 0                     # set developer's debug level [0-3]
-EMUDEBUG = 0                  # emulator has its own debug [0-3]
 
 # HTML colors for --htmlize
 # You may edit here to change the default colors
@@ -89,9 +88,6 @@ OPTIONS:
          --nocolor       no colors on debug output
          --dump-debug    dumps to screen the debugged sed script
 
-         --emu           emulates GNU sed (INCOMPLETE)
-         --emudebug      emulates GNU sed debugging the sed script (INCOMPLETE)
-
      -i, --indent        script beautifier, prints indented and
                          one-command-per-line output do STDOUT
          --prefix        indent prefix string (default: 4 spaces)
@@ -102,11 +98,6 @@ OPTIONS:
 
      -V, --version       prints the program version and exit
      -h, --help          prints this help message and exit
-
-
-NOTE: The --emu and --emudebug options are still INCOMPLETE and must
-      be used with care. Mainly regexes and address $ (last line)
-      are not handled right by the emulator.
 """)
     print("Website: %s\n" % myhome)
     sys.exit(exitcode)
@@ -184,9 +175,9 @@ short_options = 'he:f:ditVHn'
 long_options = [
     'debug', 'tokenize', 'htmlize', 'indent',                       # actions
     'version', 'help', 'file=', 'expression=', 'silent', 'quiet',   # sed-like
-    'nocolor', 'color', 'hide=', 'prefix=', 'emu', 'emudebug',      # misc
+    'nocolor', 'color', 'hide=', 'prefix=',                         # misc
     'dump-debug',                                                   # other
-    '_debuglevel=', '_emudebuglevel=', '_stdout-only', 'dumpcute']  # admin
+    '_debuglevel=', '_stdout-only', 'dumpcute']  # admin
 
 # Check it!
 try:
@@ -242,12 +233,6 @@ for o in opt:
         print('%s v%s' % (myname, __version__))
         sys.exit(0)
 
-    elif o[0] == '--emu':
-        action = 'emu'
-
-    elif o[0] == '--emudebug':
-        action = 'emudebug'
-
     elif o[0] == '--dump-debug':
         action = 'debug'
         dump_debug = 1
@@ -273,9 +258,6 @@ for o in opt:
 
     elif o[0] == '--_debuglevel':
         DEBUG = int(o[1])
-
-    elif o[0] == '--_emudebuglevel':
-        EMUDEBUG = int(o[1])
 
     elif o[0] == '--_stdout-only':
         action = 'debug'
@@ -1414,341 +1396,6 @@ ZZ[0]['has_t'] = has_t
 # print color_YLW + repr(ZZ) + color_NO ; sys.exit(0)
 
 
-###############################################################################
-#                                                                             #
-#                               The SED Emulator!                             #
-#                           -------------------------                         #
-#                       Not 100% done, but already usable                     #
-#                                                                             #
-###############################################################################
-#
-# The emulator still doesn't support complex regexes and '$' as line address.
-# Use the --emu command line option to run the emulator.
-# If you don't have SED on your system, you can use --emu to have a SED-like
-# program!
-#
-# Example:
-#    $ echo 'foo bar' | sedsed --emu 's/.*/SED/'
-#    SED
-#
-
-class SedEmulator(object):
-    # TODO check for syntax errors
-    # TODO convert regexes
-    # TODO organize debug msgs
-    # TODO make all this script a valid/callable python module
-    def __init__(self, datalist, textfile, debug=0):
-        self.inlist = ['']
-        self.outlist = []
-        self.cmdlist = []
-        self.labels = {}
-        self.blocks = {}
-        self.addr1 = self.addr2 = ''
-        self.linenr = 0
-        self.cmdnr = 0
-        self.holdspace = ''
-        self.line = ''
-        self.cmd = ''
-        self.EOS = 0  # end of script
-        self.EOF = 0  # end of file
-        self.f_delme = 0
-        self.f_inrange = 0
-        self.f_joinme = 0
-
-        self.f_debug = debug
-        self.f_stdin = 0
-        self.rewind_script()
-
-        # maketrans() is required to emulate the 'y' command
-        try:
-            self.maketrans = str.maketrans  # py3
-        except:
-            from string import maketrans    # py2
-            self.maketrans = maketrans
-
-        # getting input data location (stdin or file)
-        if textfile in (stdin_id, '-'):
-            self.f_stdin = 1
-        else:
-            self.inlist.extend(read_file(textfile))
-
-        # wipe null commands, save labels and block info
-        blockopen = []
-        for data in datalist[1:]:  # skip headers at 0
-            if not data['id'] or data['id'] == '#':
-                continue
-            self.cmdlist.append(data)
-            cmdpos = len(self.cmdlist) - 1
-            if data['id'] == ':':
-                self.labels[data['content']] = cmdpos
-            elif data['id'] == '{':
-                blockopen.append(cmdpos)
-            elif data['id'] == '}':
-                self.blocks[blockopen.pop()] = cmdpos
-        del blockopen
-
-        self.run()
-
-    def rewind_script(self):
-        self.EOS = 0     # end of script
-        self.EOF = 0     # end of file
-        self.cmdnr = -1
-        self.f_delme = 0
-        self.f_inrange = 0
-        self.f_joinme = 0
-
-    def read_next_line(self):
-        self.linenr = self.linenr + 1
-        # TODO $ matches every line.
-        # TODO GNUsed retains stdout until next only if there is a $ addr
-
-        # read STDIN interactively
-        if self.f_stdin:
-            inputline = sys.stdin.readline()
-            if not inputline:
-                self.EOF = 1
-                return
-            self.inlist.append(inputline[:-1])  # del \n$
-
-        # no more lines?
-        if self.linenr > len(self.inlist) - 1:
-            self.EOF = 1
-            return
-
-        next_line = self.inlist[self.linenr]
-        if self.f_joinme:
-            self.line = self.line + '\n' + next_line
-        else:
-            self.line = next_line
-        devdebug('line read:%d:%s' % (self.linenr, repr(self.line)), 1)
-
-    def _get_address(self, fulladdr):
-        if fulladdr[0] == '/':
-            addr = fulladdr[1:-1]  # del //
-        elif fulladdr[0] == '\\':
-            addr = fulladdr[2:-1]  # del \xx
-        else:
-            addr = fulladdr  # number
-        return addr
-
-    def _match_address(self, addr):
-        ok = 0
-        if addr[0] in '0123456789':              # 003 is valid
-            if self.linenr == int(addr):
-                ok = 1
-        elif addr == '$':                        # last line
-            if self.linenr == len(self.inlist) - 1:
-                ok = 1
-        elif re.search(addr, self.line):         # pattern
-            ok = 1
-        if ok:
-            devdebug('MATCHed addr:%s' % repr(addr), 2)
-        return ok
-
-    def test_address(self):
-        ok = 0
-        cmd = self.cmd
-
-        if not cmd['addr1']:
-            ok = 1              # no address
-            devdebug('NO address!', 3)
-        else:
-            self.addr1 = self._get_address(cmd['addr1'])
-            devdebug('addr1: ' + self.addr1, 2)
-
-        if cmd['addr2']:                         # range
-            self.addr2 = self._get_address(cmd['addr2'])
-            devdebug('addr2: ' + self.addr2, 2)
-            if self.f_inrange:
-                self.f_inrange = 0
-
-        if not ok:
-            if self._match_address(self.addr1):
-                ok = 1
-
-            if self.addr2:                       # range
-                if ok:
-                    self.f_inrange = 1           # start range
-                elif self._match_address(self.addr2):
-                    ok = 1
-                    self.f_inrange = 0           # end range
-                elif self.f_inrange:
-                    ok = 1                       # in range
-                devdebug('in range: %d' % self.f_inrange, 3)
-
-        devdebug('is hotline: %d' % ok, 3)
-        devdebug('cmd: %s' % cmd['id'], 1)
-        return ok
-
-    def _make_raw_string(self, text):
-        raw = text.replace('\t', '\\t')
-        raw = raw.replace('\n', '\\n')
-        return raw + '$'
-
-    def apply_cmd(self):
-        cmd = self.cmd
-        PS = self.line
-        HS = self.holdspace
-        devdebug('cmdnr: %d' % self.cmdnr, 3)
-
-        # TODO ! r w //
-        if cmd['id'] == ':':
-            pass
-
-        elif cmd['id'] == '=':
-            print(self.linenr)
-
-        elif cmd['id'] == 'p':
-            print(PS)
-
-        elif cmd['id'] == 'P':
-            print(re.sub('\n.*', '', PS))
-
-        elif cmd['id'] == 'q':
-            self.EOF = 1
-
-        elif cmd['id'] == 'h':
-            HS = PS
-
-        elif cmd['id'] == 'H':
-            HS = HS + '\n' + PS
-
-        elif cmd['id'] == 'g':
-            PS = HS
-
-        elif cmd['id'] == 'G':
-            PS = PS + '\n' + HS
-
-        elif cmd['id'] == 'x':
-            PS, HS = HS, PS
-
-        elif cmd['id'] == 'y':
-            trtab = self.maketrans(cmd['pattern'], cmd['replace'])
-            PS = PS.translate(trtab)
-
-        elif cmd['id'] == 'l':
-            print(self._make_raw_string(PS))
-
-        elif cmd['id'] == 'd':
-            self.f_delme = 1
-            self.EOS = 1  # d) forces next cycle
-
-        elif cmd['id'] == 'D':                 # D) del till \n, next cycle
-            cutted = re.sub('^.*?\n', '', PS)  # del till the 1st \n
-            if cutted == PS:
-                cutted = ''                    # if no \n, del all
-            PS = cutted
-            self.rewind_script()                # D forces rewind
-            if not PS:                         # no PS, start next cycle
-                self.f_delme = 1
-                self.EOS = 1
-
-        elif cmd['id'] == 'n':             # n) print patt, read line
-            print(PS)
-            self.read_next_line()
-            PS = self.line
-
-        elif cmd['id'] == 'N':             # N) join next, read line
-            self.f_joinme = 1
-            self.read_next_line()
-            PS = self.line
-
-        elif cmd['id'] in 'aic':           # aic) spill text
-            txt = re.sub(r'\\%s' % linesep, '\n', cmd['content'])
-            txt = re.sub('^\n', '', txt)     # delete first escape
-            self.f_delme = 1
-            if cmd['id'] == 'a':
-                print(PS)                    # line before
-            print(txt)                       # put text
-            if cmd['id'] == 'i':
-                print(PS)                    # line after
-
-        elif cmd['id'] in 'bt':            # jump to...
-            if not cmd['content']:
-                self.EOS = 1                              # ...end
-            else:
-                self.cmdnr = self.labels[cmd['content']]  # ...label
-
-        # TODO s///3 ; s//\1/ ; s//&/
-        elif cmd['id'] == 's':
-            times = 1
-            patt = cmd['pattern']
-            repl = cmd['replace']
-
-            # TODO v----- test only, make function
-            patt = re.sub(r'\\\(', '(', patt)
-            patt = re.sub(r'\\\)', ')', patt)
-            repl = re.sub(r'^\\\n', '\n', repl)  # NL escaped on repl
-
-            if 'g' in cmd['flag']:  # global
-                times = 0
-
-            if 'i' in cmd['flag']:  # ignore case
-                patt = '(?i)' + patt
-
-            new = re.sub(patt, repl, PS, times)
-
-            if 'p' in cmd['flag'] and new != PS:
-                print(new)
-
-            if 'w' in cmd['flag']:
-                text = [new]  # w) open file truncating anyway
-
-                # write patt only if s/// was ok
-                if new == PS:
-                    text = ''
-                write_file(cmd['content'], text)
-
-            PS = new
-
-        if self.f_debug:
-            showreg = 1
-            fullcmd = "%s%s" % (
-                compose_sed_address(cmd),
-                compose_sed_command(cmd).replace('\n', newlineshow + color_YLW))
-            print('COMM:' + color_YLW + fullcmd + color_NO)
-            if cmd['id'] in ':bt' and cmd['content']:
-                showreg = 0
-            if cmd['id'] in '{}':
-                showreg = 0
-            if showreg:
-                print('PATT:' + self._make_raw_string(PS))
-                print('HOLD:' + self._make_raw_string(HS))
-
-        self.line = PS
-        self.holdspace = HS  # save registers
-
-    def run(self):
-        while not self.EOF:
-            self.rewind_script()
-            self.read_next_line()
-            if self.EOF:
-                break
-
-            if self.linenr == 1 and self.f_debug:   # debug info
-                print('PATT:' + self._make_raw_string(self.line))
-                print('HOLD:' + self._make_raw_string(self.holdspace))
-
-            while not self.EOS:
-                if self.cmdnr == -1:  # 1st position
-                    self.cmdnr = 0
-                self.cmd = self.cmdlist[self.cmdnr]
-                if self.test_address():
-                    self.apply_cmd()
-                    if self.EOS or self.EOF:
-                        break
-                elif self.cmd['id'] == '{':
-                    self.cmdnr = self.blocks[self.cmdnr]
-
-                self.cmdnr = self.cmdnr + 1  # next command
-                if self.cmdnr > len(self.cmdlist) - 1:
-                    break
-
-            # default print pattern behavior
-            if not self.f_delme:
-                print(self.line)
-
-
 # -----------------------------------------------------------------------------
 #          Script Already Parsed, Now It's Time To Make Decisions
 # -----------------------------------------------------------------------------
@@ -1774,16 +1421,6 @@ elif action == 'token':
 
 elif action == 'dumpcute':
     dump_cute(ZZ)
-
-elif action in ['emu', 'emudebug']:
-    DEBUG = EMUDEBUG
-    if action == 'emudebug':
-        dodebug = 1
-    else:
-        dodebug = 0
-    for input_file in textfiles:
-        SedEmulator(ZZ, input_file, dodebug)
-
 
 # -----------------------------------------------------------------------------
 #                               - THE END -
