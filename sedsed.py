@@ -287,12 +287,19 @@ def validate_script_syntax(script_text):
     write_file(tmpfile1, script_text)
     write_file(tmpfile2, '')
 
+    # Note that even when running against an empty file, there could be
+    # consequences on the system, such as a 'w' command writing files.
     # sed -f sed_script empty_file
     ret, msg = system_command("%s -f '%s' '%s'" % (
         sedbin, tmpfile1, tmpfile2))
     os.remove(tmpfile1)
     os.remove(tmpfile2)
 
+    # The sed command will fail when there's something wrong:
+    # - syntax error
+    # - unknown command
+    # - permission denied for file read/write commands (r, w, s///w)
+    #   Example: touch a; chmod 000 a; sedsed -d -e 'w a'
     if ret:
         msg = 'syntax error on your SED script, please fix it before.'
         fatal_error('#%d: %s' % (ret, msg))
