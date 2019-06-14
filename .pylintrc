@@ -4,7 +4,6 @@
 enable=all
 disable=
     bad-whitespace,
-    bare-except,
     fixme,
     invalid-name,
     missing-docstring,
