@@ -290,7 +290,7 @@ def validate_script_syntax(script_text):
     # Note that even when running against an empty file, there could be
     # consequences on the system, such as a 'w' command writing files.
     # sed -f sed_script empty_file
-    ret, msg = system_command("%s -f '%s' '%s'" % (
+    ret, _ = system_command("%s -f '%s' '%s'" % (
         sedbin, tmpfile1, tmpfile2))
     os.remove(tmpfile1)
     os.remove(tmpfile2)
@@ -301,8 +301,12 @@ def validate_script_syntax(script_text):
     # - permission denied for file read/write commands (r, w, s///w)
     #   Example: touch a; chmod 000 a; sedsed -d -e 'w a'
     if ret:
-        msg = 'syntax error on your SED script, please fix it before.'
-        fatal_error('#%d: %s' % (ret, msg))
+        # At this point, the sed error message was already shown to the user,
+        # explaining the reason for the failure. So now we abort giving some
+        # context of what we were trying to do.
+        fatal_error(
+            "%d: Failed validating your script using system's sed: %s" % (
+                ret, sedbin))
 
 
 # There's a SED script?
