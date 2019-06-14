@@ -7,7 +7,6 @@ disable=
     fixme,
     invalid-name,
     missing-docstring,
-    no-self-use,
     redefined-outer-name,
     too-few-public-methods,
     too-many-branches,
