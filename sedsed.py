@@ -154,14 +154,16 @@ def write_file(file_path, lines):
 
 
 def system_command(cmd):  # Returns a (#exit_code, program_output[]) tuple
-    # TODO don't use popen()
+    ret = None
     output = []
+
     fd = os.popen(cmd)
     for line in fd.readlines():
         output.append(line.rstrip())  # stripping \s*\n
     ret = fd.close()
     if ret:
         ret = ret / 256  # 16bit number
+
     return ret, output
 
 
@@ -284,14 +286,10 @@ def validate_script_syntax(script_text):
     tmpfile2 = tempfile.mktemp()
     write_file(tmpfile1, script_text)
     write_file(tmpfile2, '')
-    try:
-        # sed -f sed_script empty_file
-        ret, msg = system_command("%s -f '%s' '%s'" % (
-            sedbin, tmpfile1, tmpfile2))
-    except:
-        # popen(), used in system_command, is broken on Win9x machines
-        # https://docs.python.org/2.6/faq/windows.html
-        ret = None
+
+    # sed -f sed_script empty_file
+    ret, msg = system_command("%s -f '%s' '%s'" % (
+        sedbin, tmpfile1, tmpfile2))
     os.remove(tmpfile1)
     os.remove(tmpfile2)
 

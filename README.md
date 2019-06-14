@@ -17,7 +17,7 @@ Sedsed has a homemade custom testing solution, comprised of multiple shell scrip
 
 ## CI
 
-For every new commit, Travis CI runs the code linter and all the tests. The tests are checked in multiple Python versions, from 2.6 to 3.6. See [.travis.yml](.travis.yml).
+For every new commit, Travis CI runs the code linter and all the tests. The tests are checked in multiple Python versions, from 2.7 to 3.6. See [.travis.yml](.travis.yml).
 
 ## New version release checklist
 
