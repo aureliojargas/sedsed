@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# sedsed - Debugger, indenter and HTMLizer for sed scripts
+# sedsed - Debugger and code formatter for sed scripts
 # Since 27 November 2001, by Aurelio Jargas
 
 __version__ = '1.2-dev'
@@ -464,8 +464,8 @@ html_data = {
 
     'footer': """
 <font color="%s"><b>### colorized by <a \
-href="%s">sedsed</a>, a SED script \
-debugger/indenter/tokenizer/HTMLizer</b></font>\n
+href="%s">sedsed</a>, a debugger and code formatter \
+for sed scripts</b></font>\n
 </pre></body></html>\
 """ % (html_colors['comment'], myhome)
 }

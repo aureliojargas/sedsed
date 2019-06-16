@@ -1,6 +1,6 @@
 # sedsed
 
-Debugger, indenter and HTMLizer for sed scripts, by Aurelio Jargas.
+Debugger and code formatter for sed scripts, by Aurelio Jargas.
 
 Website: https://aurelio.net/projects/sedsed/
 
