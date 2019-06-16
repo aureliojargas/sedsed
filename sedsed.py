@@ -319,8 +319,9 @@ if not sedscript:
 # Get all text files, if none, use STDIN
 textfiles = args or [stdin_id]
 
-# On --debug, check the given script syntax, running SED with it.
-# We will not debug a broken script.
+# When debugging, the system's sed will be used to run the modified script.
+# So it's mandatory that the original script is runnable in that specific sed
+# version (i.e., no syntax errors and no unknown commands or flags).
 if action == 'debug':
     validate_script_syntax(sedscript)
 
