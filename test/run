@@ -12,4 +12,5 @@ do
 	$file || failed=1
 done
 
+test $failed -ne 0 && GIT_PAGER= git diff .
 tests_exit
