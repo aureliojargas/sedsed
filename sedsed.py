@@ -311,9 +311,13 @@ def validate_script_syntax(script_text):
 
 # There's a SED script?
 if not sedscript:
-    if args:          # the script is the only argument (echo | sed 's///')
+    if args:
+        # the script is the only argument (echo | sed 's///')
         sedscript.append(args.pop(0))
-    else:             # :(
+    elif __name__ != '__main__':
+        # being used as a module (import sedsed), empty script is expected
+        pass
+    else:
         fatal_error("there's no SED script to parse! (try --help)")
 
 # Get all text files, if none, use STDIN
@@ -1418,20 +1422,17 @@ ZZ[0]['has_t'] = has_t
 # how to handle it. Maybe we will indent, maybe debug? We'll see.
 #
 
-if action == 'indent':
-    dump_script(ZZ, indent_prefix)
-
-elif action == 'html':
-    dump_script(ZZ, indent_prefix)
-
-elif action == 'debug':
-    do_debug(ZZ)
-
-elif action == 'token':
-    dump_key_value_pair(ZZ)
-
-elif action == 'dumpcute':
-    dump_cute(ZZ)
+if __name__ == '__main__':
+    if action == 'indent':
+        dump_script(ZZ, indent_prefix)
+    elif action == 'html':
+        dump_script(ZZ, indent_prefix)
+    elif action == 'debug':
+        do_debug(ZZ)
+    elif action == 'token':
+        dump_key_value_pair(ZZ)
+    elif action == 'dumpcute':
+        dump_cute(ZZ)
 
 # -----------------------------------------------------------------------------
 #                               - THE END -
