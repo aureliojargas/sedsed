@@ -1403,7 +1403,8 @@ ZZ[0]['has_t'] = has_t
 # If you are curious about it, just uncomment the line below and
 # prepare yourself for an ASCII nightmare ;)
 #
-# print color_YLW + repr(ZZ) + color_NO ; sys.exit(0)
+# import pprint; pprint.pprint(ZZ, indent=4); sys.exit(0)
+
 
 
 # -----------------------------------------------------------------------------
