@@ -439,11 +439,11 @@ nullcomm = nullcomm[0]
 
 
 # If user specified --hide, unset DEBUG commands for them
-if action_modifiers.count('nopatt'):
+if 'nopatt' in action_modifiers:
     showpatt = ''
-if action_modifiers.count('nohold'):
+if 'nohold' in action_modifiers:
     showhold = ''
-if action_modifiers.count('nocomm'):
+if 'nocomm' in action_modifiers:
     showcomm = ''
 
 
@@ -1164,7 +1164,7 @@ def do_debug(datalist):
 
     # executing sed script
     cmdextra = ''
-    if action_modifiers.count('_stdout-only'):
+    if '_stdout-only' in action_modifiers:
         # cmdextra = "| egrep -v '^PATT|^HOLD|^COMM|\$$|\\$'"  # sed
         cmdextra = "-l 9999 | egrep -v '^PATT|^HOLD|^COMM'"   # gsed
     inputfiles = ' '.join(textfiles)
