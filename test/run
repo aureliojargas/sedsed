@@ -6,6 +6,10 @@ cd $(dirname "$0") || exit 1
 # Read default configuration
 source _include.sh
 
+# Run the unit tests first
+python unit.py || failed=1
+echo
+
 for file in */run
 do
 	echo "        Running $file..."
