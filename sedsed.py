@@ -18,6 +18,26 @@ myhome = 'https://aurelio.net/projects/sedsed/'
 #                              User Configuration
 # -----------------------------------------------------------------------------
 
+# Those attributes are global and can be set inside functions directly
+#   $ ./sedsed.py
+#   1
+#   2
+#   3
+class Config(object):
+    foo = 1
+    bar = 2
+
+print(Config.foo)
+
+Config.foo = 2
+print(Config.foo)
+
+def foo():
+    Config.foo = 3
+foo()
+print(Config.foo)
+
+sys.exit()
 
 # Default config - Changeable, but you won't need to do it
 sedbin = 'sed'                # name (or full path) of the sed program
