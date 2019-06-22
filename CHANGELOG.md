@@ -79,6 +79,12 @@
 - Bugfix: Add support for escaped chars in `y` command.
   [#11](https://github.com/aureliojargas/sedsed/issues/11)
 
+- Bugfix: Raise syntax error for unknown `s///` flags.
+  [#3](https://github.com/aureliojargas/sedsed/issues/3)
+
+- Bugfix: Detect and show error on incomplete `s` and `y` commands.
+  [#48](https://github.com/aureliojargas/sedsed/issues/48)
+
 
 ## [Version 1.1][] released in 2019-05-25
 

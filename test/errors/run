@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# Always run the tests from this script's folder
+cd "$(dirname "$0")" || exit 1
+
+# Read default configuration
+# shellcheck source=test/_include.sh
+source ../_include.sh
+
+# Run sedsed for each invalid command.
+# Each test is ok if sedsed raises an error message.
+while read -r line
+do
+    test_message "Testing $line"
+    output=$($sedsed -e "$line" || true)
+    if ! echo "$output" | grep -q '^ERROR:'
+    then
+        failed=1
+        echo 'TEST FAILED'
+        echo "$output"
+    fi
+done < invalid-commands.txt
+
+tests_clean_up
+tests_exit
