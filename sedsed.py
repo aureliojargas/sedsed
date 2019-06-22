@@ -124,17 +124,19 @@ def read_file(file_path):
     if file_path in (stdin_id, '-'):
         try:
             data = sys.stdin.readlines()
+
         except KeyboardInterrupt:  # ^C
             sys.exit(1)
             # Ideally the exit code should be 128+signal.SIGINT in Unix, but
             # I'm not sure about other platforms. So I'll keep it simple.
     else:
         try:
-            f = open(file_path)
-            data = f.readlines()
-            f.close()
+            with open(file_path) as f:
+                data = f.readlines()
+
         except IOError as e:
             fatal_error("Cannot read file: %s\n%s" % (file_path, e))
+
     return [re.sub('[\n\r]+$', '', x) for x in data]
 
 
@@ -142,15 +144,14 @@ def write_file(file_path, lines):
     "Writes a list contents into file, adding correct line breaks"
 
     try:
-        f = open(file_path, 'w')
+        with open(file_path, 'w') as f:
+            # TODO maybe use os.linesep? - all this is really necessary?
+            # ensuring line break
+            lines = [re.sub('\n$', '', x) + '\n' for x in lines]
+            f.writelines(lines)
+
     except IOError as e:
         fatal_error("Cannot write file: %s\n%s" % (file_path, e))
-
-    # TODO maybe use os.linesep? - all this is really necessary?
-    # ensuring line break
-    lines = [re.sub('\n$', '', x) + '\n' for x in lines]
-    f.writelines(lines)
-    f.close()
 
 
 def system_command(cmd):
