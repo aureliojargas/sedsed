@@ -2,6 +2,17 @@
 
 import sys
 
+# WONTDO
+#
+# Check if command only accepts one address
+# if (cur_cmd->a2) bad_prog (_(ONE_ADDR));
+#
+# Check if command is a GNU extension
+# if (posixicity == POSIXLY_EXTENDED)
+#
+# Debug messages
+# if (debug)
+
 #define YMAP_LENGTH		256 /*XXX shouldn't this be (UCHAR_MAX+1)?*/
 #define VECTOR_ALLOC_INCREMENT	40
 #define OPEN_BRACKET	'['
@@ -190,6 +201,39 @@ first_script = True
 # /* #define END_ERRORS (DISALLOWED_CMD \
 #      + sizeof (N_( "e/r/w commands disabled in sandbox mode"))) */
 
+
+
+BAD_BANG = "multiple `!'s"
+BAD_COMMA = "unexpected `,'"
+BAD_STEP = "invalid usage of +N or ~N as first address"
+EXCESS_OPEN_BRACE = "unmatched `{'"
+EXCESS_CLOSE_BRACE = "unexpected `}'"
+EXCESS_JUNK = "extra characters after command"
+EXPECTED_SLASH = "expected \\ after `a', `c' or `i'"
+NO_CLOSE_BRACE_ADDR = "`}' doesn't want any addresses"
+NO_COLON_ADDR = ": doesn't want any addresses"
+NO_SHARP_ADDR = "comments don't accept any addresses"
+NO_COMMAND = "missing command"
+ONE_ADDR = "command only uses one address"
+UNTERM_ADDR_RE = "unterminated address regex"
+UNTERM_S_CMD = "unterminated `s' command"
+UNTERM_Y_CMD = "unterminated `y' command"
+UNKNOWN_S_OPT = "unknown option to `s'"
+EXCESS_P_OPT = "multiple `p' options to `s' command"
+EXCESS_G_OPT = "multiple `g' options to `s' command"
+EXCESS_N_OPT = "multiple number options to `s' command"
+ZERO_N_OPT = "number option to `s' command may not be zero"
+Y_CMD_LEN = "strings for `y' command are different lengths"
+BAD_DELIM = "delimiter character is not a single-byte character"
+ANCIENT_VERSION = "expected newer version of sed"
+INVALID_LINE_0 = "invalid usage of line address 0"
+UNKNOWN_CMD = "unknown command: `%c'"
+INCOMPLETE_CMD = "incomplete command"
+COLON_LACKS_LABEL = "\":\" lacks a label"
+RECURSIVE_ESCAPE_C = "recursive escaping after \\c not allowed"
+DISALLOWED_CMD = "e/r/w commands disabled in sandbox mode"
+MISSING_FILENAME = "missing filename in r/R/w/W commands"
+
 # static struct output *file_read = NULL;
 # static struct output *file_write = NULL;
 
@@ -211,7 +255,7 @@ program_name = 'sed'
 
 # /* Complain about an unknown command and exit. */
 def bad_command(ch):
-    bad_prog("unknown command: '%s'" % ch)
+    bad_prog(UNKNOWN_CMD % ch)
 #   const char *msg = _(UNKNOWN_CMD);
 #   char *unknown_cmd = xmalloc (strlen (msg));
 #   sprintf (unknown_cmd, msg, ch);
@@ -246,7 +290,7 @@ def inchar():
     ch = EOF
     # if prog.cur:
     if True:
-        print("inchar: %s < %s" % (prog.cur, prog.end))
+        # print("inchar: %s < %s" % (prog.cur, prog.end))
         if prog.cur < prog.end:
             prog.cur += 1
             ch = prog.text[prog.cur]
@@ -330,7 +374,7 @@ def read_end_of_cmd():
     if ch == CLOSE_BRACE or ch == '#':
         savchar(ch)
     elif ch != EOF and ch != '\n' and ch != ';':
-        bad_prog ("extra characters after command")
+        bad_prog(EXCESS_JUNK)
 #   const int ch = in_nonblank ();
 #   if (ch == CLOSE_BRACE || ch == '#')
 #     savchar (ch);
@@ -343,7 +387,7 @@ def ISDIGIT(ch):
 
 # /* Read an integer value from the program.  */
 def in_integer(ch):
-    num = [ch]
+    num = []
     while ISDIGIT(ch):
         num.append(ch)
         ch = inchar()
@@ -425,10 +469,24 @@ def add_then_next(buffer, ch):
 #   return p;
 # }
 
+### from sed/utils.c
+def init_buffer():
+    return []
+#   struct buffer *b = XCALLOC (1, struct buffer);
+#   b->b = XCALLOC (MIN_ALLOCATE, char);
+#   b->allocated = MIN_ALLOCATE;
+#   b->length = 0;
+#   return b;
+
 # /* Read in a filename for a `r', `w', or `s///w' command. */
-# static struct buffer *
-# read_filename (void)
-# {
+def read_filename():
+    b = init_buffer()
+    ch = in_nonblank()
+    while ch != EOF and ch != '\n':
+        ch = add_then_next(b, ch)
+    # add1_buffer(b, '\0');  # not necessary in Python
+    return b
+#
 #   struct buffer *b;
 #   int ch;
 
@@ -451,7 +509,6 @@ def add_then_next(buffer, ch):
 #     }
 #   add1_buffer (b, '\0');
 #   return b;
-# }
 
 # static struct output *
 # get_openfile (struct output **file_ptrs, const char *mode, int fail)
@@ -731,9 +788,19 @@ def add_then_next(buffer, ch):
 # }
 
 # /* read in a label for a `:', `b', or `t' command */
-# static char * _GL_ATTRIBUTE_MALLOC
-# read_label (void)
-# {
+def read_label():
+    b = init_buffer()
+    ch = in_nonblank()
+
+    while ch != EOF and ch != '\n' and not ISBLANK (ch) and ch != ';' and ch != CLOSE_BRACE and ch != '#':
+        ch = add_then_next(b, ch)
+
+    savchar(ch)
+    # add1_buffer(b, '\0')  # not necessary in Python
+    ret = ''.join(b)
+    free_buffer(b)
+    return ret
+
 #   struct buffer *b;
 #   int ch;
 #   char *ret;
@@ -750,7 +817,7 @@ def add_then_next(buffer, ch):
 #   ret = xstrdup (get_buffer (b));
 #   free_buffer (b);
 #   return ret;
-# }
+
 
 # /* Store a label (or label reference) created by a `:', `b', or `t'
 #   command so that the jump to/from the label can be backpatched after
@@ -1045,6 +1112,13 @@ def add_then_next(buffer, ch):
 def ISSPACE(ch):
     return ch == ' '
 
+### from sed/utils.c
+def free_buffer(b):
+    del b
+#   if (b)
+#     free (b->b);
+#   free (b);
+
 # /* Read a program (or a subprogram within `{' `}' pairs) in and store
 #   the compiled form in `*vector'.  Return a pointer to the new vector.  */
 def compile_program (vector):
@@ -1055,19 +1129,68 @@ def compile_program (vector):
             if ch != ';' and not ISSPACE(ch):
                 break
 
-        if (ch == EOF):
+        if ch == EOF:
             break;
 
         # cur_cmd = next_cmd_entry (vector);
         # cur_cmd->cmd = ch;
         print("Found command: %r" % ch)
 
-        if ch in '=dDFgGhHnNpPzx':
+
+        if ch == '#':
+            # if (cur_cmd->a1)
+            #     bad_prog (_(NO_SHARP_ADDR));
+
+            ## I think I won't need this #n detection
+            # ch = inchar()
+            # if ch == 'n' and first_script and cur_input.line < 2:
+            #     if (prog.base and prog.cur == 2 + prog.base):
+            #     # or (prog.file and not prog.base and 2 == ftell(prog.file)):
+            #       no_default_output = true
+
+            # GNU sed discards the comment contents, but I must save it
+            # Using read_filename because it's the same logic of reading until \n or EOF
+            b = read_filename()
+            print("comment: %r" % ''.join(b))
+            free_buffer(b)
+            # while ch != EOF and ch != '\n':
+            #     ch = inchar()
+            continue  # redundant
+
+        elif ch in ':Tbt':
+#           if (cur_cmd->a1)
+#             bad_prog (_(NO_COLON_ADDR));
+            label = read_label()
+            print("label: %s" % label)
+            if not label:
+                bad_prog(COLON_LACKS_LABEL)
+            # labels = setup_label (labels, vector->v_length, label, NULL);
+
+        elif ch in 'QqLl':
+            ch = in_nonblank()
+            if ISDIGIT(ch):
+                # cur_cmd->x.int_arg = in_integer(ch)
+                print("int_arg: %s" % in_integer(ch))
+            else:
+                # cur_cmd->x.int_arg = -1
+                print("int_arg: -1")
+                savchar(ch)
             read_end_of_cmd()
-            # break;
+
+        elif ch in '=dDFgGhHnNpPzx':
+            read_end_of_cmd()
+
+        elif ch == 'r':
+            b = read_filename()
+            if len(b) == 0:
+                bad_prog(MISSING_FILENAME)
+            # cur_cmd->x.fname = xstrdup (get_buffer (b))
+            print("filename: %r" % ''.join(b))
+            free_buffer(b)
+
         elif ch == EOF:
-            bad_prog("NO_COMMAND")
-        #   /*NOTREACHED*/
+            bad_prog(NO_COMMAND)
+            # /*NOTREACHED*/
         else:
             bad_command(ch)
             # /*NOTREACHED*/
@@ -1799,7 +1922,7 @@ def debug(ch):
 prog.cur = 0
 cur_input.string_expr_count = 1
 ch = ''
-test = 3
+test = 8
 
 # In prog.text the leading @ is ignored, it's a 1-based index
 if test == 1:
@@ -1843,6 +1966,27 @@ elif test == 4:
 elif test == 5:
     # sed: -e expression #1, char 5: unknown command: 'u'
     prog.text = "d\np\nu"
+    prog.end = len(prog.text)
+    prog.text = "@" + prog.text
+    debug(ch)
+    compile_program(None)
+elif test == 6:
+    # read file
+    prog.text = "r empty"
+    prog.end = len(prog.text)
+    prog.text = "@" + prog.text
+    debug(ch)
+    compile_program(None)
+elif test == 7:
+    # q l
+    prog.text = "q;Q;L;l;q123;L123"
+    prog.end = len(prog.text)
+    prog.text = "@" + prog.text
+    debug(ch)
+    compile_program(None)
+elif test == 8:
+    # q l
+    prog.text = ":label1;bfoo;t bar #comment"
     prog.end = len(prog.text)
     prog.text = "@" + prog.text
     debug(ch)
