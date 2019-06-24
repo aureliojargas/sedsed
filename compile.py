@@ -359,9 +359,26 @@ def in_integer(ch):
 #   savchar (ch);
 #   return num;
 
+### from sed/utils.c
+def add1_buffer(buffer, ch):
+    if ch != EOF:
+        buffer.append(ch)  # in-place
+    # the return is never used
+#add1_buffer (struct buffer *b, int c)
+#   if (c != EOF)
+#    {
+#      char *result;
+#      if (b->allocated - b->length < 1)
+#        resize_buffer (b, b->length+1);
+#      result = b->b + b->length++;
+#      *result = c;
+#      return result;
+#    }g
+#  return NULL;
 
-
-# static int
+def add_then_next(buffer, ch):
+    add1_buffer(buffer, ch)
+    return inchar()
 # add_then_next (struct buffer *b, int ch)
 # {
 #   add1_buffer (b, ch);
