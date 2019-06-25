@@ -15,7 +15,7 @@ import sys
 
 program_name = 'sed'
 EOF = '<EOF>'
-NULL = 'NULL'
+NULL = None
 RANGE_INACTIVE = 'RANGE_INACTIVE'
 
 #define YMAP_LENGTH		256
@@ -30,6 +30,18 @@ OPEN_BRACKET = '['
 CLOSE_BRACKET = ']'
 OPEN_BRACE = '{'
 CLOSE_BRACE = '}'
+
+
+### from sed/sed.h
+class text_buf:
+    text = NULL
+    text_length = NULL
+# struct text_buf {
+#   char *text;
+#   size_t text_length;
+# };
+
+
 
 # struct prog_info {
 #   /* When we're reading a script command from a string, `prog.base'
@@ -94,16 +106,15 @@ class error_info:
 # /* Where we are in the processing of the input. */
 # static struct prog_info prog;
 # static struct error_info cur_input;
-
-class prog(prog_info):
-    pass
-class cur_input(error_info):
-    pass
+class prog(prog_info): pass
+class cur_input(error_info): pass
 
 # /* Information about labels and jumps-to-labels.  This is used to do
 #   the required backpatching after we have compiled all the scripts. */
 # static struct sed_label *jumps = NULL;
 # static struct sed_label *labels = NULL;
+jumps = NULL
+labels = NULL
 
 # /* We wish to detect #n magic only in the first input argument;
 #   this flag tracks when we have consumed the first file of input. */
@@ -113,10 +124,13 @@ first_script = True
 # /* Allow for scripts like "sed -e 'i\' -e foo": */
 # static struct buffer *pending_text = NULL;
 # static struct text_buf *old_text_buf = NULL;
+pending_text = NULL
+old_text_buf = NULL
 
 # /* Information about block start positions.  This is used to backpatch
 #   block end positions. */
 # static struct sed_label *blocks = NULL;
+blocks = NULL
 
 # /* Use an obstack for compilation. */
 # static struct obstack obs;
@@ -558,7 +572,7 @@ def read_filename():
 #   return p;
 # }
 
-class SedCmd():
+class SedCmd:
     a1 = NULL
     a2 = NULL
     range_state = RANGE_INACTIVE
@@ -983,7 +997,43 @@ def read_label():
 #   sub->replacement = root.next;
 # }
 
-# static void
+def read_text(buf, leadin_ch):
+    if buf:
+        if pending_text:
+            free_buffer(pending_text)
+        pending_text = init_buffer()
+        buf.text = NULL
+        buf.text_length = 0
+        old_text_buf = buf
+
+    if leadin_ch == EOF:
+        return
+
+    if leadin_ch != '\n':
+        add1_buffer(pending_text, leadin_ch)
+
+    ch = inchar()
+    while ch != EOF and ch != '\n':
+        if ch == '\\':
+            ch = inchar()
+            if ch != EOF:
+                add1_buffer(pending_text, '\\')
+
+        if ch == EOF:
+            add1_buffer(pending_text, '\n')
+            return
+
+        ch = add_then_next(pending_text, ch)
+
+    add1_buffer(pending_text, '\n')
+
+    if not buf:
+        buf = old_text_buf
+    # buf.text_length = normalize_text(get_buffer (pending_text),
+    #                                  size_buffer (pending_text), TEXT_BUFFER)
+    buf.text = pending_text
+    free_buffer(pending_text)
+    pending_text = NULL
 # read_text (struct text_buf *buf, int leadin_ch)
 # {
 #   int ch;
@@ -1135,6 +1185,16 @@ def free_buffer(b):
 #   the compiled form in `*vector'.  Return a pointer to the new vector.  */
 def compile_program (vector):
 
+    if not vector:
+        vector = []
+        # vector = struct_vector()
+        # vector.v = NULL
+        # vector.v_allocated = 0
+        # vector.v_length = 0
+        # obstack_init (&obs)
+    if pending_text:
+        read_text(NULL, '\n')
+
     while True:
         while True:
             ch = inchar()
@@ -1144,10 +1204,9 @@ def compile_program (vector):
         if ch == EOF:
             break;
 
-        # cur_cmd = next_cmd_entry (vector);
-        # cur_cmd->cmd = ch;
+        cur_cmd = next_cmd_entry(vector)
+        cur_cmd.cmd = ch
         print("Found command: %r" % ch)
-
 
         if ch == '#':
             # if (cur_cmd->a1)
@@ -1168,6 +1227,24 @@ def compile_program (vector):
             # while ch != EOF and ch != '\n':
             #     ch = inchar()
             continue  # redundant
+
+        elif ch in 'aic':
+            ch = in_nonblank()
+
+        #GOTO read_text_to_slash:
+            if ch == EOF:
+                bad_prog(EXPECTED_SLASH)
+
+            if ch == '\\':
+                ch = inchar()
+            else:
+                # if posixicity == POSIXLY_BASIC:
+                #     bad_prog(EXPECTED_SLASH)
+                savchar(ch)
+                ch = '\n'
+
+            read_text(cur_cmd.x.cmd_txt, ch)
+        #ENDGOTO
 
         elif ch in ':Tbt':
 #           if (cur_cmd->a1)
@@ -1932,7 +2009,7 @@ def debug(ch):
 prog.cur = 0
 cur_input.string_expr_count = 1
 ch = ''
-test = 8
+test = 9
 
 # In prog.text the leading @ is ignored, it's a 1-based index
 if test == 1:
@@ -1997,6 +2074,13 @@ elif test == 7:
 elif test == 8:
     # q l
     prog.text = ":label1;bfoo;t bar #comment"
+    prog.end = len(prog.text)
+    prog.text = "@" + prog.text
+    debug(ch)
+    compile_program(None)
+elif test == 9:
+    # a i c
+    prog.text = "a foo"
     prog.end = len(prog.text)
     prog.text = "@" + prog.text
     debug(ch)
