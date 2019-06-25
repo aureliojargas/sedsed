@@ -1,6 +1,14 @@
 #!/usr/bin/env python
 
 import sys
+from mydefs import *
+from basicdefs_h import *
+from sed_h import *
+from utils_h import *
+from utils_c import *
+
+# TODO
+# check: python3 -m pylint compile.py | grep redefined-outer-name
 
 # WONTDO
 #
@@ -13,10 +21,6 @@ import sys
 # Debug messages
 # if (debug)
 
-program_name = 'sed'
-EOF = '<EOF>'
-NULL = None
-RANGE_INACTIVE = 'RANGE_INACTIVE'
 
 #define YMAP_LENGTH		256
 #define VECTOR_ALLOC_INCREMENT	40
@@ -30,17 +34,6 @@ OPEN_BRACKET = '['
 CLOSE_BRACKET = ']'
 OPEN_BRACE = '{'
 CLOSE_BRACE = '}'
-
-
-### from sed/sed.h
-class text_buf:
-    text = NULL
-    text_length = NULL
-# struct text_buf {
-#   char *text;
-#   size_t text_length;
-# };
-
 
 
 # struct prog_info {
@@ -331,11 +324,6 @@ def inchar():
 #   return ch;
 
 
-### from sed/utils.c
-def panic(msg):
-    print("%s: %s" % (program_name, msg), file=sys.stderr)
-    sys.exit(EXIT_PANIC)
-
 # /* unget `ch' so the next call to inchar will return it.   */
 def savchar(ch):
     if ch == EOF:
@@ -359,12 +347,6 @@ def savchar(ch):
 #     }
 #   else
 #     ungetc (ch, prog.file);
-
-
-
-### from basicdefs.h
-def ISBLANK(ch):
-    return ch == ' ' or ch == '\t'
 
 # /* Read the next non-blank character from the program.  */
 def in_nonblank():
@@ -419,23 +401,6 @@ def in_integer(ch):
 #   savchar (ch);
 #   return num;
 
-### from sed/utils.c
-def add1_buffer(buffer, ch):
-    if ch != EOF:
-        buffer.append(ch)  # in-place
-    # the return is never used
-#add1_buffer (struct buffer *b, int c)
-#   if (c != EOF)
-#    {
-#      char *result;
-#      if (b->allocated - b->length < 1)
-#        resize_buffer (b, b->length+1);
-#      result = b->b + b->length++;
-#      *result = c;
-#      return result;
-#    }g
-#  return NULL;
-
 def add_then_next(buffer, ch):
     add1_buffer(buffer, ch)
     return inchar()
@@ -484,15 +449,6 @@ def add_then_next(buffer, ch):
 #     *result = n;
 #   return p;
 # }
-
-### from sed/utils.c
-def init_buffer():
-    return []
-#   struct buffer *b = XCALLOC (1, struct buffer);
-#   b->b = XCALLOC (MIN_ALLOCATE, char);
-#   b->allocated = MIN_ALLOCATE;
-#   b->length = 0;
-#   return b;
 
 # /* Read in a filename for a `r', `w', or `s///w' command. */
 def read_filename():
@@ -572,15 +528,9 @@ def read_filename():
 #   return p;
 # }
 
-class SedCmd:
-    a1 = NULL
-    a2 = NULL
-    range_state = RANGE_INACTIVE
-    addr_bang = False
-    cmd = '\0'
 
-def next_cmd_entry (vector):
-    cmd = SedCmd()
+def next_cmd_entry(vector):
+    cmd = struct_sed_cmd()
     vector.append(cmd)
     return cmd
 # next_cmd_entry (struct vector **vectorp)
@@ -998,6 +948,7 @@ def read_label():
 # }
 
 def read_text(buf, leadin_ch):
+    global pending_text
     if buf:
         if pending_text:
             free_buffer(pending_text)
@@ -1171,19 +1122,9 @@ def read_text(buf, leadin_ch):
 # }
 
 
-def ISSPACE(ch):
-    return ch == ' '
-
-### from sed/utils.c
-def free_buffer(b):
-    del b
-#   if (b)
-#     free (b->b);
-#   free (b);
-
 # /* Read a program (or a subprogram within `{' `}' pairs) in and store
 #   the compiled form in `*vector'.  Return a pointer to the new vector.  */
-def compile_program (vector):
+def compile_program(vector):
 
     if not vector:
         vector = []
@@ -2009,41 +1950,34 @@ def debug(ch):
 prog.cur = 0
 cur_input.string_expr_count = 1
 ch = ''
-test = 9
+test = 4
 
 # In prog.text the leading @ is ignored, it's a 1-based index
 if test == 1:
     # sed: -e expression #0, char 9: unknown command: 'u'
-    prog.text = "@" + "p;p  \n  u"
+    prog.text = "p;p  \n  u"
     prog.end = len(prog.text)
+    prog.text = "@" + prog.text
     debug(ch)
-    ch = in_nonblank()
-    debug(ch)
-    ch = in_nonblank()
-    debug(ch)
-    ch = in_nonblank()
-    debug(ch)
-    ch = in_nonblank()
-    debug(ch)
-    ch = in_nonblank()
-    debug(ch)
-    bad_command(ch)
+    compile_program(None)
 elif test == 2:
     # sed: -e expression #1, char 2: extra characters after command
-    prog.text = "@" + "dp"
+    prog.text = "dp"
     prog.end = len(prog.text)
+    prog.text = "@" + prog.text
     debug(ch)
     ch = in_nonblank()
     debug(ch)
     read_end_of_cmd()
 elif test == 3:
     # 123
-    prog.text = "@" + "123d"
+    prog.text = "123d"
     prog.end = len(prog.text)
+    prog.text = "@" + prog.text
     debug(ch)
     num = in_integer(ch)
     print(num)
-elif test == 4:
+elif test == 4: # XXX bug
     # OK
     prog.text = "d;\np; "
     prog.end = len(prog.text)
