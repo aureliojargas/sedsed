@@ -13,7 +13,12 @@ import sys
 # Debug messages
 # if (debug)
 
-#define YMAP_LENGTH		256 /*XXX shouldn't this be (UCHAR_MAX+1)?*/
+program_name = 'sed'
+EOF = '<EOF>'
+NULL = 'NULL'
+RANGE_INACTIVE = 'RANGE_INACTIVE'
+
+#define YMAP_LENGTH		256
 #define VECTOR_ALLOC_INCREMENT	40
 #define OPEN_BRACKET	'['
 #define CLOSE_BRACKET	']'
@@ -249,9 +254,6 @@ EXIT_SUCCESS   = 0
 EXIT_BAD_USAGE = 1  #/* bad program syntax, invalid command-line options */
 EXIT_BAD_INPUT = 2  #/* failed to open some of the input files */
 EXIT_PANIC     = 4  #/* PANIC during program execution */
-
-EOF = '<EOF>'
-program_name = 'sed'
 
 # /* Complain about an unknown command and exit. */
 def bad_command(ch):
@@ -556,7 +558,17 @@ def read_filename():
 #   return p;
 # }
 
-# static struct sed_cmd *
+class SedCmd():
+    a1 = NULL
+    a2 = NULL
+    range_state = RANGE_INACTIVE
+    addr_bang = False
+    cmd = '\0'
+
+def next_cmd_entry (vector):
+    cmd = SedCmd()
+    vector.append(cmd)
+    return cmd
 # next_cmd_entry (struct vector **vectorp)
 # {
 #   struct sed_cmd *cmd;
@@ -1211,8 +1223,6 @@ def compile_program (vector):
 #       obstack_init (&obs);
 #     }
 #   if (pending_text)
-
-
 #     read_text (NULL, '\n');
 
 #   for (;;)
