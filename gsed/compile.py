@@ -1172,7 +1172,7 @@ def compile_program(vector):
         elif ch in 'aic':
             ch = in_nonblank()
 
-        #GOTO read_text_to_slash:
+#GOTO read_text_to_slash:
             if ch == EOF:
                 bad_prog(EXPECTED_SLASH)
 
@@ -1185,7 +1185,8 @@ def compile_program(vector):
                 ch = '\n'
 
             read_text(cur_cmd.x.cmd_txt, ch)
-        #ENDGOTO
+            print("text: %s" % cur_cmd.x.cmd_txt)
+#ENDGOTO
 
         elif ch in ':Tbt':
 #           if (cur_cmd->a1)
@@ -1950,7 +1951,7 @@ def debug(ch):
 prog.cur = 0
 cur_input.string_expr_count = 1
 ch = ''
-test = 4
+test = 9
 
 # In prog.text the leading @ is ignored, it's a 1-based index
 if test == 1:
@@ -2014,7 +2015,7 @@ elif test == 8:
     compile_program(None)
 elif test == 9:
     # a i c
-    prog.text = "a foo"
+    prog.text = "a\\foo\\\nbar"
     prog.end = len(prog.text)
     prog.text = "@" + prog.text
     debug(ch)

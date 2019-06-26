@@ -15,8 +15,10 @@ class struct_output:
 # };
 
 class struct_text_buf:
-    text = ""
+    text = []
     text_length = 0
+    def __str__(self):
+        return ''.join(self.text)
 # struct text_buf {
 #   char *text;
 #   size_t text_length;
