@@ -1131,6 +1131,19 @@ def compile_program(vector):
             break
 
         cur_cmd = next_cmd_entry(vector)
+
+        # address (TODO)
+
+        if ch == '!':
+            cur_cmd.addr_bang = True
+            ch = in_nonblank()
+            if ch == '!':
+                bad_prog(BAD_BANG)
+
+        # Do not accept extended commands in --posix mode.  Also,
+        # a few commands only accept one address in that mode.
+        # SKIPPED
+
         cur_cmd.cmd = ch
         print("Found command: %r" % ch)
 
@@ -1936,7 +1949,7 @@ def debug(ch):
 prog.cur = 0
 cur_input.string_expr_count = 1
 ch = ''
-test = 6
+test = 10
 
 # In prog.text the leading @ is ignored, it's a 1-based index
 if test == 1:
@@ -2001,6 +2014,13 @@ elif test == 8:
 elif test == 9:
     # a i c
     prog.text = "a\\foo\\\nbar"
+    prog.end = len(prog.text)
+    prog.text = "@" + prog.text
+    debug(ch)
+    compile_program(None)
+elif test == 10:
+    # !
+    prog.text = "!p;!!d"
     prog.end = len(prog.text)
     prog.text = "@" + prog.text
     debug(ch)
