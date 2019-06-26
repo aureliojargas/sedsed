@@ -72,7 +72,7 @@ def ISBLANK(c):	return c == ' ' or c == '\t'
 # def ISLOWER(c):	return (ISASCII (c) and islower (c))
 # def ISPUNCT(c):	return (ISASCII (c) and ispunct (c))
 # def ISSPACE(c):	return (ISASCII (c) and isspace (c))
-def ISSPACE(c): return c == ' '
+def ISSPACE(c): return c in ' \t\n\v\f\r'
 # def ISUPPER(c):	return (ISASCII (c) and isupper (c))
 # def ISXDIGIT(c):	return (ISASCII (c) and isxdigit (c))
 

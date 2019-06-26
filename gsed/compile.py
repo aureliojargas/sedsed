@@ -1977,7 +1977,7 @@ elif test == 3:
     debug(ch)
     num = in_integer(ch)
     print(num)
-elif test == 4: # XXX bug
+elif test == 4:
     # OK
     prog.text = "d;\np; "
     prog.end = len(prog.text)
@@ -1986,7 +1986,7 @@ elif test == 4: # XXX bug
     compile_program(None)
 elif test == 5:
     # sed: -e expression #1, char 5: unknown command: 'u'
-    prog.text = "d\np\nu"
+    prog.text = "d;;;p;\nu"
     prog.end = len(prog.text)
     prog.text = "@" + prog.text
     debug(ch)
