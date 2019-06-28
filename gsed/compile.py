@@ -534,6 +534,11 @@ def read_filename():
 
 def next_cmd_entry(vector):
     cmd = struct_sed_cmd()
+    cmd.a1 = NULL
+    cmd.a2 = NULL
+    cmd.range_state = RANGE_INACTIVE
+    cmd.addr_bang = False
+    cmd.cmd = '\0'  # something invalid, to catch bugs early
     vector.append(cmd)
     return cmd
 #---------------------------------------------------------------------
@@ -639,6 +644,51 @@ def next_cmd_entry(vector):
 # }
 
 
+def match_slash(slash, regex):  # char, bool
+    # struct buffer *b
+    # mbstate_t cur_stat = { 0, }
+    cur_stat = { 0, }
+
+    # We allow only 1 byte characters for a slash.
+    if IS_MB_CHAR(slash):  #, &cur_stat):
+        bad_prog(BAD_DELIM)
+
+    # memset(&cur_stat, 0, sizeof cur_stat)
+
+    b = init_buffer()
+
+    # while ((ch = inchar ()) != EOF && ch != '\n')
+    while True:
+        ch = inchar()
+        if ch == EOF or ch == '\n':
+            break
+
+        # const mb_char = IS_MB_CHAR(ch, &cur_stat)
+
+        if not IS_MB_CHAR(ch):
+            if ch == slash:
+                return b
+            elif ch == '\\':
+                ch = inchar()
+                if ch == EOF:
+                    break
+                elif ch == 'n' and regex:
+                    ch = '\n'
+                elif (ch != '\n' and (ch != slash or (not regex and ch == '&'))):
+                    add1_buffer(b, '\\')
+            elif ch == OPEN_BRACKET and regex:
+                add1_buffer(b, ch)
+                ch = snarf_char_class(b)  #, &cur_stat)
+                if ch != CLOSE_BRACKET:
+                    break
+
+        add1_buffer(b, ch)
+
+    if ch == '\n':
+        savchar(ch)  # for proper line number in error report
+    free_buffer(b)
+    return NULL
+#---------------------------------------------------------------------
 # static struct buffer *
 # match_slash (int slash, int regex)
 # {
@@ -1050,10 +1100,74 @@ def read_text(buf, leadin_ch):
 # }
 
 
-# /* Try to read an address for a sed command.  If it succeeds,
+# Try to read an address for a sed command.  If it succeeds,
 #   return non-zero and store the resulting address in `*addr'.
 #   If the input doesn't look like an address read nothing
-#   and return zero.  */
+#   and return zero.
+def compile_address(addr, ch):  # struct_addr, str
+    addr.addr_type = ADDR_IS_NULL
+    addr.addr_step = 0
+    addr.addr_number = 0      # extremely unlikely to ever match
+    addr.addr_regex = NULL
+
+    if ch == '/' or ch == '\\':
+        # Instead of using bit flags as regex.c, I'll just save the flags as text
+        flags = []
+        # flags = 0
+        # struct buffer *b
+
+        addr.addr_type = ADDR_IS_REGEX
+        if ch == '\\':
+            ch = inchar()
+        b = match_slash(ch, True)
+        if not b:
+            bad_prog(UNTERM_ADDR_RE)
+
+        while True:
+            ch = in_nonblank()
+            # if posixicity == POSIXLY_BASIC:
+            #     goto posix_address_modifier
+            if ch == 'I':  # GNU extension
+                # flags |= REG_ICASE
+                flags.append(ch)
+            elif ch == 'M':  # GNU extension
+                # flags |= REG_NEWLINE
+                flags.append(ch)
+            else:
+            #   posix_address_modifier:  # GOTO label
+                savchar(ch)
+                addr.addr_regex = compile_regex(b, flags)
+                free_buffer(b)
+                return True
+
+    elif ISDIGIT(ch):
+        addr.addr_number = in_integer(ch)
+        addr.addr_type = ADDR_IS_NUM
+        ch = in_nonblank()
+        if ch != '~':  # or posixicity == POSIXLY_BASIC:
+            savchar(ch)
+        else:
+            step = in_integer(in_nonblank())
+            if step > 0:
+                addr.addr_step = step
+                addr.addr_type = ADDR_IS_NUM_MOD
+
+    elif ch == '+' or ch == '~':  #and posixicity != POSIXLY_BASIC:
+        addr.addr_step = in_integer(in_nonblank())
+        if addr.addr_step == 0:
+            pass  # default to ADDR_IS_NULL; forces matching to stop on next line
+        elif ch == '+':
+            addr.addr_type = ADDR_IS_STEP
+        else:
+            addr.addr_type = ADDR_IS_STEP_MOD
+
+    elif ch == '$':
+        addr.addr_type = ADDR_IS_LAST
+
+    else:
+        return False
+    return True
+#---------------------------------------------------------------------
 # static bool
 # compile_address (struct addr *addr, int ch)
 # {
@@ -1151,9 +1265,11 @@ def compile_program(vector):
         read_text(NULL, '\n')
 
     while True:
+
+        a = struct_addr()
+
         while True:
             ch = inchar()
-
             if ch != ';' and not ISSPACE(ch):
                 break
 
@@ -1162,10 +1278,32 @@ def compile_program(vector):
 
         cur_cmd = next_cmd_entry(vector)
 
-        # address (TODO)
+        if compile_address(a, ch):
+            if a.addr_type == ADDR_IS_STEP or a.addr_type == ADDR_IS_STEP_MOD:
+                bad_prog(BAD_STEP)
+
+            cur_cmd.a1 = a  # MEMDUP(&a, 1, struct addr)
+            print("----- Found address 1: %r" % cur_cmd.a1)
+
+
+            a = struct_addr()  # reset a
+            ch = in_nonblank()
+            if ch == ',':
+                if not compile_address(a, in_nonblank()):
+                    bad_prog(BAD_COMMA)
+
+                cur_cmd.a2 = a  # MEMDUP(&a, 1, struct addr)
+                print("----- Found address 2: %r" % cur_cmd.a2)
+                ch = in_nonblank()
+
+            if (cur_cmd.a1.addr_type == ADDR_IS_NUM and cur_cmd.a1.addr_number == 0) \
+                    and (not cur_cmd.a2 or cur_cmd.a2.addr_type != ADDR_IS_REGEX):
+                    #or posixicity == POSIXLY_BASIC)):
+                bad_prog(INVALID_LINE_0)
 
         if ch == '!':
             cur_cmd.addr_bang = True
+            print("----- Found negation: !")
             ch = in_nonblank()
             if ch == '!':
                 bad_prog(BAD_BANG)
@@ -1175,7 +1313,7 @@ def compile_program(vector):
         # SKIPPED
 
         cur_cmd.cmd = ch
-        print("Found command: %r" % ch)
+        print("----- Found command: %r" % ch)
 
         if ch == '#':
             # if (cur_cmd->a1)
@@ -2031,7 +2169,7 @@ def debug(ch):
         cur_input.string_expr_count, cur_input.line, prog.cur, prog.end, prog.text, ch))
 
 the_program = []
-test = 7
+test = 11
 
 if len(sys.argv) > 1:
     print("Will parse file:", sys.argv[1])
@@ -2063,3 +2201,5 @@ elif test == 9:  # a i c
     compile_string(the_program, "a\\foo\\\nbar")
 elif test == 10:  # !
     compile_string(the_program, "!p;!!d")
+elif test == 11:  # address
+    compile_string(the_program, "1,10!p;/foo/I,\|bar|MI!d;/abc/p")
