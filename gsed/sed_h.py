@@ -19,6 +19,7 @@ class struct_text_buf:
     text_length = 0
     def __str__(self):
         return ''.join(self.text)
+    __repr__ = __str__
 # struct text_buf {
 #   char *text;
 #   size_t text_length;
@@ -32,6 +33,10 @@ class struct_regex:
     begline = False
     endline = False
     re = ""
+    def __str__(self):
+        return "[pattern=%s flags=%s]" % (self.pattern, self.flags)
+    __repr__ = __str__
+
 # struct regex {
 #   regex_t pattern;
 #   int flags;
@@ -84,6 +89,10 @@ class struct_addr:
     addr_number = 0
     addr_step = 0
     addr_regex = struct_regex()
+    def __str__(self):
+        return "[type=%s number=%s step=%s regex=%s]" % (
+            self.addr_type, self.addr_number, self.addr_step, self.addr_regex)
+    __repr__ = __str__
 # struct addr {
 #   enum addr_types addr_type;
 #   countT addr_number;
@@ -226,6 +235,15 @@ class struct_vector:
 # void rewind_read_files (void);
 # void finish_program (struct vector *);
 
+# This is probably from regex.c, but I'll fake it here
+# just saving the collected strings
+def compile_regex(pattern, flags):
+    r = struct_regex()
+    r.pattern = ''.join(pattern)
+    r.flags = ''.join(flags)
+    return r
+
+
 # struct regex *compile_regex (struct buffer *b, int flags, int needed_sub);
 # int match_regex (struct regex *regex,
 #                  char *buf, size_t buflen, size_t buf_start_offset,
@@ -309,6 +327,8 @@ class struct_vector:
 
 # #define IS_MB_CHAR(ch, ps)                \
 #   (mb_cur_max == 1 ? 0 : is_mb_char (ch, ps))
+def IS_MB_CHAR(ch):
+    return ord(ch) > 127
 
 # extern int is_mb_char (int ch, mbstate_t *ps);
 # extern void initialize_mbcs (void);
