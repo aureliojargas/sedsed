@@ -55,6 +55,7 @@ class prog_info:
     base = None  # int
     cur = None  # int
     end = None  # int
+    file = None  # file descriptor
     text = None  # str
     # Using None because some code checks for "is not None" to detect unset state
 
@@ -292,7 +293,11 @@ def inchar():
         if prog.cur < prog.end:
             prog.cur += 1
             ch = prog.text[prog.cur]
-    # else if (prog.file)
+    elif prog.file:
+        # https://stackoverflow.com/a/15599780
+        ch = prog.file.read(1)
+        if not ch:
+            ch = EOF
     if ch == '\n':
         cur_input.line += 1
     debug(ch)
@@ -326,8 +331,12 @@ def savchar(ch):
         if prog.cur <= prog.base or prog.text[prog.cur+1] != ch:  # XXX not sure about cur+1
             # panic ("Called savchar with unexpected pushback (%s)" % ch)
             panic ("Called savchar with unexpected pushback (curr=%s %s!=%s)" % (prog.cur, prog.text[prog.cur],ch))
-        # else:
-        #     ungetc (ch, prog.file);
+    else:
+        try:
+            # Go back one position in prog.file file descriptor pointer
+            prog.file.seek(prog.file.tell() - 1)  # ungetc (ch, prog.file)
+        except ValueError:  # negative seek position -1
+            pass
 #---------------------------------------------------------------------
 # #   if (ch == EOF)
 #     return;
@@ -1782,7 +1791,7 @@ def compile_string(cur_program, string):
     cur_input.string_expr_count += 1
 
     compile_program(cur_program)
-    # ret = compile_program(cur_program)
+
     prog.base = NULL
     prog.cur = NULL
     prog.end = NULL
@@ -1815,10 +1824,31 @@ def compile_string(cur_program, string):
 # }
 
 
-# /* `cmdfile' is the name of a file containing sed commands.
+# `cmdfile' is the name of a file containing sed commands.
 #   Read them in and add them to the end of `cur_program'.
-#  */
-# struct vector *
+#
+def compile_file(cur_program, cmdfile):
+    # prog and cur_input are global classes
+    global first_script
+
+    prog.file = sys.stdin
+    if cmdfile[0] != '-':  # or cmdfile[1] != '\0':
+        prog.file = open(cmdfile, "r")
+
+    cur_input.line = 1
+    cur_input.name = cmdfile
+    cur_input.string_expr_count = 0
+
+    compile_program(cur_program)
+
+    if prog.file != sys.stdin:
+        prog.file.close()
+    prog.file = NULL
+
+    first_script = False
+    # no return, cur_program edited in place
+
+#---------------------------------------------------------------------
 # compile_file (struct vector *cur_program, const char *cmdfile)
 # {
 #   struct vector *ret;
@@ -2002,6 +2032,11 @@ def debug(ch):
 
 the_program = []
 test = 7
+
+if len(sys.argv) > 1:
+    print("Will parse file:", sys.argv[1])
+    compile_file(the_program, sys.argv[1])
+    sys.exit(0)
 
 if test == 1:
     # sed: -e expression #1, char 9: unknown command: 'u'
