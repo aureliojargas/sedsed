@@ -267,7 +267,7 @@ def bad_prog(why):
             program_name, cur_input.name, cur_input.line, why)
     else:
         msg = "%s: -e expression #%d, char %d: %s" % (
-            program_name, cur_input.string_expr_count, prog.cur-prog.base, why)
+            program_name, cur_input.string_expr_count, prog.cur - prog.base, why)
     print(msg, file=sys.stderr)
     sys.exit(EXIT_BAD_USAGE)
 #---------------------------------------------------------------------
@@ -2168,38 +2168,35 @@ def debug(ch):
     print("exp=%s line=%s cur=%s end=%s text=%r ch=%r" % (
         cur_input.string_expr_count, cur_input.line, prog.cur, prog.end, prog.text, ch))
 
-the_program = []
-test = 11
+if __name__ == '__main__':
 
-if len(sys.argv) > 1:
-    print("Will parse file:", sys.argv[1])
-    compile_file(the_program, sys.argv[1])
-    sys.exit(0)
+    the_program = []
+    test = 11
 
-if test == 1:
-    # sed: -e expression #1, char 9: unknown command: 'u'
-    compile_string(the_program, "p;p  \n  u")
-elif test == 2:
-    # sed: -e expression #1, char 2: extra characters after command
-    compile_string(the_program, "dp")
-elif test == 3:  # 123
-    compile_string(the_program, "q123")
-elif test == 4:
-    compile_string(the_program, "d;\np; ")
-elif test == 5:
-    # sed: -e expression #1, char 5: unknown command: 'u'
-    compile_string(the_program, "d;;;p;\nu")
-elif test == 6:  # r
-    compile_string(the_program, "r empty")
-elif test == 7:  # q l
-    compile_string(the_program, "q;Q;\nL;l\n;q123;L123")
-    # sed: -e expression #2, char 2: extra characters after command
-    compile_string(the_program, "xx")
-elif test == 8:  # q l
-    compile_string(the_program, ":label1;bfoo;t bar #comment")
-elif test == 9:  # a i c
-    compile_string(the_program, "a\\foo\\\nbar")
-elif test == 10:  # !
-    compile_string(the_program, "!p;!!d")
-elif test == 11:  # address
-    compile_string(the_program, "1,10!p;/foo/I,\|bar|MI!d;/abc/p")
+    if len(sys.argv) > 1:
+        print("Will parse file:", sys.argv[1])
+        compile_file(the_program, sys.argv[1])
+        sys.exit(0)
+
+    if test == 1:
+        pass
+    elif test == 2:
+        pass
+    elif test == 3:  # 123
+        compile_string(the_program, "q123")
+    elif test == 4:
+        compile_string(the_program, "d;\np; ")
+    elif test == 5:
+        pass
+    elif test == 6:  # r
+        compile_string(the_program, "r empty")
+    elif test == 7:  # q l
+        compile_string(the_program, "q;Q;\nL;l\n;q123;L123")
+    elif test == 8:  # q l
+        compile_string(the_program, ":label1;bfoo;t bar #comment")
+    elif test == 9:  # a i c
+        compile_string(the_program, "a\\foo\\\nbar")
+    elif test == 10:  # !
+        compile_string(the_program, "!p;!!d")
+    elif test == 11:  # address
+        compile_string(the_program, "1,10!p;/foo/I,\|bar|MI!d;/abc/p")
