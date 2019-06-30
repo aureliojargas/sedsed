@@ -21,49 +21,59 @@ def captured_output():
 
 class TestSed(unittest.TestCase):
 
-    def mock_sys_exit(self, msg):
-        pass
-
     def setUp(self):
-        self.sys_exit = sys.exit
-        sys.exit = self.mock_sys_exit
-
-        # start from scratch to avoid midule data leak
+        # start from scratch to avoid module state leak between tests
         import compile
         self.x = compile
         self.x.the_program = []
 
     def tearDown(self):
-        sys.exit = self.sys_exit
-
         # Make sure it's really gone - https://stackoverflow.com/a/11199969
         del self.x
         sys.modules.pop('compile', None)
 
     def test_1(self):
-        with captured_output() as (out, err):
-            exp = "sed: -e expression #1, char 9: unknown command: `u'"
-            self.x.compile_string(self.x.the_program, "p;p  \n  u")
-            self.assertEqual(err.getvalue().rstrip(), exp)
+        with self.assertRaises(SystemExit):
+            with captured_output() as (out, err):
+                exp = "sed: -e expression #1, char 9: unknown command: `u'"
+                self.x.compile_string(self.x.the_program, "p;p  \n  u")
+                self.assertEqual(err.getvalue().rstrip(), exp)
 
     def test_2(self):
-        with captured_output() as (out, err):
-            exp = "sed: -e expression #1, char 2: extra characters after command"
-            self.x.compile_string(self.x.the_program, "dp")
-            self.assertEqual(err.getvalue().rstrip(), exp)
+        with self.assertRaises(SystemExit):
+            with captured_output() as (out, err):
+                exp = "sed: -e expression #1, char 2: extra characters after command"
+                self.x.compile_string(self.x.the_program, "dp")
+                self.assertEqual(err.getvalue().rstrip(), exp)
 
     def test_3(self):
-        with captured_output() as (out, err):
-            exp = "sed: -e expression #1, char 8: unknown command: `u'"
-            self.x.compile_string(self.x.the_program, "d;;;p;\nu")
-            self.assertEqual(err.getvalue().rstrip(), exp)
+        with self.assertRaises(SystemExit):
+            with captured_output() as (out, err):
+                exp = "sed: -e expression #1, char 8: unknown command: `u'"
+                self.x.compile_string(self.x.the_program, "d;;;p;\nu")
+                self.assertEqual(err.getvalue().rstrip(), exp)
 
     def test_4(self):
-        with captured_output() as (out, err):
-            exp = "sed: -e expression #2, char 2: extra characters after command"
-            self.x.compile_string(self.x.the_program, "p")
-            self.x.compile_string(self.x.the_program, "xx")
-            self.assertEqual(err.getvalue().rstrip(), exp)
+        with self.assertRaises(SystemExit):
+            with captured_output() as (out, err):
+                exp = "sed: -e expression #2, char 2: extra characters after command"
+                self.x.compile_string(self.x.the_program, "p")
+                self.x.compile_string(self.x.the_program, "xx")
+                self.assertEqual(err.getvalue().rstrip(), exp)
+
+    def test_5(self):
+        with self.assertRaises(SystemExit):
+            with captured_output() as (out, err):
+                exp = "sed: -e expression #1, char 3: missing command"
+                self.x.compile_string(self.x.the_program, "/a/")
+                self.assertEqual(err.getvalue().rstrip(), exp)
+
+    def test_6(self):
+        with self.assertRaises(SystemExit):
+            with captured_output() as (out, err):
+                exp = "sed: -e expression #1, char 2: unterminated address regex"
+                self.x.compile_string(self.x.the_program, "/a")
+                self.assertEqual(err.getvalue().rstrip(), exp)
 
 if __name__ == '__main__':
     unittest.main()
