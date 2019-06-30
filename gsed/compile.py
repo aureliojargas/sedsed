@@ -566,7 +566,71 @@ def next_cmd_entry(vector):
 # }
 
 
-# static int
+def snarf_char_class(b):  #, cur_stat):
+    state = 0
+    delim = None  # delim IF_LINT( = 0)
+
+    ch = inchar()
+    if ch == '^':
+        ch = add_then_next(b, ch)
+    if ch == CLOSE_BRACKET:
+        ch = add_then_next(b, ch)
+
+    # States are:
+    #   0 outside a collation element, character class or collation class
+    #   1 after the bracket
+    #   2 after the opening ./:/=
+    #   3 after the closing ./:/=
+
+    # for (;; ch = add_then_next(b, ch)) {
+    while True:
+        ch = add_then_next(b, ch)
+        mb_char = IS_MB_CHAR(ch)  #, cur_stat)
+
+        if ch == EOF or ch == '\n':
+            return ch
+
+        elif ch in '.:=':
+            if mb_char:
+                continue
+
+            if state == 1:
+                delim = ch
+                state = 2
+            elif state == 2 and ch == delim:
+                state = 3
+            # else:
+            #     break  # break from C-switch
+
+            continue
+
+        elif ch == OPEN_BRACKET:
+            if mb_char:
+                continue
+
+            if state == 0:
+                state = 1
+            continue
+
+        elif ch == CLOSE_BRACKET:
+            if mb_char:
+                continue
+
+            if state == 0 or state == 1:
+                return ch
+            elif state == 3:
+                state = 0
+
+        # Getting a character different from .=: whilst in state 1
+        # goes back to state 0, getting a character different from ]
+        # whilst in state 3 goes back to state 2.
+        if ch not in '.:=' and state == 1:
+            state = 0
+        elif ch != CLOSE_BRACKET and state == 3:
+            state = 2
+
+        # state &= ~1  # please, no magic
+#---------------------------------------------------------------------
 # snarf_char_class (struct buffer *b, mbstate_t *cur_stat)
 # {
 #   int ch;
@@ -2171,7 +2235,7 @@ def debug(ch):
 if __name__ == '__main__':
 
     the_program = []
-    test = 11
+    test = 12
 
     if len(sys.argv) > 1:
         print("Will parse file:", sys.argv[1])
@@ -2200,3 +2264,5 @@ if __name__ == '__main__':
         compile_string(the_program, "!p;!!d")
     elif test == 11:  # address
         compile_string(the_program, "1,10!p;/foo/I,\|bar|MI!d;/abc/p")
+    elif test == 12:  # address tricky
+        compile_string(the_program, "/a\/b[/]c/ p")
