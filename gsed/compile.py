@@ -1457,7 +1457,6 @@ def compile_program(vector):
             # /*NOTREACHED*/
         vector.append(cur_cmd)
     # no return, vector edited in place
-
 #---------------------------------------------------------------------
 #   struct sed_cmd *cur_cmd;
 #   struct buffer *b;
@@ -2049,7 +2048,6 @@ def compile_file(cur_program, cmdfile):
 
     first_script = False
     # no return, cur_program edited in place
-
 #---------------------------------------------------------------------
 # compile_file (struct vector *cur_program, const char *cmdfile)
 # {
