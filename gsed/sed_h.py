@@ -1,3 +1,5 @@
+from mydefs import *
+
 # This structure tracks files used by sed so that they may all be
 #   closed cleanly at normal program termination.  A flag is kept that tells
 #   if a missing newline was encountered, so that it is added on the
@@ -328,7 +330,8 @@ def compile_regex(pattern, flags):
 # #define IS_MB_CHAR(ch, ps)                \
 #   (mb_cur_max == 1 ? 0 : is_mb_char (ch, ps))
 def IS_MB_CHAR(ch):
-    return ord(ch) > 127
+    return ch != EOF and ord(ch) > 127
+    # This exception is because I chose to store EOF as '<EOF>'
 
 # extern int is_mb_char (int ch, mbstate_t *ps);
 # extern void initialize_mbcs (void);
