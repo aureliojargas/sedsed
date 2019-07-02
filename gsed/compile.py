@@ -412,6 +412,57 @@ def add_then_next(buffer, ch):
 #   return inchar ();
 # }
 
+
+def convert_number(result, buf, base):
+    return int(buf, base)
+
+    # result = []
+    # n = 0
+    # max_ = 1
+    # mapping = {
+    #     '0': 0x0,
+    #     '1': 0x1,
+    #     '2': 0x2,
+    #     '3': 0x3,
+    #     '4': 0x4,
+    #     '5': 0x5,
+    #     '6': 0x6,
+    #     '7': 0x7,
+    #     '8': 0x8,
+    #     '9': 0x9,
+    #     'A': 0xa,
+    #     'a': 0xa,
+    #     'B': 0xb,
+    #     'b': 0xb,
+    #     'C': 0xc,
+    #     'c': 0xc,
+    #     'D': 0xd,
+    #     'd': 0xd,
+    #     'E': 0xe,
+    #     'e': 0xe,
+    #     'F': 0xf,
+    #     'f': 0xf
+    # }
+    # # for (p = buf + 1; p < bufend and max_ <= 255; ++p, max_ *= base) {
+    # p = buf + 1
+    # while p < bufend and max_ <= 255:
+
+    #     # d = -1
+    #     d = mapping.get(p, -1)
+    #     if d < 0 or base <= d:
+    #         break
+    #     n = n * base + d
+
+    #     p += 1
+    convert_number (char *result, char *buf, const char *bufend, int base)
+    #     max_ *= base
+
+    # if p == buf + 1:
+    #     *result = *buf
+    # else:
+    #     *result = n
+    # return p
+#---------------------------------------------------------------------
 # static char *
 # convert_number (char *result, char *buf, const char *bufend, int base)
 # {
@@ -1882,7 +1933,112 @@ def compile_program(vector):
 
 
 # deal with \X escapes
-# size_t
+def normalize_text(buf, buftype):
+    bufend = len(buf)
+    p = 0
+    ret = []
+
+    # This variable prevents normalizing text within bracket
+    # subexpressions when conforming to POSIX.  If 0, we
+    # are not within a bracket expression.  If -1, we are within a
+    # bracket expression but are not within [.FOO.], [=FOO=],
+    # or [:FOO:].  Otherwise, this is the '.', '=', or ':'
+    # respectively within these three types of subexpressions.
+    bracket_state = 0
+
+    while p < bufend:
+        if buf[p] == '\\' and p + 1 < bufend and bracket_state == 0:
+            p += 1
+            if buf[p] == 'a':
+                ret.append('\a')
+                p += 1
+                continue
+            # conflicts with \b RE
+            # elif buf[p] == 'b':
+            #     ret.append('\b')
+            #     p += 1
+            #     continue
+            elif buf[p] == 'f':
+                ret.append('\f')
+                p += 1
+                continue
+            elif buf[p] in ('n', '\n'):
+                ret.append('\n')
+                p += 1
+                continue
+            elif buf[p] == 'r':
+                ret.append('\r')
+                p += 1
+                continue
+            elif buf[p] == 't':
+                ret.append('\t')
+                p += 1
+                continue
+            elif buf[p] == 'v':
+                ret.append('\v')
+                p += 1
+                continue
+
+            elif buf[p] == 'd':  # decimal byte
+                base = 10
+                convert_number(&ch, p, bufend, base)
+                goto convert
+
+            elif buf[p] == 'x':  # hexadecimal byte
+                base = 16
+                goto convert
+
+            elif buf[p] == 'o':  # octal byte
+                base = 8
+            #   convert:
+                p = convert_number(&ch, p, bufend, base)
+
+                # for an ampersand in a replacement, pass the \ up one level
+                if (buftype == TEXT_REPLACEMENT
+                 and (ch == '&' or ch == '\\'))
+                    *q++ = '\\'
+                *q++ = ch
+                continue
+
+            case 'c':
+                if ++p < bufend:
+                    *q++ = toupper((unsigned char) *p) ^ 0x40
+                    if *p == '\\':
+                        p += 1
+                        if *p != '\\':
+                            bad_prog(RECURSIVE_ESCAPE_C)
+                    p += 1
+                    continue
+                else:
+                    # we just pass the \ up one level for interpretation
+                    if buftype != TEXT_BUFFER:
+                        *q++ = '\\'
+                    continue
+
+            else:
+                # we just pass the \ up one level for interpretation
+                if buftype != TEXT_BUFFER:
+                    *q++ = '\\'
+
+        elif buftype == TEXT_REGEX:  # and posixicity != POSIXLY_EXTENDED:
+            if buf[p] == '[':
+                if not bracket_state:
+                    bracket_state = -1
+
+            elif buf[p] in ':.=':
+                if bracket_state == -1 and buf[p][-1] == '[':
+                    bracket_state = *p  #XXX
+
+            elif buf[p] == ']':
+                if bracket_state == 0:
+                elif bracket_state == -1:
+                    bracket_state = 0
+                elif buf[p][-2] != bracket_state and buf[p][-1] == bracket_state:
+                    bracket_state = -1
+
+        # *q++ = *p += 1
+    return ret  #(size_t) (q - buf)
+#---------------------------------------------------------------------
 # normalize_text (char *buf, size_t len, enum text_types buftype)
 # {
 #   const char *bufend = buf + len;
