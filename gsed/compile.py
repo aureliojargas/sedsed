@@ -1465,7 +1465,29 @@ def compile_program(vector):
             print("filename: %s" % cur_cmd.x.fname)
             free_buffer(b)
 
-#TODO s y
+#TODO s y  aure
+
+        elif ch == 'y':
+            slash = inchar()
+            b = match_slash(slash, False)
+            if not b:
+                bad_prog(UNTERM_Y_CMD)
+            print("y pattern: %s" % ''.join(b))
+
+            b2 = match_slash(slash, False)
+            if not b2:
+                bad_prog(UNTERM_Y_CMD)
+            print("y replacement: %s" % ''.join(b2))
+
+            # len = normalize_text(src_buf, size_buffer(b), TEXT_BUFFER)
+            # dest_len = normalize_text(dest_buf, size_buffer(b2), TEXT_BUFFER)
+
+            if len(b) != len(b2):
+                bad_prog(Y_CMD_LEN)
+
+            read_end_of_cmd()
+            free_buffer(b)
+            free_buffer(b2)
 
         elif ch == EOF:
             bad_prog(NO_COMMAND)
@@ -2251,7 +2273,7 @@ def debug(ch):
 if __name__ == '__main__':
 
     the_program = []
-    test = 5
+    test = 2
 
     if len(sys.argv) > 1:
         print("Will parse file:", sys.argv[1])
@@ -2261,7 +2283,7 @@ if __name__ == '__main__':
     if test == 1:
         pass
     elif test == 2:
-        pass
+        compile_string(the_program, "y/abc/xyz/;y/AB/X/;y/1/.;")
     elif test == 3:  # 123
         compile_string(the_program, "q123")
     elif test == 4:
