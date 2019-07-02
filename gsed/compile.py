@@ -485,7 +485,17 @@ def read_filename():
 #   return b;
 
 
-# static struct output *
+#def get_openfile(file_ptrs, mode, fail);
+#    struct output *p
+#
+#    b = read_filename()
+#    file_name = get_buffer(b)
+#    if len(file_name) == 0:
+#        bad_prog(_(MISSING_FILENAME))
+#
+#    free_buffer(b)
+#    return p
+#---------------------------------------------------------------------
 # get_openfile (struct output **file_ptrs, const char *mode, int fail)
 # {
 #   struct buffer *b;
@@ -1399,6 +1409,12 @@ def compile_program(vector):
             #     ch = inchar()
             continue  # redundant
 
+#TODO { }
+
+        elif ch in 'ev':
+            argument = read_label()
+            print("argument: %s" % argument)
+
         elif ch in 'aic':
             ch = in_nonblank()
 
@@ -1430,10 +1446,10 @@ def compile_program(vector):
         elif ch in 'QqLl':
             ch = in_nonblank()
             if ISDIGIT(ch):
-                # cur_cmd->x.int_arg = in_integer(ch)
+                cur_cmd.x.int_arg = in_integer(ch)
                 print("int_arg: %s" % in_integer(ch))
             else:
-                # cur_cmd->x.int_arg = -1
+                cur_cmd.x.int_arg = -1
                 print("int_arg: -1")
                 savchar(ch)
             read_end_of_cmd()
@@ -1441,13 +1457,15 @@ def compile_program(vector):
         elif ch in '=dDFgGhHnNpPzx':
             read_end_of_cmd()
 
-        elif ch == 'r':
+        elif ch in 'rRwW':
             b = read_filename()
             if not b:
                 bad_prog(MISSING_FILENAME)
             cur_cmd.x.fname = ''.join(b)
             print("filename: %s" % cur_cmd.x.fname)
             free_buffer(b)
+
+#TODO s y
 
         elif ch == EOF:
             bad_prog(NO_COMMAND)
@@ -2233,7 +2251,7 @@ def debug(ch):
 if __name__ == '__main__':
 
     the_program = []
-    test = 12
+    test = 5
 
     if len(sys.argv) > 1:
         print("Will parse file:", sys.argv[1])
@@ -2249,9 +2267,9 @@ if __name__ == '__main__':
     elif test == 4:
         compile_string(the_program, "d;\np; ")
     elif test == 5:
-        pass
+        compile_string(the_program, "e date;v;v 4.2")
     elif test == 6:  # r
-        compile_string(the_program, "r empty")
+        compile_string(the_program, "r filer\nw filew")
     elif test == 7:  # q l
         compile_string(the_program, "q;Q;\nL;l\n;q123;L123")
     elif test == 8:  # q l
