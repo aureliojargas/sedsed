@@ -33,54 +33,77 @@ class TestSed(unittest.TestCase):
         sys.modules.pop('compile', None)
 
     def test_1(self):
-        with self.assertRaises(SystemExit):
-            with captured_output() as (out, err):
-                exp = "sed: -e expression #1, char 9: unknown command: `u'"
+        with captured_output() as (out, err):
+            exp = "sed: -e expression #1, char 9: unknown command: `u'"
+            try:
                 self.x.compile_string(self.x.the_program, "p;p  \n  u")
-                self.assertEqual(err.getvalue().rstrip(), exp)
+            except SystemExit:
+                pass
+            self.assertEqual(err.getvalue().rstrip(), exp)
 
     def test_2(self):
-        with self.assertRaises(SystemExit):
-            with captured_output() as (out, err):
-                exp = "sed: -e expression #1, char 2: extra characters after command"
+        with captured_output() as (out, err):
+            exp = "sed: -e expression #1, char 2: extra characters after command"
+            try:
                 self.x.compile_string(self.x.the_program, "dp")
-                self.assertEqual(err.getvalue().rstrip(), exp)
+            except SystemExit:
+                pass
+            self.assertEqual(err.getvalue().rstrip(), exp)
 
     def test_3(self):
-        with self.assertRaises(SystemExit):
-            with captured_output() as (out, err):
-                exp = "sed: -e expression #1, char 8: unknown command: `u'"
+        with captured_output() as (out, err):
+            exp = "sed: -e expression #1, char 8: unknown command: `u'"
+            try:
                 self.x.compile_string(self.x.the_program, "d;;;p;\nu")
-                self.assertEqual(err.getvalue().rstrip(), exp)
+            except SystemExit:
+                pass
+            self.assertEqual(err.getvalue().rstrip(), exp)
 
     def test_4(self):
-        with self.assertRaises(SystemExit):
-            with captured_output() as (out, err):
-                exp = "sed: -e expression #2, char 2: extra characters after command"
+        with captured_output() as (out, err):
+            exp = "sed: -e expression #2, char 2: extra characters after command"
+            try:
                 self.x.compile_string(self.x.the_program, "p")
                 self.x.compile_string(self.x.the_program, "xx")
-                self.assertEqual(err.getvalue().rstrip(), exp)
+            except SystemExit:
+                pass
+            self.assertEqual(err.getvalue().rstrip(), exp)
 
     def test_5(self):
-        with self.assertRaises(SystemExit):
-            with captured_output() as (out, err):
-                exp = "sed: -e expression #1, char 3: missing command"
+        with captured_output() as (out, err):
+            exp = "sed: -e expression #1, char 3: missing command"
+            try:
                 self.x.compile_string(self.x.the_program, "/a/")
-                self.assertEqual(err.getvalue().rstrip(), exp)
+            except SystemExit:
+                pass
+            self.assertEqual(err.getvalue().rstrip(), exp)
 
     def test_6(self):
-        with self.assertRaises(SystemExit):
-            with captured_output() as (out, err):
-                exp = "sed: -e expression #1, char 2: unterminated address regex"
+        with captured_output() as (out, err):
+            exp = "sed: -e expression #1, char 2: unterminated address regex"
+            try:
                 self.x.compile_string(self.x.the_program, "/a")
-                self.assertEqual(err.getvalue().rstrip(), exp)
+            except SystemExit:
+                pass
+            self.assertEqual(err.getvalue().rstrip(), exp)
 
     def test_7(self):
-        with self.assertRaises(SystemExit):
-            with captured_output() as (out, err):
-                exp = "sed: -e expression #1, char 25: unterminated `y' command"
+        with captured_output() as (out, err):
+            exp = "sed: -e expression #1, char 4: unterminated `y' command"
+            try:
                 self.x.compile_string(self.x.the_program, "y/a/")
-                self.assertEqual(err.getvalue().rstrip(), exp)
+            except SystemExit:
+                pass
+            self.assertEqual(err.getvalue().rstrip(), exp)
+
+    def test_8(self):
+        with captured_output() as (out, err):
+            exp = "sed: -e expression #1, char 5: unterminated `s' command"
+            try:
+                self.x.compile_string(self.x.the_program, "s/a/b")
+            except SystemExit:
+                pass
+            self.assertEqual(err.getvalue().rstrip(), exp)
 
 if __name__ == '__main__':
     unittest.main()
