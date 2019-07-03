@@ -1465,7 +1465,28 @@ def compile_program(vector):
             print("filename: %s" % cur_cmd.x.fname)
             free_buffer(b)
 
-#TODO s
+        elif ch == 's':
+            slash = inchar()
+            b = match_slash(slash, True)
+            if not b:
+                bad_prog(UNTERM_S_CMD)
+            print("s pattern: %s" % ''.join(b))
+
+            b2 = match_slash(slash, False)
+            if not b2:
+                bad_prog(UNTERM_S_CMD)
+            print("s replacement: %s" % ''.join(b2))
+
+            #TODO
+#             cur_cmd->x.cmd_subst = OB_MALLOC (&obs, 1, struct subst);
+#             setup_replacement (cur_cmd->x.cmd_subst,
+#                               get_buffer (b2), size_buffer (b2));
+#             free_buffer (b2);
+#
+#             flags = mark_subst_opts (cur_cmd->x.cmd_subst);
+#             cur_cmd->x.cmd_subst->regx =
+#               compile_regex (b, flags, cur_cmd->x.cmd_subst->max_id + 1);
+#             free_buffer (b);
 
         elif ch == 'y':
             slash = inchar()
