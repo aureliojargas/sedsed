@@ -1465,7 +1465,7 @@ def compile_program(vector):
             print("filename: %s" % cur_cmd.x.fname)
             free_buffer(b)
 
-#TODO s y  aure
+#TODO s
 
         elif ch == 'y':
             slash = inchar()
@@ -1479,11 +1479,9 @@ def compile_program(vector):
                 bad_prog(UNTERM_Y_CMD)
             print("y replacement: %s" % ''.join(b2))
 
-            # len = normalize_text(src_buf, size_buffer(b), TEXT_BUFFER)
-            # dest_len = normalize_text(dest_buf, size_buffer(b2), TEXT_BUFFER)
-
-            if len(b) != len(b2):
-                bad_prog(Y_CMD_LEN)
+            # sedsed doesn't need to check this
+            # if len(normalize_text(b)) != len(normalize_text(b2)):
+            #     bad_prog(Y_CMD_LEN)
 
             read_end_of_cmd()
             free_buffer(b)
@@ -2283,7 +2281,7 @@ if __name__ == '__main__':
     if test == 1:
         pass
     elif test == 2:
-        compile_string(the_program, "y/abc/xyz/;y/AB/X/;y/1/.;")
+        compile_string(the_program, "y/abc/xyz/;y/AB/X/")
     elif test == 3:  # 123
         compile_string(the_program, "q123")
     elif test == 4:
@@ -2301,6 +2299,6 @@ if __name__ == '__main__':
     elif test == 10:  # !
         compile_string(the_program, "!p;!!d")
     elif test == 11:  # address
-        compile_string(the_program, "1,10!p;/foo/I,\|bar|MI!d;/abc/p")
+        compile_string(the_program, r"1,10!p;/foo/I,\|bar|MI!d;/abc/p")
     elif test == 12:  # address tricky
-        compile_string(the_program, "/a\/b[/]c/ p")
+        compile_string(the_program, r"/a\/b[/]c/ p")

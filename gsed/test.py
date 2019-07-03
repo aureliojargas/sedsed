@@ -75,5 +75,12 @@ class TestSed(unittest.TestCase):
                 self.x.compile_string(self.x.the_program, "/a")
                 self.assertEqual(err.getvalue().rstrip(), exp)
 
+    def test_7(self):
+        with self.assertRaises(SystemExit):
+            with captured_output() as (out, err):
+                exp = "sed: -e expression #1, char 25: unterminated `y' command"
+                self.x.compile_string(self.x.the_program, "y/a/")
+                self.assertEqual(err.getvalue().rstrip(), exp)
+
 if __name__ == '__main__':
     unittest.main()
