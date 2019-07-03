@@ -42,6 +42,7 @@ class TestSed(unittest.TestCase):
             ("y/a/",      "sed: -e expression #1, char 4: unterminated `y' command"),
             ("s/a/b",     "sed: -e expression #1, char 5: unterminated `s' command"),
             ("s/a/b/z",   "sed: -e expression #1, char 7: unknown option to `s'"),
+            ("s/a/b/\r",  "sed: -e expression #1, char 7: unknown option to `s'"),
             ("s/a/b/pp",  "sed: -e expression #1, char 8: multiple `p' options to `s' command"),
             ("s/a/b/gg",  "sed: -e expression #1, char 8: multiple `g' options to `s' command"),
             ("s/a/b/2p2", "sed: -e expression #1, char 9: multiple number options to `s' command"),
