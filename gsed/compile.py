@@ -814,7 +814,61 @@ def match_slash(slash, regex):  # char, bool
 # }
 
 
-# static int
+def mark_subst_opts():
+    flags = []
+    numb = False
+
+    while True:
+        ch = in_nonblank()
+
+        if ch in 'iImMe':  # GNU extensions
+            flags.append(ch)
+
+        elif ch == 'p':
+            if ch in flags:
+                bad_prog(EXCESS_P_OPT)
+            flags.append(ch)
+
+        elif ch == 'g':
+            if ch in flags:
+                bad_prog(EXCESS_G_OPT)
+            flags.append(ch)
+
+        elif ch in '0123456789':
+            if numb:
+                bad_prog(EXCESS_N_OPT)
+            n = in_integer(ch)
+            if int(n) == 0:
+                bad_prog(ZERO_N_OPT)
+            flags.append(n)
+            numb = True
+
+        elif ch == 'w':
+            b = read_filename()
+            if not b:
+                bad_prog(MISSING_FILENAME)
+            flags.append("%s %s" % (ch, ''.join(b)))
+
+        elif ch == '#':
+            savchar(ch)
+            return flags
+
+        elif ch == CLOSE_BRACE:
+            savchar(ch)
+            return flags
+
+        elif ch in (EOF, '\n', ';'):
+            return flags
+
+        elif ch == '\r':
+            if inchar() == '\n':
+                return flags
+            bad_prog(UNKNOWN_S_OPT)
+
+        else:
+            bad_prog(UNKNOWN_S_OPT)
+         #NOTREACHED
+#---------------------------------------------------------------------
 # mark_subst_opts (struct subst *cmd)
 # {
 #   int flags = 0;
@@ -976,7 +1030,6 @@ def read_label():
 #   /* r-> next = NULL; */
 #   return r;
 # }
-
 
 # static void
 # setup_replacement (struct subst *sub, const char *text, size_t length)
@@ -1477,16 +1530,16 @@ def compile_program(vector):
                 bad_prog(UNTERM_S_CMD)
             print("s replacement: %s" % ''.join(b2))
 
-            #TODO
-#             cur_cmd->x.cmd_subst = OB_MALLOC (&obs, 1, struct subst);
-#             setup_replacement (cur_cmd->x.cmd_subst,
-#                               get_buffer (b2), size_buffer (b2));
-#             free_buffer (b2);
-#
-#             flags = mark_subst_opts (cur_cmd->x.cmd_subst);
-#             cur_cmd->x.cmd_subst->regx =
-#               compile_regex (b, flags, cur_cmd->x.cmd_subst->max_id + 1);
-#             free_buffer (b);
+            # setup_replacement(cur_cmd.x.cmd_subst, b2)
+            free_buffer(b2)
+
+            flags = mark_subst_opts()  #cur_cmd.x.cmd_subst)
+            print("s flags: %s" % ''.join(flags))
+            # cur_cmd.x.cmd_subst.regx = compile_regex(b, flags, cur_cmd.x.cmd_subst.max_id + 1)
+            free_buffer(b)
+
+            # if cur_cmd.x.cmd_subst.eval and sandbox:
+            #     bad_prog(_(DISALLOWED_CMD))
 
         elif ch == 'y':
             slash = inchar()
@@ -2292,7 +2345,7 @@ def debug(ch):
 if __name__ == '__main__':
 
     the_program = []
-    test = 2
+    test = 16
 
     if len(sys.argv) > 1:
         print("Will parse file:", sys.argv[1])
@@ -2323,3 +2376,11 @@ if __name__ == '__main__':
         compile_string(the_program, r"1,10!p;/foo/I,\|bar|MI!d;/abc/p")
     elif test == 12:  # address tricky
         compile_string(the_program, r"/a\/b[/]c/ p")
+    elif test == 13:  # s no flags
+        compile_string(the_program, "s/a/b/")
+    elif test == 14:  # comment after s
+        compile_string(the_program, "s/a/b/g # foo")
+    elif test == 15:  # s with w flag
+        compile_string(the_program, "s/a/b/gw filew")
+    elif test == 16:  # s with }
+        compile_string(the_program, "{s/a/b/g}")
