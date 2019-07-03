@@ -15,5 +15,5 @@ REG_NEWLINE = 4
 # #define REG_NEWLINE (1 << 2)
 
 program_name = 'sed'
-EOF = '<EOF>'
+EOF = '<EOF>'  # XXX read https://softwareengineering.stackexchange.com/a/197629
 NULL = None

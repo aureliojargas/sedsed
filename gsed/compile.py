@@ -9,6 +9,7 @@ from utils_c import *
 
 # TODO
 # check: python3 -m pylint compile.py | grep redefined-outer-name
+# create tests for ALL the errors
 
 # WONTDO
 #
@@ -721,7 +722,6 @@ def snarf_char_class(b):  #, cur_stat):
 def match_slash(slash, regex):  # char, bool
     # struct buffer *b
     # mbstate_t cur_stat = { 0, }
-    cur_stat = { 0, }
 
     # We allow only 1 byte characters for a slash.
     if IS_MB_CHAR(slash):  #, &cur_stat):
