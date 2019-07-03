@@ -21,89 +21,42 @@ def captured_output():
 
 class TestSed(unittest.TestCase):
 
-    def setUp(self):
+    def my_setUp(self):
         # start from scratch to avoid module state leak between tests
         import compile
         self.x = compile
         self.x.the_program = []
 
-    def tearDown(self):
+    def my_tearDown(self):
         # Make sure it's really gone - https://stackoverflow.com/a/11199969
         del self.x
         sys.modules.pop('compile', None)
 
     def test_1(self):
-        with captured_output() as (out, err):
-            exp = "sed: -e expression #1, char 9: unknown command: `u'"
-            try:
-                self.x.compile_string(self.x.the_program, "p;p  \n  u")
-            except SystemExit:
-                pass
-            self.assertEqual(err.getvalue().rstrip(), exp)
-
-    def test_2(self):
-        with captured_output() as (out, err):
-            exp = "sed: -e expression #1, char 2: extra characters after command"
-            try:
-                self.x.compile_string(self.x.the_program, "dp")
-            except SystemExit:
-                pass
-            self.assertEqual(err.getvalue().rstrip(), exp)
-
-    def test_3(self):
-        with captured_output() as (out, err):
-            exp = "sed: -e expression #1, char 8: unknown command: `u'"
-            try:
-                self.x.compile_string(self.x.the_program, "d;;;p;\nu")
-            except SystemExit:
-                pass
-            self.assertEqual(err.getvalue().rstrip(), exp)
-
-    def test_4(self):
-        with captured_output() as (out, err):
-            exp = "sed: -e expression #2, char 2: extra characters after command"
-            try:
-                self.x.compile_string(self.x.the_program, "p")
-                self.x.compile_string(self.x.the_program, "xx")
-            except SystemExit:
-                pass
-            self.assertEqual(err.getvalue().rstrip(), exp)
-
-    def test_5(self):
-        with captured_output() as (out, err):
-            exp = "sed: -e expression #1, char 3: missing command"
-            try:
-                self.x.compile_string(self.x.the_program, "/a/")
-            except SystemExit:
-                pass
-            self.assertEqual(err.getvalue().rstrip(), exp)
-
-    def test_6(self):
-        with captured_output() as (out, err):
-            exp = "sed: -e expression #1, char 2: unterminated address regex"
-            try:
-                self.x.compile_string(self.x.the_program, "/a")
-            except SystemExit:
-                pass
-            self.assertEqual(err.getvalue().rstrip(), exp)
-
-    def test_7(self):
-        with captured_output() as (out, err):
-            exp = "sed: -e expression #1, char 4: unterminated `y' command"
-            try:
-                self.x.compile_string(self.x.the_program, "y/a/")
-            except SystemExit:
-                pass
-            self.assertEqual(err.getvalue().rstrip(), exp)
-
-    def test_8(self):
-        with captured_output() as (out, err):
-            exp = "sed: -e expression #1, char 5: unterminated `s' command"
-            try:
-                self.x.compile_string(self.x.the_program, "s/a/b")
-            except SystemExit:
-                pass
-            self.assertEqual(err.getvalue().rstrip(), exp)
+        data = [
+            ("u",         "sed: -e expression #1, char 1: unknown command: `u'"),
+            ("dp",        "sed: -e expression #1, char 2: extra characters after command"),
+            ("xx",        "sed: -e expression #1, char 2: extra characters after command"),
+            ("/a/",       "sed: -e expression #1, char 3: missing command"),
+            ("/a",        "sed: -e expression #1, char 2: unterminated address regex"),
+            ("y/a/",      "sed: -e expression #1, char 4: unterminated `y' command"),
+            ("s/a/b",     "sed: -e expression #1, char 5: unterminated `s' command"),
+            ("s/a/b/z",   "sed: -e expression #1, char 7: unknown option to `s'"),
+            ("s/a/b/pp",  "sed: -e expression #1, char 8: multiple `p' options to `s' command"),
+            ("s/a/b/gg",  "sed: -e expression #1, char 8: multiple `g' options to `s' command"),
+            ("s/a/b/2p2", "sed: -e expression #1, char 9: multiple number options to `s' command"),
+            ("s/a/b/0",   "sed: -e expression #1, char 7: number option to `s' command may not be zero"),
+            ("s/a/b/w",   "sed: -e expression #1, char 7: missing filename in r/R/w/W commands"),
+        ]
+        for command, expected in data:
+            self.my_setUp()
+            with captured_output() as (out, err):
+                try:
+                    self.x.compile_string(self.x.the_program, command)
+                except SystemExit:
+                    pass
+                self.assertEqual(err.getvalue().rstrip(), expected)
+            self.my_tearDown()
 
 if __name__ == '__main__':
     unittest.main()
