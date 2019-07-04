@@ -374,9 +374,9 @@ def in_nonblank():
 # */
 def read_end_of_cmd():
     ch = in_nonblank()
-    if ch == CLOSE_BRACE or ch == '#':
+    if ch in (CLOSE_BRACE, '#'):
         savchar(ch)
-    elif ch != EOF and ch != '\n' and ch != ';':
+    elif ch not in (EOF, '\n', ';'):
         bad_prog(EXCESS_JUNK)
 #---------------------------------------------------------------------
 #   const int ch = in_nonblank ();
@@ -457,7 +457,7 @@ def add_then_next(buffer, ch):
 def read_filename():
     b = init_buffer()
     ch = in_nonblank()
-    while ch != EOF and ch != '\n':
+    while ch not in (EOF, '\n'):
         ch = add_then_next(b, ch)
     # add1_buffer(b, '\0');  # not necessary in Python
     return b
@@ -598,7 +598,7 @@ def snarf_char_class(b):  #, cur_stat):
         ch = add_then_next(b, ch)
         mb_char = IS_MB_CHAR(ch)  #, cur_stat)
 
-        if ch == EOF or ch == '\n':
+        if ch in (EOF, '\n'):
             return ch
 
         elif ch in '.:=':
@@ -627,7 +627,7 @@ def snarf_char_class(b):  #, cur_stat):
             if mb_char:
                 continue
 
-            if state == 0 or state == 1:
+            if state in (0, 1):
                 return ch
             elif state == 3:
                 state = 0
@@ -734,7 +734,7 @@ def match_slash(slash, regex):  # char, bool
     # while ((ch = inchar ()) != EOF && ch != '\n')
     while True:
         ch = inchar()
-        if ch == EOF or ch == '\n':
+        if ch in (EOF, '\n'):
             break
 
         # const mb_char = IS_MB_CHAR(ch, &cur_stat)
@@ -1153,7 +1153,7 @@ def read_text(buf, leadin_ch):
         add1_buffer(pending_text, leadin_ch)
 
     ch = inchar()
-    while ch != EOF and ch != '\n':
+    while ch not in (EOF, '\n'):
         if ch == '\\':
             ch = inchar()
             if ch != EOF:
@@ -1237,7 +1237,7 @@ def compile_address(addr, ch):  # struct_addr, str
     addr.addr_number = 0      # extremely unlikely to ever match
     addr.addr_regex = NULL
 
-    if ch == '/' or ch == '\\':
+    if ch in ('/', '\\'):
         # Instead of using bit flags as regex.c, I'll just save the flags as text
         flags = []
         # flags = 0
@@ -1279,7 +1279,7 @@ def compile_address(addr, ch):  # struct_addr, str
                 addr.addr_step = step
                 addr.addr_type = ADDR_IS_NUM_MOD
 
-    elif ch == '+' or ch == '~':  #and posixicity != POSIXLY_BASIC:
+    elif ch in '+~':  #and posixicity != POSIXLY_BASIC:
         addr.addr_step = in_integer(in_nonblank())
         if addr.addr_step == 0:
             pass  # default to ADDR_IS_NULL; forces matching to stop on next line
