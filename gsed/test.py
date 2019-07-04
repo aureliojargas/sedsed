@@ -48,12 +48,16 @@ class TestSed(unittest.TestCase):
             ("s/a/b/2p2", "sed: -e expression #1, char 9: multiple number options to `s' command"),
             ("s/a/b/0",   "sed: -e expression #1, char 7: number option to `s' command may not be zero"),
             ("s/a/b/w",   "sed: -e expression #1, char 7: missing filename in r/R/w/W commands"),
+            ("{",         "sed: -e expression #1, char 1: unmatched `{'"),  # GNU sed is "char 0"
+            ("}",         "sed: -e expression #1, char 1: unexpected `}'"),
+            ("{p;$}",     "sed: -e expression #1, char 5: `}' doesn't want any addresses"),
         ]
         for command, expected in data:
             self.my_setUp()
             with captured_output() as (out, err):
                 try:
                     self.x.compile_string(self.x.the_program, command)
+                    self.x.check_final_program()
                 except SystemExit:
                     pass
                 self.assertEqual(err.getvalue().rstrip(), expected)
