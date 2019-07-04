@@ -128,7 +128,7 @@ old_text_buf = NULL
 # /* Information about block start positions.  This is used to backpatch
 #   block end positions. */
 # static struct sed_label *blocks = NULL;
-blocks = NULL
+blocks = 0
 
 # Use an obstack for compilation.
 # static struct obstack obs;
@@ -1138,11 +1138,12 @@ def read_label():
 def read_text(buf, leadin_ch):
     global pending_text
     global old_text_buf
+
     if buf:
         if pending_text:
             free_buffer(pending_text)
         pending_text = init_buffer()
-        buf.text = NULL
+        buf.text = []
         buf.text_length = 0
         old_text_buf = buf
 
@@ -1377,17 +1378,13 @@ def compile_address(addr, ch):  # struct_addr, str
 # }
 
 
-# /* Read a program (or a subprogram within `{' `}' pairs) in and store
-#   the compiled form in `*vector'.  Return a pointer to the new vector.  */
+# Read a program (or a subprogram within `{' `}' pairs) in and store
+# the compiled form in `*vector'.  Return a pointer to the new vector.
 def compile_program(vector):
+    global blocks
 
     if not vector:
         vector = []
-        # vector = struct_vector()
-        # vector.v = NULL
-        # vector.v_allocated = 0
-        # vector.v_length = 0
-        # obstack_init (&obs)
     if pending_text:
         read_text(NULL, '\n')
 
@@ -1462,7 +1459,18 @@ def compile_program(vector):
             #     ch = inchar()
             continue  # redundant
 
-#TODO { }
+        elif ch == '{':
+            blocks += 1
+            cur_cmd.addr_bang = not cur_cmd.addr_bang
+
+        elif ch == '}':
+            if not blocks:
+                bad_prog(EXCESS_CLOSE_BRACE)
+            if cur_cmd.a1:
+                bad_prog(NO_CLOSE_BRACE_ADDR)
+
+            read_end_of_cmd()
+            blocks -= 1  # done with this entry
 
         elif ch in 'ev':
             argument = read_label()
@@ -2105,9 +2113,10 @@ def compile_string(cur_program, string):
 
     compile_program(cur_program)
 
-    prog.base = NULL
-    prog.cur = NULL
-    prog.end = NULL
+    # Reseting here breaks check_final_program() error messages (bad_prog())
+    # prog.base = NULL
+    # prog.cur = NULL
+    # prog.end = NULL
 
     first_script = False
     # no return, cur_program edited in place
@@ -2156,7 +2165,8 @@ def compile_file(cur_program, cmdfile):
 
     if prog.file != sys.stdin:
         prog.file.close()
-    prog.file = NULL
+    # Reseting here breaks check_final_program() error messages (bad_prog())
+    # prog.file = NULL
 
     first_script = False
     # no return, cur_program edited in place
@@ -2212,10 +2222,23 @@ def compile_file(cur_program, cmdfile):
 # }
 
 
-# /* Make any checks which require the whole program to have been read.
+# Make any checks which require the whole program to have been read.
 #   In particular: this backpatches the jump targets.
-#   Any cleanup which can be done after these checks is done here also.  */
-# void
+#   Any cleanup which can be done after these checks is done here also.
+def check_final_program():  #program):
+    global pending_text
+
+    # do all "{"s have a corresponding "}"?
+    if blocks:
+        bad_prog(EXCESS_OPEN_BRACE)
+
+    # was the final command an unterminated a/c/i command?
+    if pending_text:
+        print("pending_text:", pending_text)
+        old_text_buf.text = pending_text
+        free_buffer(pending_text)
+        pending_text = NULL
+#---------------------------------------------------------------------
 # check_final_program (struct vector *program)
 # {
 #   struct sed_label *go;
@@ -2345,7 +2368,7 @@ def debug(ch):
 if __name__ == '__main__':
 
     the_program = []
-    test = 16
+    test = 17
 
     if len(sys.argv) > 1:
         print("Will parse file:", sys.argv[1])
@@ -2384,3 +2407,6 @@ if __name__ == '__main__':
         compile_string(the_program, "s/a/b/gw filew")
     elif test == 16:  # s with }
         compile_string(the_program, "{s/a/b/g}")
+    elif test == 17:  # unterminated a i c
+        compile_string(the_program, "a\\")
+        # check_final_program()
