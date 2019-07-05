@@ -39,6 +39,7 @@ class TestSed(unittest.TestCase):
             ("xx",        "sed: -e expression #1, char 2: extra characters after command"),
             ("/a/",       "sed: -e expression #1, char 3: missing command"),
             ("/a",        "sed: -e expression #1, char 2: unterminated address regex"),
+            ("a",         "sed: -e expression #1, char 1: expected \ after `a', `c' or `i'"),
             ("y/a/",      "sed: -e expression #1, char 4: unterminated `y' command"),
             ("s/a/b",     "sed: -e expression #1, char 5: unterminated `s' command"),
             ("s/a/b/z",   "sed: -e expression #1, char 7: unknown option to `s'"),
@@ -47,10 +48,18 @@ class TestSed(unittest.TestCase):
             ("s/a/b/gg",  "sed: -e expression #1, char 8: multiple `g' options to `s' command"),
             ("s/a/b/2p2", "sed: -e expression #1, char 9: multiple number options to `s' command"),
             ("s/a/b/0",   "sed: -e expression #1, char 7: number option to `s' command may not be zero"),
+            ("s★a★b★",    "sed: -e expression #1, char 2: delimiter character is not a single-byte character"),
             ("s/a/b/w",   "sed: -e expression #1, char 7: missing filename in r/R/w/W commands"),
+            ("r",         "sed: -e expression #1, char 1: missing filename in r/R/w/W commands"),
             ("{",         "sed: -e expression #1, char 1: unmatched `{'"),  # GNU sed is "char 0"
             ("}",         "sed: -e expression #1, char 1: unexpected `}'"),
             ("{p;$}",     "sed: -e expression #1, char 5: `}' doesn't want any addresses"),
+            (":",         "sed: -e expression #1, char 1: \":\" lacks a label"),
+            ("!!p",       "sed: -e expression #1, char 2: multiple `!'s"),
+            ("1,p",       "sed: -e expression #1, char 3: unexpected `,'"),
+            ("0p",        "sed: -e expression #1, char 2: invalid usage of line address 0"),
+            ("+1p",       "sed: -e expression #1, char 2: invalid usage of +N or ~N as first address"),
+            ("~1p",       "sed: -e expression #1, char 2: invalid usage of +N or ~N as first address"),
         ]
         for command, expected in data:
             self.my_setUp()
