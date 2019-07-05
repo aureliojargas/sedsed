@@ -9,7 +9,6 @@ from utils_c import *
 
 # TODO
 # check: python3 -m pylint compile.py | grep redefined-outer-name
-# create tests for ALL the errors
 
 # WONTDO
 #
