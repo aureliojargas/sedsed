@@ -206,6 +206,8 @@ class struct_sed_cmd:
 
         if self.cmd in 'sy':
             ret.append(str(self.x.cmd_subst))
+        elif self.cmd == ':':
+            ret.append(self.x.label_name)
         elif self.x.label_name:
             ret.append(' ' + self.x.label_name)
         elif self.x.fname:
