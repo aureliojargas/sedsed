@@ -1539,21 +1539,25 @@ def compile_program(vector):
 
         elif ch == 's':
             slash = inchar()
+            cur_cmd.x.cmd_subst.slash = slash
             b = match_slash(slash, True)
             if not b:
                 bad_prog(UNTERM_S_CMD)
-            print("s pattern: %r" % ''.join(b))
+            cur_cmd.x.cmd_subst.regx.pattern = ''.join(b)
+            print("s pattern: %r" % cur_cmd.x.cmd_subst.regx.pattern)
 
             b2 = match_slash(slash, False)
             if not b2:
                 bad_prog(UNTERM_S_CMD)
-            print("s replacement: %r" % ''.join(b2))
+            cur_cmd.x.cmd_subst.replacement.text = ''.join(b2)
+            print("s replacement: %r" % cur_cmd.x.cmd_subst.replacement.text)
 
             # setup_replacement(cur_cmd.x.cmd_subst, b2)
             free_buffer(b2)
 
             flags = mark_subst_opts()  #cur_cmd.x.cmd_subst)
-            print("s flags: %r" % ''.join(flags))
+            cur_cmd.x.cmd_subst.flags = ''.join(flags)
+            print("s flags: %r" % cur_cmd.x.cmd_subst.flags)
             # cur_cmd.x.cmd_subst.regx = compile_regex(b, flags, cur_cmd.x.cmd_subst.max_id + 1)
             free_buffer(b)
 
