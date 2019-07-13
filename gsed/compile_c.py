@@ -1258,7 +1258,7 @@ def compile_address(addr, ch):  # struct_addr, str
         if ch == '\\':
             ch = inchar()
         b = match_slash(ch, True)
-        if not b:
+        if b == NULL:
             bad_prog(UNTERM_ADDR_RE)
 
         while True:
@@ -1541,13 +1541,13 @@ def compile_program(vector):
             slash = inchar()
             cur_cmd.x.cmd_subst.slash = slash
             b = match_slash(slash, True)
-            if not b:
+            if b == NULL:
                 bad_prog(UNTERM_S_CMD)
             cur_cmd.x.cmd_subst.regx.pattern = ''.join(b)
             print("s pattern: %r" % cur_cmd.x.cmd_subst.regx.pattern)
 
             b2 = match_slash(slash, False)
-            if not b2:
+            if b2 == NULL:
                 bad_prog(UNTERM_S_CMD)
             cur_cmd.x.cmd_subst.replacement.text = ''.join(b2)
             print("s replacement: %r" % cur_cmd.x.cmd_subst.replacement.text)
@@ -1568,13 +1568,13 @@ def compile_program(vector):
             slash = inchar()
             cur_cmd.x.cmd_subst.slash = slash
             b = match_slash(slash, False)
-            if not b:
+            if b == NULL:
                 bad_prog(UNTERM_Y_CMD)
             cur_cmd.x.cmd_subst.regx.pattern = ''.join(b)
             print("y pattern: %r" % cur_cmd.x.cmd_subst.regx.pattern)
 
             b2 = match_slash(slash, False)
-            if not b2:
+            if b2 == NULL:
                 bad_prog(UNTERM_Y_CMD)
             cur_cmd.x.cmd_subst.replacement.text = ''.join(b2)
             print("y replacement: %r" % cur_cmd.x.cmd_subst.replacement.text)

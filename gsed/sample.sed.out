@@ -77,14 +77,11 @@ exp=0 line=7 cur=None end=None text=None ch='\n'
 exp=0 line=7 cur=None end=None text=None ch=' '
 exp=0 line=7 cur=None end=None text=None ch=' '
 exp=0 line=7 cur=None end=None text=None ch='/'
-exp=0 line=7 cur=None end=None text=None ch='x'
-exp=0 line=7 cur=None end=None text=None ch='x'
-exp=0 line=7 cur=None end=None text=None ch='x'
 exp=0 line=7 cur=None end=None text=None ch='/'
 exp=0 line=7 cur=None end=None text=None ch=' '
 exp=0 line=7 cur=None end=None text=None ch='{'
 exp=0 line=7 cur=None end=None text=None ch='savchar({)'
------ Found address 1: [type=2 number=0 step=0 regex=/xxx/]
+----- Found address 1: [type=2 number=0 step=0 regex=//]
 exp=0 line=7 cur=None end=None text=None ch='{'
 ----- Found command: '{'
 exp=0 line=8 cur=None end=None text=None ch='\n'
@@ -602,16 +599,10 @@ s flags: 'gpw filesw'
 exp=0 line=65 cur=None end=None text=None ch='s'
 ----- Found command: 's'
 exp=0 line=65 cur=None end=None text=None ch='.'
-exp=0 line=65 cur=None end=None text=None ch='a'
-exp=0 line=65 cur=None end=None text=None ch='b'
-exp=0 line=65 cur=None end=None text=None ch='c'
 exp=0 line=65 cur=None end=None text=None ch='.'
-s pattern: 'abc'
-exp=0 line=65 cur=None end=None text=None ch='x'
-exp=0 line=65 cur=None end=None text=None ch='y'
-exp=0 line=65 cur=None end=None text=None ch='z'
+s pattern: ''
 exp=0 line=65 cur=None end=None text=None ch='.'
-s replacement: 'xyz'
+s replacement: ''
 exp=0 line=66 cur=None end=None text=None ch='\n'
 s flag candidate: '\n'
 s flags: ''
@@ -642,7 +633,7 @@ exp=0 line=68 cur=None end=None text=None ch='<EOF>'
 2, /xxx/ x
 $ h
 1, $ {
-    /xxx/ {
+    // {
         x
         $ ! {
             d
@@ -705,6 +696,6 @@ text_c3
 # comment
 e date
 s/foo/bar/gpw filesw
-s.abc.xyz.
+s...
 y/A/B/
 y.a.b.
