@@ -1511,7 +1511,7 @@ def compile_program(vector):
             label = read_label()
             cur_cmd.x.label_name = label
             print("label: %r" % label)
-            if not label:
+            if ch == ':' and not label:
                 bad_prog(COLON_LACKS_LABEL)
             # labels = setup_label (labels, vector->v_length, label, NULL);
 
