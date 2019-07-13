@@ -2,6 +2,7 @@
 1,5g
 /xxx/IG
 2,/xxx/x
+\|pipe|,\ space x
 $h
 1,$ {
   // {

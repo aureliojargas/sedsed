@@ -1260,6 +1260,7 @@ def compile_address(addr, ch):  # struct_addr, str
         b = match_slash(ch, True)
         if b == NULL:
             bad_prog(UNTERM_ADDR_RE)
+        slash = ch
 
         while True:
             ch = in_nonblank()
@@ -1275,6 +1276,7 @@ def compile_address(addr, ch):  # struct_addr, str
             #   posix_address_modifier:  # GOTO label
                 savchar(ch)
                 addr.addr_regex = compile_regex(b, flags)
+                addr.addr_regex.slash = slash
                 free_buffer(b)
                 return True
 
