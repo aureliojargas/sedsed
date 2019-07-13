@@ -2,7 +2,7 @@
 1,5g
 /xxx/IG
 2,/xxx/x
-\|pipe|,\ space x
+\|pipe\n\|\n|,\ space x
 $h
 1,$ {
   // {
@@ -66,6 +66,6 @@ text_c3
 # comment
 e date
 s/foo/bar/gpw filesw
-s...3
+s.\n\.\n.\n.3
 y/A/B/
 y.a.b.

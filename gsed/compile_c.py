@@ -753,9 +753,14 @@ def match_slash(slash, regex):  # char, bool
                 ch = inchar()
                 if ch == EOF:
                     break
-                elif ch == 'n' and regex:
-                    ch = '\n'
-                elif (ch != '\n' and (ch != slash or (not regex and ch == '&'))):
+                # # GNU sed interprets \n here, we don't
+                # elif ch == 'n' and regex:
+                #     ch = '\n'
+                # # Those exceptions remove the leading \ from known situations
+                # # For example, s/a\/b/.../ becames 'a/b' not 'a\/b'
+                # # Since I want to keep the original user text, this is disabled
+                # elif (ch != '\n' and (ch != slash or (not regex and ch == '&'))):
+                else:
                     add1_buffer(b, '\\')
             elif ch == OPEN_BRACKET and regex:
                 add1_buffer(b, ch)

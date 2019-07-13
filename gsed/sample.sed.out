@@ -62,10 +62,16 @@ exp=0 line=5 cur=None end=None text=None ch='p'
 exp=0 line=5 cur=None end=None text=None ch='i'
 exp=0 line=5 cur=None end=None text=None ch='p'
 exp=0 line=5 cur=None end=None text=None ch='e'
+exp=0 line=5 cur=None end=None text=None ch='\\'
+exp=0 line=5 cur=None end=None text=None ch='n'
+exp=0 line=5 cur=None end=None text=None ch='\\'
+exp=0 line=5 cur=None end=None text=None ch='|'
+exp=0 line=5 cur=None end=None text=None ch='\\'
+exp=0 line=5 cur=None end=None text=None ch='n'
 exp=0 line=5 cur=None end=None text=None ch='|'
 exp=0 line=5 cur=None end=None text=None ch=','
 exp=0 line=5 cur=None end=None text=None ch='savchar(,)'
------ Found address 1: [type=2 number=0 step=0 regex=\|pipe|]
+----- Found address 1: [type=2 number=0 step=0 regex=\|pipe\n\|\n|]
 exp=0 line=5 cur=None end=None text=None ch=','
 exp=0 line=5 cur=None end=None text=None ch='\\'
 exp=0 line=5 cur=None end=None text=None ch=' '
@@ -642,10 +648,18 @@ s flags: 'gpw filesw'
 exp=0 line=69 cur=None end=None text=None ch='s'
 ----- Found command: 's'
 exp=0 line=69 cur=None end=None text=None ch='.'
+exp=0 line=69 cur=None end=None text=None ch='\\'
+exp=0 line=69 cur=None end=None text=None ch='n'
+exp=0 line=69 cur=None end=None text=None ch='\\'
 exp=0 line=69 cur=None end=None text=None ch='.'
-s pattern: ''
+exp=0 line=69 cur=None end=None text=None ch='\\'
+exp=0 line=69 cur=None end=None text=None ch='n'
 exp=0 line=69 cur=None end=None text=None ch='.'
-s replacement: ''
+s pattern: '\\n\\.\\n'
+exp=0 line=69 cur=None end=None text=None ch='\\'
+exp=0 line=69 cur=None end=None text=None ch='n'
+exp=0 line=69 cur=None end=None text=None ch='.'
+s replacement: '\\n'
 exp=0 line=69 cur=None end=None text=None ch='3'
 s flag candidate: '3'
 exp=0 line=70 cur=None end=None text=None ch='\n'
@@ -678,7 +692,7 @@ exp=0 line=72 cur=None end=None text=None ch='<EOF>'
 1,5 g
 /xxx/I G
 2,/xxx/ x
-\|pipe|,\ space  x
+\|pipe\n\|\n|,\ space  x
 $ h
 1,$ {
     // {
@@ -747,6 +761,6 @@ text_c3
 # comment
 e date
 s/foo/bar/gpw filesw
-s...3
+s.\n\.\n.\n.3
 y/A/B/
 y.a.b.
