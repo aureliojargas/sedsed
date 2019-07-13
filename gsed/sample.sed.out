@@ -690,7 +690,7 @@ $ h
     v 4.2
 }
 /labels/ {
-    : abc1
+    :abc1
     t abc2
     T ABC2
     b abc3
