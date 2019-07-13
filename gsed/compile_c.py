@@ -1470,7 +1470,7 @@ def compile_program(vector):
 
         elif ch == '{':
             blocks += 1
-            cur_cmd.addr_bang = not cur_cmd.addr_bang
+            # cur_cmd.addr_bang = not cur_cmd.addr_bang  # ?
 
         elif ch == '}':
             if not blocks:

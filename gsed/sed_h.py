@@ -177,7 +177,7 @@ class struct_sed_cmd:
     a1 = struct_addr()
     a2 = struct_addr()
     range_state = RANGE_INACTIVE  # See enum addr_state
-    addr_bang = 0  # Non-zero if command is to be applied to non-matches.
+    addr_bang = False  # Non-zero if command is to be applied to non-matches. (aur: using bool)
     cmd = ""  # The actual command character.
     x = struct_sed_cmd_x()
 
