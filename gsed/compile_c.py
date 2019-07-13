@@ -1382,8 +1382,6 @@ def compile_address(addr, ch):  # struct_addr, str
 def compile_program(vector):
     global blocks
 
-    if not vector:
-        vector = []
     if pending_text:
         read_text(NULL, '\n')
 
@@ -1456,7 +1454,7 @@ def compile_program(vector):
             free_buffer(b)
             # while ch != EOF and ch != '\n':
             #     ch = inchar()
-            continue  # redundant
+            # continue
 
         elif ch == '{':
             blocks += 1
@@ -1574,7 +1572,6 @@ def compile_program(vector):
         else:
             bad_command(ch)
             # /*NOTREACHED*/
-        vector.append(cur_cmd)
     # no return, vector edited in place
 #---------------------------------------------------------------------
 #   struct sed_cmd *cur_cmd;
