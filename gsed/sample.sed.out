@@ -674,7 +674,7 @@ exp=0 line=71 cur=None end=None text=None ch='.'
 y replacement: 'b'
 exp=0 line=72 cur=None end=None text=None ch='\n'
 exp=0 line=72 cur=None end=None text=None ch='<EOF>'
-5 ! H
+5 !H
 1,5 g
 /xxx/I G
 2,/xxx/ x
@@ -683,7 +683,7 @@ $ h
 1,$ {
     // {
         x
-        $ ! {
+        $ !{
             d
         }
     }

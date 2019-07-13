@@ -199,11 +199,11 @@ class struct_sed_cmd:
             ret.append(str(self.a1))
         if self.a2:
             ret.append(',%s' % self.a2)
-        if self.addr_bang:
-            ret.append(' !')
         if ret:
             ret.append(' ')
 
+        if self.addr_bang:
+            ret.append('!')
         ret.append(self.cmd)
 
         if self.cmd in 'sy':
