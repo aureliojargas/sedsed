@@ -74,3 +74,4 @@ e date
 s/foo/bar/gpw filesw
 s.abc.xyz.
 y/A/B/
+y.a.b.

@@ -625,7 +625,17 @@ exp=0 line=76 cur=None end=None text=None ch='B'
 exp=0 line=76 cur=None end=None text=None ch='/'
 y replacement: 'B'
 exp=0 line=77 cur=None end=None text=None ch='\n'
-exp=0 line=77 cur=None end=None text=None ch='<EOF>'
+exp=0 line=77 cur=None end=None text=None ch='y'
+----- Found command: 'y'
+exp=0 line=77 cur=None end=None text=None ch='.'
+exp=0 line=77 cur=None end=None text=None ch='a'
+exp=0 line=77 cur=None end=None text=None ch='.'
+y pattern: 'a'
+exp=0 line=77 cur=None end=None text=None ch='b'
+exp=0 line=77 cur=None end=None text=None ch='.'
+y replacement: 'b'
+exp=0 line=78 cur=None end=None text=None ch='\n'
+exp=0 line=78 cur=None end=None text=None ch='<EOF>'
 5 ! H
 1, 5 g
 /xxx/I G
@@ -696,4 +706,5 @@ text_c3
 e date
 s/foo/bar/gpw filesw
 s.abc.xyz.
-y
+y/A/B/
+y.a.b.

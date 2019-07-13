@@ -1566,15 +1566,18 @@ def compile_program(vector):
 
         elif ch == 'y':
             slash = inchar()
+            cur_cmd.x.cmd_subst.slash = slash
             b = match_slash(slash, False)
             if not b:
                 bad_prog(UNTERM_Y_CMD)
-            print("y pattern: %r" % ''.join(b))
+            cur_cmd.x.cmd_subst.regx.pattern = ''.join(b)
+            print("y pattern: %r" % cur_cmd.x.cmd_subst.regx.pattern)
 
             b2 = match_slash(slash, False)
             if not b2:
                 bad_prog(UNTERM_Y_CMD)
-            print("y replacement: %r" % ''.join(b2))
+            cur_cmd.x.cmd_subst.replacement.text = ''.join(b2)
+            print("y replacement: %r" % cur_cmd.x.cmd_subst.replacement.text)
 
             # sedsed doesn't need to check this
             # if len(normalize_text(b)) != len(normalize_text(b2)):
