@@ -1,5 +1,5 @@
 h
-5H
+5!H
 1,5g
 /xxx/G
 /xxx/IG
@@ -8,7 +8,9 @@ $h
 1,$H
 1,/xxx/ {
 x
+/yyy/!{
 d
+}
 }
 =
 d
