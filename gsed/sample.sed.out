@@ -599,17 +599,33 @@ exp=0 line=74 cur=None end=None text=None ch='w'
 exp=0 line=75 cur=None end=None text=None ch='\n'
 s flag filename: 'filesw'
 s flags: 'gpw filesw'
+exp=0 line=75 cur=None end=None text=None ch='s'
+----- Found command: 's'
+exp=0 line=75 cur=None end=None text=None ch='.'
+exp=0 line=75 cur=None end=None text=None ch='a'
+exp=0 line=75 cur=None end=None text=None ch='b'
+exp=0 line=75 cur=None end=None text=None ch='c'
+exp=0 line=75 cur=None end=None text=None ch='.'
+s pattern: 'abc'
+exp=0 line=75 cur=None end=None text=None ch='x'
 exp=0 line=75 cur=None end=None text=None ch='y'
------ Found command: 'y'
-exp=0 line=75 cur=None end=None text=None ch='/'
-exp=0 line=75 cur=None end=None text=None ch='A'
-exp=0 line=75 cur=None end=None text=None ch='/'
-y pattern: 'A'
-exp=0 line=75 cur=None end=None text=None ch='B'
-exp=0 line=75 cur=None end=None text=None ch='/'
-y replacement: 'B'
+exp=0 line=75 cur=None end=None text=None ch='z'
+exp=0 line=75 cur=None end=None text=None ch='.'
+s replacement: 'xyz'
 exp=0 line=76 cur=None end=None text=None ch='\n'
-exp=0 line=76 cur=None end=None text=None ch='<EOF>'
+s flag candidate: '\n'
+s flags: ''
+exp=0 line=76 cur=None end=None text=None ch='y'
+----- Found command: 'y'
+exp=0 line=76 cur=None end=None text=None ch='/'
+exp=0 line=76 cur=None end=None text=None ch='A'
+exp=0 line=76 cur=None end=None text=None ch='/'
+y pattern: 'A'
+exp=0 line=76 cur=None end=None text=None ch='B'
+exp=0 line=76 cur=None end=None text=None ch='/'
+y replacement: 'B'
+exp=0 line=77 cur=None end=None text=None ch='\n'
+exp=0 line=77 cur=None end=None text=None ch='<EOF>'
 5 ! H
 1, 5 g
 /xxx/I G
@@ -661,7 +677,7 @@ $ h
     R fileR
     w filew
     W fileW
-    s
+    s/foo/bar/gw filesw
 }
 /aic/ {
     a\
@@ -678,5 +694,6 @@ text_c3
 }
 # comment
 e date
-s
+s/foo/bar/gpw filesw
+s.abc.xyz.
 y

@@ -117,6 +117,8 @@ class struct_replacement:
     subst_id = 0
     repl_type = REPL_ASIS  # enum replacement_types
     next_ = None  # struct_replacement
+    text = ""  # aur
+
 # struct replacement {
 #   char *prefix;
 #   size_t prefix_length;
@@ -135,6 +137,13 @@ class struct_subst:
     eval_ = False  # 'e' option given
     max_id = 0  # maximum backreference on the RHS
     replacement_buffer = ""  #ifdef lint
+    flags = ""  # aur
+    slash = ""  # aur
+    def __str__(self):
+        return self.slash + str(self.regx.pattern) + \
+               self.slash + str(self.replacement.text) + \
+               self.slash + self.flags
+
 # struct subst {
 #   struct regex *regx;
 #   struct replacement *replacement;
@@ -203,6 +212,8 @@ class struct_sed_cmd:
             ret.append(' %s' % self.x.int_arg)
         elif self.x.cmd_txt.text:  # aic
             ret.append('\\\n%s' % self.x.cmd_txt)
+        elif self.cmd == 's':
+            ret.append(str(self.x.cmd_subst))
 
         return ''.join(ret)
 

@@ -72,4 +72,5 @@ text_c3
 # comment
 e date
 s/foo/bar/gpw filesw
+s.abc.xyz.
 y/A/B/
