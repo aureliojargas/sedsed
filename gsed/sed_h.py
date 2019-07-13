@@ -196,7 +196,7 @@ class struct_sed_cmd:
         if self.a1:
             ret.append(str(self.a1))
         if self.a2:
-            ret.append(', %s' % self.a2)
+            ret.append(',%s' % self.a2)
         if self.addr_bang:
             ret.append(' !')
         if ret:
