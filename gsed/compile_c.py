@@ -1461,7 +1461,8 @@ def compile_program(vector):
             # GNU sed discards the comment contents, but I must save it
             # Using read_filename because it's the same logic of reading until \n or EOF
             b = read_filename()
-            print("comment: %r" % ''.join(b))
+            cur_cmd.x.fname = ''.join(b)
+            print("comment: %r" % cur_cmd.x.fname)
             free_buffer(b)
             # while ch != EOF and ch != '\n':
             #     ch = inchar()
@@ -1482,6 +1483,7 @@ def compile_program(vector):
 
         elif ch in 'ev':
             argument = read_label()
+            cur_cmd.x.label_name = argument
             print("argument: %s" % argument)
 
         elif ch in 'aic':
@@ -1507,7 +1509,8 @@ def compile_program(vector):
 #           if (cur_cmd->a1)
 #             bad_prog (_(NO_COLON_ADDR));
             label = read_label()
-            print("label: %s" % label)
+            cur_cmd.x.label_name = label
+            print("label: %r" % label)
             if not label:
                 bad_prog(COLON_LACKS_LABEL)
             # labels = setup_label (labels, vector->v_length, label, NULL);
