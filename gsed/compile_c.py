@@ -2383,8 +2383,14 @@ if __name__ == '__main__':
     if len(sys.argv) > 1:
         print("Will parse file:", sys.argv[1])
         compile_file(the_program, sys.argv[1])
+        indent_level = 0
+        indent_prefix = ' ' * 4
         for x in the_program:
-            print(x)
+            if x.cmd == '}':
+                indent_level -= 1
+            print('%s%s' % ((indent_prefix * indent_level), x))
+            if x.cmd == '{':
+                indent_level += 1
         sys.exit(0)
 
     if test == 1:
