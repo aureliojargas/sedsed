@@ -169,7 +169,7 @@ class struct_sed_cmd_x:
     jump_index = 0
     # This is used for the r command. (aur: and RwW)
     fname = ""
-    # This is used for the hairy s command.
+    # This is used for the hairy s command. (aur: and y)
     cmd_subst = struct_subst()
     # This is used for the w command.
     outf = struct_output()
@@ -212,7 +212,7 @@ class struct_sed_cmd:
             ret.append(' %s' % self.x.int_arg)
         elif self.x.cmd_txt.text:  # aic
             ret.append('\\\n%s' % self.x.cmd_txt)
-        elif self.cmd == 's':
+        elif self.cmd in 'sy':
             ret.append(str(self.x.cmd_subst))
 
         return ''.join(ret)
