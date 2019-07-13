@@ -647,18 +647,18 @@ s flag filename: 'filesw'
 s flags: 'gpw filesw'
 exp=0 line=69 cur=None end=None text=None ch='s'
 ----- Found command: 's'
-exp=0 line=69 cur=None end=None text=None ch='.'
+exp=0 line=69 cur=None end=None text=None ch=';'
 exp=0 line=69 cur=None end=None text=None ch='\\'
 exp=0 line=69 cur=None end=None text=None ch='n'
 exp=0 line=69 cur=None end=None text=None ch='\\'
-exp=0 line=69 cur=None end=None text=None ch='.'
+exp=0 line=69 cur=None end=None text=None ch=';'
 exp=0 line=69 cur=None end=None text=None ch='\\'
 exp=0 line=69 cur=None end=None text=None ch='n'
-exp=0 line=69 cur=None end=None text=None ch='.'
-s pattern: '\\n\\.\\n'
+exp=0 line=69 cur=None end=None text=None ch=';'
+s pattern: '\\n\\;\\n'
 exp=0 line=69 cur=None end=None text=None ch='\\'
 exp=0 line=69 cur=None end=None text=None ch='n'
-exp=0 line=69 cur=None end=None text=None ch='.'
+exp=0 line=69 cur=None end=None text=None ch=';'
 s replacement: '\\n'
 exp=0 line=69 cur=None end=None text=None ch='3'
 s flag candidate: '3'
@@ -761,6 +761,6 @@ text_c3
 # comment
 e date
 s/foo/bar/gpw filesw
-s.\n\.\n.\n.3
+s;\n\;\n;\n;3
 y/A/B/
 y.a.b.
