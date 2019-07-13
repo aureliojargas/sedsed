@@ -4,7 +4,7 @@
 2,/xxx/x
 $h
 1,$ {
-  /xxx/ {
+  // {
     x
     $!{
       d
@@ -62,6 +62,6 @@ text_c3
 # comment
 e date
 s/foo/bar/gpw filesw
-s.abc.xyz.
+s...
 y/A/B/
 y.a.b.
