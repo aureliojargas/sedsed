@@ -35,6 +35,9 @@ v;v 4.2
 t abc2
 T ABC2
 b abc3
+t
+T
+b
 }
 
 /files/ {
