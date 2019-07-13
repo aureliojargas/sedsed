@@ -30,16 +30,18 @@ class struct_text_buf:
 
 class struct_regex:
     pattern = ""
-    flags = 0
+    flags = ""  # aur: was 0 in the original
     sz = 0
     dfa = None  # struct_dfa()
     begline = False
     endline = False
     re = ""
+    slash = ""  # aur
     def __repr__(self):
         return "[pattern=%s flags=%s]" % (self.pattern, self.flags)
     def __str__(self):
-        return "/{}/{}".format(self.pattern, self.flags)
+        return ('\\' if self.slash != '/' else '') + \
+               self.slash + self.pattern + self.slash + self.flags
 
 # struct regex {
 #   regex_t pattern;
