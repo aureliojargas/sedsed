@@ -2383,6 +2383,8 @@ if __name__ == '__main__':
     if len(sys.argv) > 1:
         print("Will parse file:", sys.argv[1])
         compile_file(the_program, sys.argv[1])
+        for x in the_program:
+            print(x)
         sys.exit(0)
 
     if test == 1:

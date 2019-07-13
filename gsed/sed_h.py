@@ -20,8 +20,9 @@ class struct_text_buf:
     text = []
     text_length = 0
     def __str__(self):
-        return ''.join(self.text)
-    __repr__ = __str__
+        return ''.join(self.text)[:-1]  # remove trailing \n
+    def __repr__(self):
+        return repr(''.join(self.text)[:-1])
 # struct text_buf {
 #   char *text;
 #   size_t text_length;
@@ -35,9 +36,10 @@ class struct_regex:
     begline = False
     endline = False
     re = ""
-    def __str__(self):
+    def __repr__(self):
         return "[pattern=%s flags=%s]" % (self.pattern, self.flags)
-    __repr__ = __str__
+    def __str__(self):
+        return "/{}/{}".format(self.pattern, self.flags)
 
 # struct regex {
 #   regex_t pattern;
@@ -91,10 +93,17 @@ class struct_addr:
     addr_number = 0
     addr_step = 0
     addr_regex = struct_regex()
-    def __str__(self):
+    def __repr__(self):
         return "[type=%s number=%s step=%s regex=%s]" % (
             self.addr_type, self.addr_number, self.addr_step, self.addr_regex)
-    __repr__ = __str__
+    def __str__(self):
+        #TODO use addr_type
+        if self.addr_regex:
+            return str(self.addr_regex)
+        elif self.addr_number:
+            return str(self.addr_number)
+        else:
+            return '$'
 # struct addr {
 #   enum addr_types addr_type;
 #   countT addr_number;
@@ -149,7 +158,7 @@ class struct_sed_cmd_x:
     int_arg = 0
     # This is used for the {}, b, and t commands.
     jump_index = 0
-    # This is used for the r command.
+    # This is used for the r command. (aur: and RwW)
     fname = ""
     # This is used for the hairy s command.
     cmd_subst = struct_subst()
@@ -171,6 +180,32 @@ class struct_sed_cmd:
     addr_bang = 0  # Non-zero if command is to be applied to non-matches.
     cmd = ""  # The actual command character.
     x = struct_sed_cmd_x()
+
+    def __str__(self):
+        ret = []
+
+        if self.a1:
+            ret.append(str(self.a1))
+        if self.a2:
+            ret.append(', %s' % self.a2)
+        if self.addr_bang:
+            ret.append(' !')
+        if ret:
+            ret.append(' ')
+
+        ret.append(self.cmd)
+
+        if self.x.label_name:
+            ret.append(' ' + self.x.label_name)
+        elif self.x.fname:
+            ret.append(' ' + self.x.fname)
+        elif self.x.int_arg:
+            ret.append(' %s' % self.x.int_arg)
+        elif self.x.cmd_txt.text:  # aic
+            ret.append('\\\n%s' % self.x.cmd_txt)
+
+        return ''.join(ret)
+
 
 # struct sed_cmd {
 #   struct addr *a1;	/* save space: usually is NULL */
