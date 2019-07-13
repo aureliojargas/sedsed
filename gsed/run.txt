@@ -1,0 +1,11 @@
+# run errors tests
+python3 test.py
+
+# test sample
+python3 compile_c.py sample.sed 2>&1 | tee sample.sed.out
+git diff
+
+# test sedsed 'parsing' test module
+cat ../test/parsing/*.sed | ../sedsed.py -i -f - > parsing-sedsed.sed
+python3 compile_c.py parsing.sed | sed -n '/^# Address with no spaces/,$ p' > parsing-gsed.sed
+diff -u parsing-{sedsed,gsed}.sed | less
