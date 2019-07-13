@@ -849,6 +849,7 @@ def mark_subst_opts():
                 bad_prog(MISSING_FILENAME)
             print("s flag filename: %r" % ''.join(b))
             flags.append("%s %s" % (ch, ''.join(b)))
+            return flags
 
         elif ch == '#':
             savchar(ch)
