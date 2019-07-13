@@ -65,6 +65,6 @@ text_c3
 # comment
 e date
 s/foo/bar/gpw filesw
-s...
+s...3
 y/A/B/
 y.a.b.

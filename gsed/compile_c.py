@@ -848,7 +848,7 @@ def mark_subst_opts():
             n = in_integer(ch)
             if int(n) == 0:
                 bad_prog(ZERO_N_OPT)
-            flags.append(n)
+            flags.append(str(n))
             numb = True
 
         elif ch == 'w':
