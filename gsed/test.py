@@ -23,14 +23,14 @@ class TestSed(unittest.TestCase):
 
     def my_setUp(self):
         # start from scratch to avoid module state leak between tests
-        import compile
-        self.x = compile
+        import compile_c
+        self.x = compile_c
         self.x.the_program = []
 
     def my_tearDown(self):
         # Make sure it's really gone - https://stackoverflow.com/a/11199969
         del self.x
-        sys.modules.pop('compile', None)
+        sys.modules.pop('compile_c', None)
 
     def test_1(self):
         data = [
