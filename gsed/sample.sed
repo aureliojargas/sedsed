@@ -13,31 +13,21 @@ $h
 }
 /no arguments/ {
 =
-d
-D
-g
-G
-h
-H
-n
-N
-p
-P
+d;D
+g;G
+h;H
+n;N
+p;P
 z
 x
 }
 
 /optional numeric argument/ {
-q
-Q
-l
-L
-q1
-Q2
-l 3
-L 4
-v
-v 4.2
+q;q1
+Q;Q2
+l;l 3
+L;L 4
+v;v 4.2
 }
 
 /labels/ {
