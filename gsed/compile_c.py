@@ -289,7 +289,6 @@ def bad_prog(why):
 def inchar():
     ch = EOF
     if prog.cur is not None:
-        # print("inchar: %s < %s" % (prog.cur, prog.end))
         if prog.cur < prog.end:
             prog.cur += 1
             ch = prog.text[prog.cur]
@@ -1490,7 +1489,7 @@ def compile_program(vector):
                 ch = '\n'
 
             read_text(cur_cmd.x.cmd_txt, ch)
-            print("text: %s" % cur_cmd.x.cmd_txt)
+            print("text: %r" % cur_cmd.x.cmd_txt)
 #ENDGOTO
 
         elif ch in ':Tbt':
@@ -1506,7 +1505,7 @@ def compile_program(vector):
             ch = in_nonblank()
             if ISDIGIT(ch):
                 cur_cmd.x.int_arg = in_integer(ch)
-                print("int_arg: %s" % in_integer(ch))
+                print("int_arg: %r" % in_integer(ch))
             else:
                 cur_cmd.x.int_arg = -1
                 print("int_arg: -1")
@@ -1521,7 +1520,7 @@ def compile_program(vector):
             if not b:
                 bad_prog(MISSING_FILENAME)
             cur_cmd.x.fname = ''.join(b)
-            print("filename: %s" % cur_cmd.x.fname)
+            print("filename: %r" % cur_cmd.x.fname)
             free_buffer(b)
 
         elif ch == 's':
@@ -1529,18 +1528,18 @@ def compile_program(vector):
             b = match_slash(slash, True)
             if not b:
                 bad_prog(UNTERM_S_CMD)
-            print("s pattern: %s" % ''.join(b))
+            print("s pattern: %r" % ''.join(b))
 
             b2 = match_slash(slash, False)
             if not b2:
                 bad_prog(UNTERM_S_CMD)
-            print("s replacement: %s" % ''.join(b2))
+            print("s replacement: %r" % ''.join(b2))
 
             # setup_replacement(cur_cmd.x.cmd_subst, b2)
             free_buffer(b2)
 
             flags = mark_subst_opts()  #cur_cmd.x.cmd_subst)
-            print("s flags: %s" % ''.join(flags))
+            print("s flags: %r" % ''.join(flags))
             # cur_cmd.x.cmd_subst.regx = compile_regex(b, flags, cur_cmd.x.cmd_subst.max_id + 1)
             free_buffer(b)
 
@@ -1552,12 +1551,12 @@ def compile_program(vector):
             b = match_slash(slash, False)
             if not b:
                 bad_prog(UNTERM_Y_CMD)
-            print("y pattern: %s" % ''.join(b))
+            print("y pattern: %r" % ''.join(b))
 
             b2 = match_slash(slash, False)
             if not b2:
                 bad_prog(UNTERM_Y_CMD)
-            print("y replacement: %s" % ''.join(b2))
+            print("y replacement: %r" % ''.join(b2))
 
             # sedsed doesn't need to check this
             # if len(normalize_text(b)) != len(normalize_text(b2)):
@@ -2231,7 +2230,7 @@ def check_final_program():  #program):
 
     # was the final command an unterminated a/c/i command?
     if pending_text:
-        print("pending_text:", pending_text)
+        print("pending_text: %r" % pending_text)
         old_text_buf.text = pending_text
         free_buffer(pending_text)
         pending_text = NULL
