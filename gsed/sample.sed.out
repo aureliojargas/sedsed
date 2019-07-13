@@ -621,9 +621,13 @@ exp=0 line=68 cur=None end=None text=None ch='.'
 s pattern: ''
 exp=0 line=68 cur=None end=None text=None ch='.'
 s replacement: ''
+exp=0 line=68 cur=None end=None text=None ch='3'
+s flag candidate: '3'
+exp=0 line=69 cur=None end=None text=None ch='\n'
+exp=0 line=69 cur=None end=None text=None ch='savchar(\n)'
 exp=0 line=69 cur=None end=None text=None ch='\n'
 s flag candidate: '\n'
-s flags: ''
+s flags: '3'
 exp=0 line=69 cur=None end=None text=None ch='y'
 ----- Found command: 'y'
 exp=0 line=69 cur=None end=None text=None ch='/'
@@ -717,6 +721,6 @@ text_c3
 # comment
 e date
 s/foo/bar/gpw filesw
-s...
+s...3
 y/A/B/
 y.a.b.
