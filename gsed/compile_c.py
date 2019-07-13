@@ -819,6 +819,7 @@ def mark_subst_opts():
 
     while True:
         ch = in_nonblank()
+        print("s flag candidate: %r" % ch)
 
         if ch in 'iImMe':  # GNU extensions
             flags.append(ch)
@@ -846,6 +847,7 @@ def mark_subst_opts():
             b = read_filename()
             if not b:
                 bad_prog(MISSING_FILENAME)
+            print("s flag filename: %r" % ''.join(b))
             flags.append("%s %s" % (ch, ''.join(b)))
 
         elif ch == '#':
