@@ -204,7 +204,9 @@ class struct_sed_cmd:
 
         ret.append(self.cmd)
 
-        if self.x.label_name:
+        if self.cmd in 'sy':
+            ret.append(str(self.x.cmd_subst))
+        elif self.x.label_name:
             ret.append(' ' + self.x.label_name)
         elif self.x.fname:
             ret.append(' ' + self.x.fname)
@@ -212,8 +214,6 @@ class struct_sed_cmd:
             ret.append(' %s' % self.x.int_arg)
         elif self.x.cmd_txt.text:  # aic
             ret.append('\\\n%s' % self.x.cmd_txt)
-        elif self.cmd in 'sy':
-            ret.append(str(self.x.cmd_subst))
 
         return ''.join(ret)
 
