@@ -548,7 +548,15 @@ def next_cmd_entry(vector):
     cmd.range_state = RANGE_INACTIVE
     cmd.addr_bang = False
     cmd.cmd = '\0'  # something invalid, to catch bugs early
+    #TODO fix this struct reset mess
     cmd.x = struct_sed_cmd_x()
+    cmd.x.cmd_txt = struct_text_buf()
+    cmd.x.cmd_subst = struct_subst()
+    cmd.x.cmd_subst.regx = struct_regex()
+    cmd.x.cmd_subst.replacement = struct_replacement()
+    cmd.x.cmd_subst.outf = struct_output()
+    cmd.x.outf = struct_output()
+    cmd.x.inf = struct_output()
     vector.append(cmd)
     return cmd
 #---------------------------------------------------------------------
