@@ -199,7 +199,7 @@ class struct_sed_cmd:
             ret.append(' ' + self.x.label_name)
         elif self.x.fname:
             ret.append(' ' + self.x.fname)
-        elif self.x.int_arg:
+        elif self.x.int_arg and self.x.int_arg > -1:
             ret.append(' %s' % self.x.int_arg)
         elif self.x.cmd_txt.text:  # aic
             ret.append('\\\n%s' % self.x.cmd_txt)
