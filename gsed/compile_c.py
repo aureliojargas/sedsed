@@ -451,6 +451,14 @@ def add_then_next(buffer, ch):
 #   return p;
 # }
 
+# This is a copy of read_filename, but preserving blanks
+def read_comment():
+    b = init_buffer()
+    ch = inchar()
+    while ch not in (EOF, '\n'):
+        ch = add_then_next(b, ch)
+    return b
+
 # Read in a filename for a `r', `w', or `s///w' command.
 def read_filename():
     b = init_buffer()
@@ -1467,9 +1475,9 @@ def compile_program(vector):
 
             # GNU sed discards the comment contents, but I must save it
             # Using read_filename because it's the same logic of reading until \n or EOF
-            b = read_filename()
-            cur_cmd.x.fname = ''.join(b)
-            print("comment: %r" % cur_cmd.x.fname)
+            b = read_comment()
+            cur_cmd.x.comment = ''.join(b)
+            print("comment: %r" % cur_cmd.x.comment)
             free_buffer(b)
             # while ch != EOF and ch != '\n':
             #     ch = inchar()

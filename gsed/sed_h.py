@@ -183,6 +183,7 @@ class struct_sed_cmd_x:
     translatemb = ""
     # This is used for the ':' command (debug only).
     label_name = ""
+    comment = ""  # aur
 
 class struct_sed_cmd:
     a1 = struct_addr()
@@ -206,10 +207,12 @@ class struct_sed_cmd:
             ret.append('!')
         ret.append(self.cmd)
 
-        if self.cmd in 'sy':
-            ret.append(str(self.x.cmd_subst))
+        if self.cmd == '#':
+            ret.append(self.x.comment)
         elif self.cmd == ':':
             ret.append(self.x.label_name)
+        elif self.cmd in 'sy':
+            ret.append(str(self.x.cmd_subst))
         elif self.x.label_name:
             ret.append(' ' + self.x.label_name)
         elif self.x.fname:

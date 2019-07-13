@@ -63,9 +63,10 @@ text_c2 \
 text_c3  
 }
 
-# comment
 e date
 s/foo/bar/gpw filesw
 s;\n\;\n;\n;3
 y/A/B/
 y.a.b.
+#comment
+#    indented
