@@ -93,6 +93,8 @@ exp=0 line=6 cur=None end=None text=None ch='h'
 ----- Found command: 'h'
 exp=0 line=7 cur=None end=None text=None ch='\n'
 exp=0 line=8 cur=None end=None text=None ch='\n'
+----- Found command: '\n'
+found cosmetic line break
 exp=0 line=8 cur=None end=None text=None ch='1'
 exp=0 line=8 cur=None end=None text=None ch=','
 exp=0 line=8 cur=None end=None text=None ch='savchar(,)'
@@ -160,6 +162,8 @@ exp=0 line=15 cur=None end=None text=None ch='}'
 ----- Found command: '}'
 exp=0 line=16 cur=None end=None text=None ch='\n'
 exp=0 line=17 cur=None end=None text=None ch='\n'
+----- Found command: '\n'
+found cosmetic line break
 exp=0 line=17 cur=None end=None text=None ch='/'
 exp=0 line=17 cur=None end=None text=None ch='n'
 exp=0 line=17 cur=None end=None text=None ch='o'
@@ -224,6 +228,8 @@ exp=0 line=26 cur=None end=None text=None ch='}'
 ----- Found command: '}'
 exp=0 line=27 cur=None end=None text=None ch='\n'
 exp=0 line=28 cur=None end=None text=None ch='\n'
+----- Found command: '\n'
+found cosmetic line break
 exp=0 line=28 cur=None end=None text=None ch='/'
 exp=0 line=28 cur=None end=None text=None ch='o'
 exp=0 line=28 cur=None end=None text=None ch='p'
@@ -333,13 +339,13 @@ exp=0 line=33 cur=None end=None text=None ch='4'
 exp=0 line=33 cur=None end=None text=None ch='.'
 exp=0 line=33 cur=None end=None text=None ch='2'
 exp=0 line=34 cur=None end=None text=None ch='\n'
-exp=0 line=34 cur=None end=None text=None ch='savchar(\n)'
 argument: 4.2
-exp=0 line=34 cur=None end=None text=None ch='\n'
 exp=0 line=34 cur=None end=None text=None ch='}'
 ----- Found command: '}'
 exp=0 line=35 cur=None end=None text=None ch='\n'
 exp=0 line=36 cur=None end=None text=None ch='\n'
+----- Found command: '\n'
+found cosmetic line break
 exp=0 line=36 cur=None end=None text=None ch='/'
 exp=0 line=36 cur=None end=None text=None ch='l'
 exp=0 line=36 cur=None end=None text=None ch='a'
@@ -362,9 +368,7 @@ exp=0 line=37 cur=None end=None text=None ch='b'
 exp=0 line=37 cur=None end=None text=None ch='c'
 exp=0 line=37 cur=None end=None text=None ch='1'
 exp=0 line=38 cur=None end=None text=None ch='\n'
-exp=0 line=38 cur=None end=None text=None ch='savchar(\n)'
 label: 'abc1'
-exp=0 line=38 cur=None end=None text=None ch='\n'
 exp=0 line=38 cur=None end=None text=None ch='t'
 ----- Found command: 't'
 exp=0 line=38 cur=None end=None text=None ch=' '
@@ -373,9 +377,7 @@ exp=0 line=38 cur=None end=None text=None ch='b'
 exp=0 line=38 cur=None end=None text=None ch='c'
 exp=0 line=38 cur=None end=None text=None ch='2'
 exp=0 line=39 cur=None end=None text=None ch='\n'
-exp=0 line=39 cur=None end=None text=None ch='savchar(\n)'
 label: 'abc2'
-exp=0 line=39 cur=None end=None text=None ch='\n'
 exp=0 line=39 cur=None end=None text=None ch='T'
 ----- Found command: 'T'
 exp=0 line=39 cur=None end=None text=None ch=' '
@@ -384,9 +386,7 @@ exp=0 line=39 cur=None end=None text=None ch='B'
 exp=0 line=39 cur=None end=None text=None ch='C'
 exp=0 line=39 cur=None end=None text=None ch='2'
 exp=0 line=40 cur=None end=None text=None ch='\n'
-exp=0 line=40 cur=None end=None text=None ch='savchar(\n)'
 label: 'ABC2'
-exp=0 line=40 cur=None end=None text=None ch='\n'
 exp=0 line=40 cur=None end=None text=None ch='b'
 ----- Found command: 'b'
 exp=0 line=40 cur=None end=None text=None ch=' '
@@ -395,31 +395,25 @@ exp=0 line=40 cur=None end=None text=None ch='b'
 exp=0 line=40 cur=None end=None text=None ch='c'
 exp=0 line=40 cur=None end=None text=None ch='3'
 exp=0 line=41 cur=None end=None text=None ch='\n'
-exp=0 line=41 cur=None end=None text=None ch='savchar(\n)'
 label: 'abc3'
-exp=0 line=41 cur=None end=None text=None ch='\n'
 exp=0 line=41 cur=None end=None text=None ch='t'
 ----- Found command: 't'
 exp=0 line=42 cur=None end=None text=None ch='\n'
-exp=0 line=42 cur=None end=None text=None ch='savchar(\n)'
 label: ''
-exp=0 line=42 cur=None end=None text=None ch='\n'
 exp=0 line=42 cur=None end=None text=None ch='T'
 ----- Found command: 'T'
 exp=0 line=43 cur=None end=None text=None ch='\n'
-exp=0 line=43 cur=None end=None text=None ch='savchar(\n)'
 label: ''
-exp=0 line=43 cur=None end=None text=None ch='\n'
 exp=0 line=43 cur=None end=None text=None ch='b'
 ----- Found command: 'b'
 exp=0 line=44 cur=None end=None text=None ch='\n'
-exp=0 line=44 cur=None end=None text=None ch='savchar(\n)'
 label: ''
-exp=0 line=44 cur=None end=None text=None ch='\n'
 exp=0 line=44 cur=None end=None text=None ch='}'
 ----- Found command: '}'
 exp=0 line=45 cur=None end=None text=None ch='\n'
 exp=0 line=46 cur=None end=None text=None ch='\n'
+----- Found command: '\n'
+found cosmetic line break
 exp=0 line=46 cur=None end=None text=None ch='/'
 exp=0 line=46 cur=None end=None text=None ch='f'
 exp=0 line=46 cur=None end=None text=None ch='i'
@@ -505,6 +499,8 @@ exp=0 line=52 cur=None end=None text=None ch='}'
 ----- Found command: '}'
 exp=0 line=53 cur=None end=None text=None ch='\n'
 exp=0 line=54 cur=None end=None text=None ch='\n'
+----- Found command: '\n'
+found cosmetic line break
 exp=0 line=54 cur=None end=None text=None ch='/'
 exp=0 line=54 cur=None end=None text=None ch='a'
 exp=0 line=54 cur=None end=None text=None ch='i'
@@ -595,6 +591,8 @@ exp=0 line=66 cur=None end=None text=None ch='}'
 ----- Found command: '}'
 exp=0 line=67 cur=None end=None text=None ch='\n'
 exp=0 line=68 cur=None end=None text=None ch='\n'
+----- Found command: '\n'
+found cosmetic line break
 exp=0 line=68 cur=None end=None text=None ch='e'
 ----- Found command: 'e'
 exp=0 line=68 cur=None end=None text=None ch=' '
@@ -603,9 +601,7 @@ exp=0 line=68 cur=None end=None text=None ch='a'
 exp=0 line=68 cur=None end=None text=None ch='t'
 exp=0 line=68 cur=None end=None text=None ch='e'
 exp=0 line=69 cur=None end=None text=None ch='\n'
-exp=0 line=69 cur=None end=None text=None ch='savchar(\n)'
 argument: date
-exp=0 line=69 cur=None end=None text=None ch='\n'
 exp=0 line=69 cur=None end=None text=None ch='s'
 ----- Found command: 's'
 exp=0 line=69 cur=None end=None text=None ch='/'
@@ -711,6 +707,7 @@ exp=0 line=75 cur=None end=None text=None ch='<EOF>'
 2,/xxx/ x
 \|pipe\n\|\n|,\ space  x
 $ h
+
 1,$ {
     // {
         x
@@ -719,6 +716,7 @@ $ h
         }
     }
 }
+
 /no arguments/ {
     =
     d
@@ -734,6 +732,7 @@ $ h
     z
     x
 }
+
 /optional numeric argument/ {
     q
     q 1
@@ -746,6 +745,7 @@ $ h
     v
     v 4.2
 }
+
 /labels/ {
     :abc1
     t abc2
@@ -755,6 +755,7 @@ $ h
     T
     b
 }
+
 /files/ {
     r filer
     R fileR
@@ -762,6 +763,7 @@ $ h
     W fileW
     s/foo/bar/gw filesw
 }
+
 /aic/ {
     a\
 text_a
@@ -775,6 +777,7 @@ text_c1\
 text_c2 \
 text_c3  
 }
+
 e date
 s/foo/bar/gpw filesw
 s;\n\;\n;\n;3
