@@ -8,5 +8,5 @@ git diff
 # test sedsed 'parsing' test module
 cat ../test/parsing/*.sed > parsing.sed
 ../sedsed.py -i -f parsing.sed > parsing-sedsed.sed
-python3 compile_c.py parsing.sed | sed -n '/^# Address with no spaces/,$ p' > parsing-gsed.sed
+python3 compile_c.py parsing.sed | sed "1,/ch='<EOF>'$/ d" > parsing-gsed.sed
 diff -u parsing-{sedsed,gsed}.sed | less
