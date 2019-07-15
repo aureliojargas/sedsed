@@ -979,7 +979,10 @@ def read_label():
     while ch != EOF and ch != '\n' and not ISBLANK (ch) and ch != ';' and ch != CLOSE_BRACE and ch != '#':
         ch = add_then_next(b, ch)
 
-    savchar(ch)
+    # sedsed: Ignore trailing \n so it won't be considered the next command
+    if ch != '\n':
+        savchar(ch)
+
     # add1_buffer(b, '\0')  # not necessary in Python
     ret = ''.join(b)
     free_buffer(b)
@@ -1417,6 +1420,15 @@ def compile_program(vector):
 
         while True:
             ch = inchar()
+
+            # sedsed:
+            # GNU sed parser discards the \n used as command separator.
+            # Sedsed keeps all cosmetic line breaks (i.e. \n\n) when formatting
+            # code. It creates the concept of the \n command, to identify and
+            # preserve those breaks.
+            if ch == '\n':
+                break
+
             if ch != ';' and not ISSPACE(ch):
                 break
 
@@ -1462,7 +1474,11 @@ def compile_program(vector):
         cur_cmd.cmd = ch
         print("----- Found command: %r" % ch)
 
-        if ch == '#':
+        # sedsed
+        if ch == '\n':
+            pass  # nothing to do, command already saved
+
+        elif ch == '#':
             # if (cur_cmd->a1)
             #     bad_prog (_(NO_SHARP_ADDR));
 
@@ -1485,6 +1501,12 @@ def compile_program(vector):
 
         elif ch == '{':
             blocks += 1
+
+            # sedsed: Ignore \n after { so it won't be considered a command
+            ch = inchar()
+            if ch != '\n':
+                savchar(ch)
+
             # cur_cmd.addr_bang = not cur_cmd.addr_bang  # ?
 
         elif ch == '}':

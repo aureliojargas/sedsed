@@ -205,9 +205,13 @@ class struct_sed_cmd:
 
         if self.addr_bang:
             ret.append('!')
-        ret.append(self.cmd)
 
-        if self.cmd == '#':
+        if self.cmd != '\n':
+            ret.append(self.cmd)
+
+        if self.cmd == '\n':
+            pass
+        elif self.cmd == '#':
             ret.append(self.x.comment)
         elif self.cmd == ':':
             ret.append(self.x.label_name)
