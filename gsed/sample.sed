@@ -4,6 +4,7 @@
 2,/xxx/x
 \|pipe\n\|\n|,\ space x
 $h
+
 1,$ {
   // {
     x
@@ -12,6 +13,7 @@ $h
     }
   }
 }
+
 /no arguments/ {
 =
 d;D
