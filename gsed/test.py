@@ -1,4 +1,28 @@
 # Unit tests for sedsed
+# Here only the fatal errors are checked.
+#
+#   BAD_BANG
+#   BAD_COMMA
+#   BAD_DELIM
+#   BAD_STEP
+#   COLON_LACKS_LABEL
+#   EXCESS_CLOSE_BRACE
+#   EXCESS_G_OPT
+#   EXCESS_JUNK
+#   EXCESS_N_OPT
+#   EXCESS_OPEN_BRACE
+#   EXCESS_P_OPT
+#   EXPECTED_SLASH
+#   INVALID_LINE_0
+#   MISSING_FILENAME
+#   NO_CLOSE_BRACE_ADDR
+#   NO_COMMAND
+#   UNKNOWN_CMD
+#   UNKNOWN_S_OPT
+#   UNTERM_ADDR_RE
+#   UNTERM_S_CMD
+#   UNTERM_Y_CMD
+#   ZERO_N_OPT
 
 import unittest
 import sys
