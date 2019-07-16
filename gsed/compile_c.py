@@ -988,8 +988,13 @@ def read_label():
     b = init_buffer()
     ch = in_nonblank()
 
-    while ch != EOF and ch != '\n' and not ISBLANK (ch) and ch != ';' and ch != CLOSE_BRACE and ch != '#':
+    while ch != EOF and ch != '\n' and not ISBLANK(ch) and ch != ';' and ch != CLOSE_BRACE and ch != '#':
         ch = add_then_next(b, ch)
+
+    # sedsed: ignore trailing spaces after label
+    # This avoids extra blank line in the output (next if fails)
+    if ISBLANK(ch):
+        ch = in_nonblank()
 
     # sedsed: Ignore trailing \n so it won't be considered the next command
     if ch != '\n':
