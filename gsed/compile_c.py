@@ -609,8 +609,12 @@ def snarf_char_class(b):  #, cur_stat):
     #   3 after the closing ./:/=
 
     # for (;; ch = add_then_next(b, ch)) {
+    first_loop_run = True
     while True:
-        ch = add_then_next(b, ch)
+        if not first_loop_run:
+            ch = add_then_next(b, ch)
+        first_loop_run = False
+
         mb_char = IS_MB_CHAR(ch)  #, cur_stat)
 
         if ch in (EOF, '\n'):
