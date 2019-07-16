@@ -376,6 +376,14 @@ def read_end_of_cmd():
         savchar(ch)
     elif ch not in (EOF, '\n', ';'):
         bad_prog(EXCESS_JUNK)
+
+    # sedsed: handle ;\n after a command. Act as if the ; was not there.
+    # Without this code, the \n would be considered a new command, producing
+    # a new undesired blank line in the output.
+    elif ch == ';':
+        ch = inchar()
+        if ch != '\n':
+            savchar(ch)
 #---------------------------------------------------------------------
 #   const int ch = in_nonblank ();
 #   if (ch == CLOSE_BRACE || ch == '#')
@@ -1422,6 +1430,10 @@ def compile_program(vector):
 
         a = struct_addr()
 
+#       while ((ch=inchar ()) == ';' || ISSPACE (ch))
+#         ;
+#       if (ch == EOF)
+#         break;
         while True:
             ch = inchar()
 
@@ -2436,7 +2448,12 @@ if __name__ == '__main__':
         for x in the_program:
             if x.cmd == '}':
                 indent_level -= 1
-            print('%s%s' % ((indent_prefix * indent_level), x))
+
+            if x.cmd == '\n':
+                print()
+            else:
+                print('%s%s' % ((indent_prefix * indent_level), x))
+
             if x.cmd == '{':
                 indent_level += 1
         sys.exit(0)

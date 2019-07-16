@@ -23,7 +23,7 @@ h;H
 n;N
 p;P
 z
-x
+x;
 }
 
 /optional numeric argument/ {

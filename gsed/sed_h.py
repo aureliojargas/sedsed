@@ -206,8 +206,7 @@ class struct_sed_cmd:
         if self.addr_bang:
             ret.append('!')
 
-        if self.cmd != '\n':
-            ret.append(self.cmd)
+        ret.append(self.cmd)
 
         if self.cmd == '\n':
             pass
