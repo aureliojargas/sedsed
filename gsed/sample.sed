@@ -24,7 +24,7 @@ h;H
 n;N
 p;P
 z
-x;
+x
 }
 
 /optional numeric argument/ {
@@ -66,6 +66,35 @@ text_c1\
 text_c2 \
 text_c3  
 }
+
+/extra useless ;/ { ; 
+p;
+p ;
+p; 
+p ; 
+p;;;;
+p ; ; ; ; 
+s/a/b/g;
+s/a/b/g ;
+s/a/b/g; 
+s/a/b/g ; 
+r foo;
+s/a/b/w filesw;
+:foo;
+:foo ;
+:foo ; 
+b foo;
+b foo ;
+b foo ; 
+b;
+b ;
+b; 
+b ; 
+q1;
+q1 ;
+q1; 
+q1 ; 
+} ; 
 
 e date
 s/foo/bar/gpw filesw

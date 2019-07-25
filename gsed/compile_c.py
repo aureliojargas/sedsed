@@ -365,6 +365,20 @@ def in_nonblank():
 #   return ch;
 
 
+# sedsed: Ignore multiple trailing blanks and ; until EOC/EOL/EOF
+# Skipping those chars avoids \n incorrectly being considered a new command and
+# producing a new undesired blank line in the output.
+def ignore_trailing_fluff():
+    while True:
+        ch = in_nonblank()
+        if ch == ';':  # skip it
+            pass
+        elif ch in ('EOF', '\n'):  # EOF, EOL
+            return
+        else:  # start of a new command
+            savchar(ch)
+            return
+
 # /* Consume script input until a valid end of command marker is found:
 #      comment, closing brace, newline, semicolon or EOF.
 #   If any other character is found, die with 'extra characters after command'
@@ -377,13 +391,10 @@ def read_end_of_cmd():
     elif ch not in (EOF, '\n', ';'):
         bad_prog(EXCESS_JUNK)
 
-    # sedsed: handle ;\n after a command. Act as if the ; was not there.
-    # Without this code, the \n would be considered a new command, producing
-    # a new undesired blank line in the output.
+    # sedsed: Ignore multiple trailing blanks and ; until EOC/EOL/EOF
     elif ch == ';':
-        ch = inchar()
-        if ch != '\n':
-            savchar(ch)
+        ignore_trailing_fluff()
+
 #---------------------------------------------------------------------
 #   const int ch = in_nonblank ();
 #   if (ch == CLOSE_BRACE || ch == '#')
@@ -892,7 +903,12 @@ def mark_subst_opts():
             savchar(ch)
             return flags
 
-        elif ch in (EOF, '\n', ';'):
+        # sedsed: Ignore multiple trailing blanks and ; until EOC/EOL/EOF
+        elif ch == ';':
+            ignore_trailing_fluff()
+            return flags
+
+        elif ch in (EOF, '\n'):
             return flags
 
         elif ch == '\r':
@@ -991,14 +1007,9 @@ def read_label():
     while ch != EOF and ch != '\n' and not ISBLANK(ch) and ch != ';' and ch != CLOSE_BRACE and ch != '#':
         ch = add_then_next(b, ch)
 
-    # sedsed: ignore trailing spaces after label
-    # This avoids extra blank line in the output (next if fails)
-    if ISBLANK(ch):
-        ch = in_nonblank()
-
-    # sedsed: Ignore trailing \n so it won't be considered the next command
-    if ch != '\n':
-        savchar(ch)
+    # sedsed: Ignore multiple trailing blanks and ; until EOC/EOL/EOF
+    if ch == ';' or ISBLANK(ch):
+        ignore_trailing_fluff()
 
     # add1_buffer(b, '\0')  # not necessary in Python
     ret = ''.join(b)
@@ -1523,10 +1534,8 @@ def compile_program(vector):
         elif ch == '{':
             blocks += 1
 
-            # sedsed: Ignore \n after { so it won't be considered a command
-            ch = inchar()
-            if ch != '\n':
-                savchar(ch)
+            # sedsed: Ignore multiple trailing blanks and ; until EOC/EOL/EOF
+            ignore_trailing_fluff()
 
             # cur_cmd.addr_bang = not cur_cmd.addr_bang  # ?
 
