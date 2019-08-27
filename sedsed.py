@@ -1617,6 +1617,10 @@ def gsed_parse(sedscript):
             else:
                 cmddict['flag'] = ''.join(flags)
 
+        # Save partial comments
+        if xx.cmd != '#' and xx.x.comment:
+            cmddict['comment'] = '#' + xx.x.comment
+
         ## save sedsed specific data
 
         # saving last address content

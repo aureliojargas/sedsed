@@ -7,9 +7,6 @@
 #
 # Check if command is a GNU extension
 # if (posixicity == POSIXLY_EXTENDED)
-#
-# Debug messages
-# if (debug)
 
 import argparse
 import sys
@@ -451,22 +448,29 @@ def ignore_trailing_fluff():
             savchar(ch)
             return
 
+
 # /* Consume script input until a valid end of command marker is found:
 #      comment, closing brace, newline, semicolon or EOF.
 #   If any other character is found, die with 'extra characters after command'
 #   error.
 # */
-def read_end_of_cmd():
+# sedsed: Original function has no arguments
+def read_end_of_cmd(cur_cmd):
     ch = in_nonblank()
-    if ch in (CLOSE_BRACE, '#'):
+
+    if ch == '#':
+        cur_cmd.x.comment = ''.join(read_comment())
+        debug("command comment: %r" % cur_cmd.x.comment)
+
+    elif ch == CLOSE_BRACE:
         savchar(ch)
+
     elif ch not in (EOF, '\n', ';'):
         bad_prog(EXCESS_JUNK)
 
     # sedsed: Ignore multiple trailing blanks and ; until EOC/EOL/EOF
     elif ch == ';':
         ignore_trailing_fluff()
-
 
 # Read an integer value from the program.
 def in_integer(ch):
@@ -642,7 +646,8 @@ def match_slash(slash, regex):  # char, bool
     return NULL
 
 
-def mark_subst_opts():
+# sedsed: Original function has no arguments
+def mark_subst_opts(cur_cmd):
     flags = []
     numb = False
 
@@ -681,7 +686,9 @@ def mark_subst_opts():
             return flags
 
         elif ch == '#':
-            savchar(ch)
+            # sedsed: save command comment
+            cur_cmd.x.comment = ''.join(read_comment())
+            debug("command comment: %r" % cur_cmd.x.comment)
             return flags
 
         elif ch == CLOSE_BRACE:
@@ -707,12 +714,16 @@ def mark_subst_opts():
 
 
 # read in a label for a `:', `b', or `t' command
-def read_label():
+def read_label(cur_cmd):
     b = init_buffer()
     ch = in_nonblank()
 
     while ch != EOF and ch != '\n' and not ISBLANK(ch) and ch != ';' and ch != CLOSE_BRACE and ch != '#':
         ch = add_then_next(b, ch)
+
+    if ch == '#':
+        cur_cmd.x.comment = ''.join(read_comment())
+        debug("command comment: %r" % cur_cmd.x.comment)
 
     # sedsed: Ignore multiple trailing blanks and ; until EOC/EOL/EOF
     if ch == ';' or ISBLANK(ch):
@@ -928,7 +939,6 @@ def compile_program(vector):
             #       no_default_output = true
 
             # GNU sed discards the comment contents, but I must save it
-            # Using read_filename because it's the same logic of reading until \n or EOF
             b = read_comment()
             cur_cmd.x.comment = ''.join(b)
             debug("comment: %r" % cur_cmd.x.comment)
@@ -939,6 +949,13 @@ def compile_program(vector):
 
         elif ch == '{':
             blocks += 1
+
+            ch = in_nonblank()
+            if ch == '#':
+                cur_cmd.x.comment = ''.join(read_comment())
+                debug("command comment: %r" % cur_cmd.x.comment)
+            else:
+                savchar(ch)
 
             # sedsed: Ignore multiple trailing blanks and ; until EOC/EOL/EOF
             ignore_trailing_fluff()
@@ -951,11 +968,11 @@ def compile_program(vector):
             if cur_cmd.a1:
                 bad_prog(NO_CLOSE_BRACE_ADDR)
 
-            read_end_of_cmd()
+            read_end_of_cmd(cur_cmd)
             blocks -= 1  # done with this entry
 
         elif ch in 'ev':
-            argument = read_label()
+            argument = read_label(cur_cmd)
             cur_cmd.x.label_name = argument
             debug("argument: %s" % argument)
 
@@ -981,7 +998,7 @@ def compile_program(vector):
         elif ch in ':Tbt':
 #           if (cur_cmd->a1)
 #             bad_prog (_(NO_COLON_ADDR));
-            label = read_label()
+            label = read_label(cur_cmd)
             cur_cmd.x.label_name = label
             debug("label: %r" % label)
             if ch == ':' and not label:
@@ -997,10 +1014,10 @@ def compile_program(vector):
                 cur_cmd.x.int_arg = -1
                 debug("int_arg: -1")
                 savchar(ch)
-            read_end_of_cmd()
+            read_end_of_cmd(cur_cmd)
 
         elif ch in '=dDFgGhHnNpPzx':
-            read_end_of_cmd()
+            read_end_of_cmd(cur_cmd)
 
         elif ch in 'rRwW':
             b = read_filename()
@@ -1028,7 +1045,7 @@ def compile_program(vector):
             # setup_replacement(cur_cmd.x.cmd_subst, b2)
             free_buffer(b2)
 
-            flags = mark_subst_opts()  #cur_cmd.x.cmd_subst)
+            flags = mark_subst_opts(cur_cmd)  #cur_cmd.x.cmd_subst)
             cur_cmd.x.cmd_subst.flags = flags
             debug("s flags: %r" % ''.join(flags))
             # cur_cmd.x.cmd_subst.regx = compile_regex(b, flags, cur_cmd.x.cmd_subst.max_id + 1)
@@ -1056,7 +1073,7 @@ def compile_program(vector):
             # if len(normalize_text(b)) != len(normalize_text(b2)):
             #     bad_prog(Y_CMD_LEN)
 
-            read_end_of_cmd()
+            read_end_of_cmd(cur_cmd)
             free_buffer(b)
             free_buffer(b2)
 
@@ -1177,7 +1194,10 @@ if __name__ == '__main__':
             if x.cmd == '\n':
                 print()
             else:
-                print('%s%s' % ((indent_prefix * indent_level), x))
+                print('%s%s%s' % (
+                    (indent_prefix * indent_level),
+                    x,
+                    "   ## "+x.x.comment if x.x.comment and x.cmd != '#' else ""))
 
             if x.cmd == '{':
                 indent_level += 1

@@ -105,3 +105,4 @@ y/A/B/
 y.a.b.
 #comment
 #    indented
+p #command comment

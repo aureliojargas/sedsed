@@ -30,22 +30,6 @@
  extrainfo:
    comment:# at this address
 
-    linenr:3
-     addr1:
- addr1flag:
-     addr2:
- addr2flag:
-  lastaddr:
-  modifier:
-        id:#
-   content:
- delimiter:
-   pattern:
-   replace:
-      flag:
- extrainfo:
-   comment:# at this address
-
     linenr:4
      addr1:
  addr1flag:
