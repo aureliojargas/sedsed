@@ -14,21 +14,21 @@
  extrainfo:
    comment:# GNU sed accepts end-of-line comments with no ; before.
 
-    linenr:3
-     addr1:/bla/
+    linenr:2
+     addr1:
  addr1flag:
      addr2:
  addr2flag:
   lastaddr:
   modifier:
-        id:{
+        id:#
    content:
  delimiter:
    pattern:
    replace:
       flag:
  extrainfo:
-   comment:# at this address
+   comment:### foo
 
     linenr:3
      addr1:
@@ -44,41 +44,9 @@
    replace:
       flag:
  extrainfo:
-   comment:# at this address
+   comment:#foo
 
     linenr:4
-     addr1:
- addr1flag:
-     addr2:
- addr2flag:
-  lastaddr:
-  modifier:
-        id:h
-   content:
- delimiter:
-   pattern:
-   replace:
-      flag:
- extrainfo:
-   comment:# do this
-
-    linenr:5
-     addr1:
- addr1flag:
-     addr2:
- addr2flag:
-  lastaddr:
-  modifier:
-        id:g
-   content:
- delimiter:
-   pattern:
-   replace:
-      flag:
- extrainfo:
-   comment:# than that
-
-    linenr:6
      addr1:
  addr1flag:
      addr2:
@@ -94,7 +62,343 @@
  extrainfo:
    comment:#
 
+    linenr:5
+     addr1:/foo/
+ addr1flag:
+     addr2:
+ addr2flag:
+  lastaddr:
+  modifier:
+        id:{
+   content:
+ delimiter:
+   pattern:
+   replace:
+      flag:
+ extrainfo:
+   comment:# c1
+
+    linenr:5
+     addr1:
+ addr1flag:
+     addr2:
+ addr2flag:
+  lastaddr:
+  modifier:
+        id:#
+   content:
+ delimiter:
+   pattern:
+   replace:
+      flag:
+ extrainfo:
+   comment:# c1
+
+    linenr:5
+     addr1:
+ addr1flag:
+     addr2:
+ addr2flag:
+  lastaddr:
+  modifier:
+        id:c
+   content:\@#linesep#@1
+ delimiter:
+   pattern:
+   replace:
+      flag:
+ extrainfo:
+   comment:
+
+    linenr:6
+     addr1:
+ addr1flag:
+     addr2:
+ addr2flag:
+  lastaddr:
+  modifier:
+        id:#
+   content:
+ delimiter:
+   pattern:
+   replace:
+      flag:
+ extrainfo:
+   comment:# foo;bar
+
     linenr:7
+     addr1:
+ addr1flag:
+     addr2:
+ addr2flag:
+  lastaddr:
+  modifier:
+        id:#
+   content:
+ delimiter:
+   pattern:
+   replace:
+      flag:
+ extrainfo:
+   comment:#;
+
+    linenr:8
+     addr1:
+ addr1flag:
+     addr2:
+ addr2flag:
+  lastaddr:
+  modifier:
+        id:p
+   content:
+ delimiter:
+   pattern:
+   replace:
+      flag:
+ extrainfo:
+   comment:#p1
+
+    linenr:9
+     addr1:
+ addr1flag:
+     addr2:
+ addr2flag:
+  lastaddr:
+  modifier:
+        id:p
+   content:
+ delimiter:
+   pattern:
+   replace:
+      flag:
+ extrainfo:
+   comment:# p2
+
+    linenr:10
+     addr1:
+ addr1flag:
+     addr2:
+ addr2flag:
+  lastaddr:
+  modifier:
+        id:p
+   content:
+ delimiter:
+   pattern:
+   replace:
+      flag:
+ extrainfo:
+   comment:### p3
+
+    linenr:11
+     addr1:
+ addr1flag:
+     addr2:
+ addr2flag:
+  lastaddr:
+  modifier:
+        id:p
+   content:
+ delimiter:
+   pattern:
+   replace:
+      flag:
+ extrainfo:
+   comment:# p4
+
+    linenr:11
+     addr1:
+ addr1flag:
+     addr2:
+ addr2flag:
+  lastaddr:
+  modifier:
+        id:p
+   content:
+ delimiter:
+   pattern:
+   replace:
+      flag:
+ extrainfo:
+   comment:
+
+    linenr:12
+     addr1:
+ addr1flag:
+     addr2:
+ addr2flag:
+  lastaddr:
+  modifier:
+        id:p
+   content:
+ delimiter:
+   pattern:
+   replace:
+      flag:
+ extrainfo:
+   comment:# p5
+
+    linenr:13
+     addr1:
+ addr1flag:
+     addr2:
+ addr2flag:
+  lastaddr:
+  modifier:
+        id:s
+   content:
+ delimiter:/
+   pattern:a
+   replace:b
+      flag:
+ extrainfo:
+   comment:#s1
+
+    linenr:14
+     addr1:
+ addr1flag:
+     addr2:
+ addr2flag:
+  lastaddr:
+  modifier:
+        id:s
+   content:
+ delimiter:/
+   pattern:a
+   replace:b
+      flag:
+ extrainfo:
+   comment:# s2
+
+    linenr:15
+     addr1:
+ addr1flag:
+     addr2:
+ addr2flag:
+  lastaddr:
+  modifier:
+        id:s
+   content:
+ delimiter:/
+   pattern:a
+   replace:b
+      flag:gp
+ extrainfo:
+   comment:#s3
+
+    linenr:16
+     addr1:
+ addr1flag:
+     addr2:
+ addr2flag:
+  lastaddr:
+  modifier:
+        id:s
+   content:
+ delimiter:/
+   pattern:a
+   replace:b
+      flag:gp
+ extrainfo:
+   comment:# s4
+
+    linenr:17
+     addr1:
+ addr1flag:
+     addr2:
+ addr2flag:
+  lastaddr:
+  modifier:
+        id::
+   content:foo
+ delimiter:
+   pattern:
+   replace:
+      flag:
+ extrainfo:
+   comment:#l1
+
+    linenr:18
+     addr1:
+ addr1flag:
+     addr2:
+ addr2flag:
+  lastaddr:
+  modifier:
+        id::
+   content:foo
+ delimiter:
+   pattern:
+   replace:
+      flag:
+ extrainfo:
+   comment:# l2
+
+    linenr:19
+     addr1:
+ addr1flag:
+     addr2:
+ addr2flag:
+  lastaddr:
+  modifier:
+        id:b
+   content:foo
+ delimiter:
+   pattern:
+   replace:
+      flag:
+ extrainfo:
+   comment:#b1
+
+    linenr:20
+     addr1:
+ addr1flag:
+     addr2:
+ addr2flag:
+  lastaddr:
+  modifier:
+        id:b
+   content:foo
+ delimiter:
+   pattern:
+   replace:
+      flag:
+ extrainfo:
+   comment:# b2
+
+    linenr:21
+     addr1:
+ addr1flag:
+     addr2:
+ addr2flag:
+  lastaddr:
+  modifier:
+        id:b
+   content:
+ delimiter:
+   pattern:
+   replace:
+      flag:
+ extrainfo:
+   comment:#b3
+
+    linenr:22
+     addr1:
+ addr1flag:
+     addr2:
+ addr2flag:
+  lastaddr:
+  modifier:
+        id:b
+   content:
+ delimiter:
+   pattern:
+   replace:
+      flag:
+ extrainfo:
+   comment:# b4
+
+    linenr:23
      addr1:
  addr1flag:
      addr2:
@@ -108,21 +412,21 @@
    replace:
       flag:
  extrainfo:
-   comment:#loop end
+   comment:# c2
 
-    linenr:9
+    linenr:24
      addr1:
  addr1flag:
      addr2:
  addr2flag:
-  lastaddr:/bla/
+  lastaddr:
   modifier:
-        id:s
+        id:#
    content:
- delimiter:/
+ delimiter:
    pattern:
    replace:
       flag:
  extrainfo:
-   comment:# script end
+   comment:#
 
