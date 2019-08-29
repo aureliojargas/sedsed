@@ -1,0 +1,228 @@
+PATT:one$
+HOLD:$
+COMM:[33;1m5 !H[m
+PATT:one$
+HOLD:\none$
+COMM:[33;1m1,5 g[m
+PATT:\none$
+HOLD:\none$
+COMM:[33;1m/xxx/I G[m
+PATT:\none$
+HOLD:\none$
+COMM:[33;1m2,/xxx/ x[m
+PATT:\none$
+HOLD:\none$
+COMM:[33;1m\|pipe\n\|\n|,\ space  x[m
+PATT:\none$
+HOLD:\none$
+COMM:[33;1m$ h[m
+PATT:\none$
+HOLD:\none$
+COMM:[33;1m1,$ {[m
+COMM:[33;1m// {[m
+COMM:[33;1m}[m
+COMM:[33;1m/no arguments/ {[m
+COMM:[33;1m/optional numeric argument/ {[m
+COMM:[33;1m/labels/ {[m
+COMM:[33;1m/files/ {[m
+COMM:[33;1m/aic/ {[m
+COMM:[33;1m/extra useless ;/ {[m
+COMM:[33;1ms/foo/bar/gpw filesw[m
+PATT:\none$
+HOLD:\none$
+COMM:[33;1my/A/B/[m
+PATT:\none$
+HOLD:\none$
+COMM:[33;1my.a.b.[m
+PATT:\none$
+HOLD:\none$
+PATT:two$
+HOLD:\none$
+COMM:[33;1m5 !H[m
+PATT:two$
+HOLD:\none\ntwo$
+COMM:[33;1m1,5 g[m
+PATT:\none\ntwo$
+HOLD:\none\ntwo$
+COMM:[33;1m/xxx/I G[m
+PATT:\none\ntwo$
+HOLD:\none\ntwo$
+COMM:[33;1m2,/xxx/ x[m
+PATT:\none\ntwo$
+HOLD:\none\ntwo$
+COMM:[33;1m\|pipe\n\|\n|,\ space  x[m
+PATT:\none\ntwo$
+HOLD:\none\ntwo$
+COMM:[33;1m$ h[m
+PATT:\none\ntwo$
+HOLD:\none\ntwo$
+COMM:[33;1m1,$ {[m
+COMM:[33;1m// {[m
+COMM:[33;1m}[m
+COMM:[33;1m/no arguments/ {[m
+COMM:[33;1m/optional numeric argument/ {[m
+COMM:[33;1m/labels/ {[m
+COMM:[33;1m/files/ {[m
+COMM:[33;1m/aic/ {[m
+COMM:[33;1m/extra useless ;/ {[m
+COMM:[33;1ms/foo/bar/gpw filesw[m
+PATT:\none\ntwo$
+HOLD:\none\ntwo$
+COMM:[33;1my/A/B/[m
+PATT:\none\ntwo$
+HOLD:\none\ntwo$
+COMM:[33;1my.a.b.[m
+PATT:\none\ntwo$
+HOLD:\none\ntwo$
+PATT:three$
+HOLD:\none\ntwo$
+COMM:[33;1m5 !H[m
+PATT:three$
+HOLD:\none\ntwo\nthree$
+COMM:[33;1m1,5 g[m
+PATT:\none\ntwo\nthree$
+HOLD:\none\ntwo\nthree$
+COMM:[33;1m/xxx/I G[m
+PATT:\none\ntwo\nthree$
+HOLD:\none\ntwo\nthree$
+COMM:[33;1m2,/xxx/ x[m
+PATT:\none\ntwo\nthree$
+HOLD:\none\ntwo\nthree$
+COMM:[33;1m\|pipe\n\|\n|,\ space  x[m
+PATT:\none\ntwo\nthree$
+HOLD:\none\ntwo\nthree$
+COMM:[33;1m$ h[m
+PATT:\none\ntwo\nthree$
+HOLD:\none\ntwo\nthree$
+COMM:[33;1m1,$ {[m
+COMM:[33;1m// {[m
+COMM:[33;1m}[m
+COMM:[33;1m/no arguments/ {[m
+COMM:[33;1m/optional numeric argument/ {[m
+COMM:[33;1m/labels/ {[m
+COMM:[33;1m/files/ {[m
+COMM:[33;1m/aic/ {[m
+COMM:[33;1m/extra useless ;/ {[m
+COMM:[33;1ms/foo/bar/gpw filesw[m
+PATT:\none\ntwo\nthree$
+HOLD:\none\ntwo\nthree$
+COMM:[33;1my/A/B/[m
+PATT:\none\ntwo\nthree$
+HOLD:\none\ntwo\nthree$
+COMM:[33;1my.a.b.[m
+PATT:\none\ntwo\nthree$
+HOLD:\none\ntwo\nthree$
+PATT:four$
+HOLD:\none\ntwo\nthree$
+COMM:[33;1m5 !H[m
+PATT:four$
+HOLD:\none\ntwo\nthree\nfour$
+COMM:[33;1m1,5 g[m
+PATT:\none\ntwo\nthree\nfour$
+HOLD:\none\ntwo\nthree\nfour$
+COMM:[33;1m/xxx/I G[m
+PATT:\none\ntwo\nthree\nfour$
+HOLD:\none\ntwo\nthree\nfour$
+COMM:[33;1m2,/xxx/ x[m
+PATT:\none\ntwo\nthree\nfour$
+HOLD:\none\ntwo\nthree\nfour$
+COMM:[33;1m\|pipe\n\|\n|,\ space  x[m
+PATT:\none\ntwo\nthree\nfour$
+HOLD:\none\ntwo\nthree\nfour$
+COMM:[33;1m$ h[m
+PATT:\none\ntwo\nthree\nfour$
+HOLD:\none\ntwo\nthree\nfour$
+COMM:[33;1m1,$ {[m
+COMM:[33;1m// {[m
+COMM:[33;1m}[m
+COMM:[33;1m/no arguments/ {[m
+COMM:[33;1m/optional numeric argument/ {[m
+COMM:[33;1m/labels/ {[m
+COMM:[33;1m/files/ {[m
+COMM:[33;1m/aic/ {[m
+COMM:[33;1m/extra useless ;/ {[m
+COMM:[33;1ms/foo/bar/gpw filesw[m
+PATT:\none\ntwo\nthree\nfour$
+HOLD:\none\ntwo\nthree\nfour$
+COMM:[33;1my/A/B/[m
+PATT:\none\ntwo\nthree\nfour$
+HOLD:\none\ntwo\nthree\nfour$
+COMM:[33;1my.a.b.[m
+PATT:\none\ntwo\nthree\nfour$
+HOLD:\none\ntwo\nthree\nfour$
+PATT:five$
+HOLD:\none\ntwo\nthree\nfour$
+COMM:[33;1m5 !H[m
+PATT:five$
+HOLD:\none\ntwo\nthree\nfour$
+COMM:[33;1m1,5 g[m
+PATT:\none\ntwo\nthree\nfour$
+HOLD:\none\ntwo\nthree\nfour$
+COMM:[33;1m/xxx/I G[m
+PATT:\none\ntwo\nthree\nfour$
+HOLD:\none\ntwo\nthree\nfour$
+COMM:[33;1m2,/xxx/ x[m
+PATT:\none\ntwo\nthree\nfour$
+HOLD:\none\ntwo\nthree\nfour$
+COMM:[33;1m\|pipe\n\|\n|,\ space  x[m
+PATT:\none\ntwo\nthree\nfour$
+HOLD:\none\ntwo\nthree\nfour$
+COMM:[33;1m$ h[m
+PATT:\none\ntwo\nthree\nfour$
+HOLD:\none\ntwo\nthree\nfour$
+COMM:[33;1m1,$ {[m
+COMM:[33;1m// {[m
+COMM:[33;1m}[m
+COMM:[33;1m/no arguments/ {[m
+COMM:[33;1m/optional numeric argument/ {[m
+COMM:[33;1m/labels/ {[m
+COMM:[33;1m/files/ {[m
+COMM:[33;1m/aic/ {[m
+COMM:[33;1m/extra useless ;/ {[m
+COMM:[33;1ms/foo/bar/gpw filesw[m
+PATT:\none\ntwo\nthree\nfour$
+HOLD:\none\ntwo\nthree\nfour$
+COMM:[33;1my/A/B/[m
+PATT:\none\ntwo\nthree\nfour$
+HOLD:\none\ntwo\nthree\nfour$
+COMM:[33;1my.a.b.[m
+PATT:\none\ntwo\nthree\nfour$
+HOLD:\none\ntwo\nthree\nfour$
+PATT:six$
+HOLD:\none\ntwo\nthree\nfour$
+COMM:[33;1m5 !H[m
+PATT:six$
+HOLD:\none\ntwo\nthree\nfour\nsix$
+COMM:[33;1m1,5 g[m
+PATT:six$
+HOLD:\none\ntwo\nthree\nfour\nsix$
+COMM:[33;1m/xxx/I G[m
+PATT:six$
+HOLD:\none\ntwo\nthree\nfour\nsix$
+COMM:[33;1m2,/xxx/ x[m
+PATT:\none\ntwo\nthree\nfour\nsix$
+HOLD:six$
+COMM:[33;1m\|pipe\n\|\n|,\ space  x[m
+PATT:\none\ntwo\nthree\nfour\nsix$
+HOLD:six$
+COMM:[33;1m$ h[m
+PATT:\none\ntwo\nthree\nfour\nsix$
+HOLD:\none\ntwo\nthree\nfour\nsix$
+COMM:[33;1m1,$ {[m
+COMM:[33;1m// {[m
+COMM:[33;1m}[m
+COMM:[33;1m/no arguments/ {[m
+COMM:[33;1m/optional numeric argument/ {[m
+COMM:[33;1m/labels/ {[m
+COMM:[33;1m/files/ {[m
+COMM:[33;1m/aic/ {[m
+COMM:[33;1m/extra useless ;/ {[m
+COMM:[33;1ms/foo/bar/gpw filesw[m
+PATT:\none\ntwo\nthree\nfour\nsix$
+HOLD:\none\ntwo\nthree\nfour\nsix$
+COMM:[33;1my/A/B/[m
+PATT:\none\ntwo\nthree\nfour\nsix$
+HOLD:\none\ntwo\nthree\nfour\nsix$
+COMM:[33;1my.a.b.[m
+PATT:\none\ntwo\nthree\nfour\nsix$
+HOLD:\none\ntwo\nthree\nfour\nsix$
