@@ -175,6 +175,7 @@ class struct_sed_cmd:
     range_state = RANGE_INACTIVE  # See enum addr_state
     addr_bang = False  # Non-zero if command is to be applied to non-matches. (sedsed: using bool)
     cmd = ""  # The actual command character.
+    line = 0
     x = struct_sed_cmd_x()
 
     def __str__(self):
@@ -864,6 +865,7 @@ def compile_program(vector):
             break
 
         cur_cmd = next_cmd_entry(vector)
+        cur_cmd.line = cur_input.line
 
         if compile_address(a, ch):
             if a.addr_type == ADDR_IS_STEP or a.addr_type == ADDR_IS_STEP_MOD:
@@ -904,7 +906,9 @@ def compile_program(vector):
 
         # sedsed
         if ch == '\n':
-            pass  # nothing to do, command already saved
+            # Adjust the line number for the empty lines, because they're just
+            # detected in the next line
+            cur_cmd.line -= 1
 
         elif ch == '#':
             # if (cur_cmd->a1)
