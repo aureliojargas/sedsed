@@ -400,12 +400,12 @@ def inchar():
             ch = EOF
     if ch == '\n':
         cur_input.line += 1
-    debug(ch)
+    debug(ch, stats=True)
     return ch
 
 # unget `ch' so the next call to inchar will return it.
 def savchar(ch):
-    debug("savchar(%s)" % ch)
+    debug("savchar(%s)" % ch, stats=True)
     if ch == EOF:
         return
     if ch == '\n' and cur_input.line > 0:
@@ -643,7 +643,7 @@ def mark_subst_opts():
 
     while True:
         ch = in_nonblank()
-        print("s flag candidate: %r" % ch)
+        debug("s flag candidate: %r" % ch)
 
         if ch in 'iImMe':  # GNU extensions
             flags.append(ch)
@@ -671,7 +671,7 @@ def mark_subst_opts():
             b = read_filename()
             if not b:
                 bad_prog(MISSING_FILENAME)
-            print("s flag filename: %r" % ''.join(b))
+            debug("s flag filename: %r" % ''.join(b))
             flags.append("%s %s" % (ch, ''.join(b)))
             return flags
 
@@ -872,7 +872,7 @@ def compile_program(vector):
                 bad_prog(BAD_STEP)
 
             cur_cmd.a1 = a  # MEMDUP(&a, 1, struct addr)
-            print("----- Found address 1: %r" % cur_cmd.a1)
+            debug("----- Found address 1: %r" % cur_cmd.a1)
 
 
             a = struct_addr()  # reset a
@@ -882,7 +882,7 @@ def compile_program(vector):
                     bad_prog(BAD_COMMA)
 
                 cur_cmd.a2 = a  # MEMDUP(&a, 1, struct addr)
-                print("----- Found address 2: %r" % cur_cmd.a2)
+                debug("----- Found address 2: %r" % cur_cmd.a2)
                 ch = in_nonblank()
 
             if (cur_cmd.a1.addr_type == ADDR_IS_NUM and cur_cmd.a1.addr_number == 0) \
@@ -892,7 +892,7 @@ def compile_program(vector):
 
         if ch == '!':
             cur_cmd.addr_bang = True
-            print("----- Found negation: !")
+            debug("----- Found negation: !")
             ch = in_nonblank()
             if ch == '!':
                 bad_prog(BAD_BANG)
@@ -902,7 +902,7 @@ def compile_program(vector):
         # SKIPPED
 
         cur_cmd.cmd = ch
-        print("----- Found command: %r" % ch)
+        debug("----- Found command: %r" % ch)
 
         # sedsed
         if ch == '\n':
@@ -923,7 +923,7 @@ def compile_program(vector):
             # Using read_filename because it's the same logic of reading until \n or EOF
             b = read_comment()
             cur_cmd.x.comment = ''.join(b)
-            print("comment: %r" % cur_cmd.x.comment)
+            debug("comment: %r" % cur_cmd.x.comment)
             free_buffer(b)
             # while ch != EOF and ch != '\n':
             #     ch = inchar()
@@ -949,7 +949,7 @@ def compile_program(vector):
         elif ch in 'ev':
             argument = read_label()
             cur_cmd.x.label_name = argument
-            print("argument: %s" % argument)
+            debug("argument: %s" % argument)
 
         elif ch in 'aic':
             ch = in_nonblank()
@@ -967,7 +967,7 @@ def compile_program(vector):
                 ch = '\n'
 
             read_text(cur_cmd.x.cmd_txt, ch)
-            print("text: %r" % cur_cmd.x.cmd_txt)
+            debug("text: %r" % cur_cmd.x.cmd_txt)
 #ENDGOTO
 
         elif ch in ':Tbt':
@@ -975,7 +975,7 @@ def compile_program(vector):
 #             bad_prog (_(NO_COLON_ADDR));
             label = read_label()
             cur_cmd.x.label_name = label
-            print("label: %r" % label)
+            debug("label: %r" % label)
             if ch == ':' and not label:
                 bad_prog(COLON_LACKS_LABEL)
             # labels = setup_label (labels, vector->v_length, label, NULL);
@@ -984,10 +984,10 @@ def compile_program(vector):
             ch = in_nonblank()
             if ISDIGIT(ch):
                 cur_cmd.x.int_arg = in_integer(ch)
-                print("int_arg: %r" % in_integer(ch))
+                debug("int_arg: %r" % in_integer(ch))
             else:
                 cur_cmd.x.int_arg = -1
-                print("int_arg: -1")
+                debug("int_arg: -1")
                 savchar(ch)
             read_end_of_cmd()
 
@@ -999,7 +999,7 @@ def compile_program(vector):
             if not b:
                 bad_prog(MISSING_FILENAME)
             cur_cmd.x.fname = ''.join(b)
-            print("filename: %r" % cur_cmd.x.fname)
+            debug("filename: %r" % cur_cmd.x.fname)
             free_buffer(b)
 
         elif ch == 's':
@@ -1009,20 +1009,20 @@ def compile_program(vector):
             if b == NULL:
                 bad_prog(UNTERM_S_CMD)
             cur_cmd.x.cmd_subst.regx.pattern = ''.join(b)
-            print("s pattern: %r" % cur_cmd.x.cmd_subst.regx.pattern)
+            debug("s pattern: %r" % cur_cmd.x.cmd_subst.regx.pattern)
 
             b2 = match_slash(slash, False)
             if b2 == NULL:
                 bad_prog(UNTERM_S_CMD)
             cur_cmd.x.cmd_subst.replacement.text = ''.join(b2)
-            print("s replacement: %r" % cur_cmd.x.cmd_subst.replacement.text)
+            debug("s replacement: %r" % cur_cmd.x.cmd_subst.replacement.text)
 
             # setup_replacement(cur_cmd.x.cmd_subst, b2)
             free_buffer(b2)
 
             flags = mark_subst_opts()  #cur_cmd.x.cmd_subst)
             cur_cmd.x.cmd_subst.flags = ''.join(flags)
-            print("s flags: %r" % cur_cmd.x.cmd_subst.flags)
+            debug("s flags: %r" % cur_cmd.x.cmd_subst.flags)
             # cur_cmd.x.cmd_subst.regx = compile_regex(b, flags, cur_cmd.x.cmd_subst.max_id + 1)
             free_buffer(b)
 
@@ -1036,13 +1036,13 @@ def compile_program(vector):
             if b == NULL:
                 bad_prog(UNTERM_Y_CMD)
             cur_cmd.x.cmd_subst.regx.pattern = ''.join(b)
-            print("y pattern: %r" % cur_cmd.x.cmd_subst.regx.pattern)
+            debug("y pattern: %r" % cur_cmd.x.cmd_subst.regx.pattern)
 
             b2 = match_slash(slash, False)
             if b2 == NULL:
                 bad_prog(UNTERM_Y_CMD)
             cur_cmd.x.cmd_subst.replacement.text = ''.join(b2)
-            print("y replacement: %r" % cur_cmd.x.cmd_subst.replacement.text)
+            debug("y replacement: %r" % cur_cmd.x.cmd_subst.replacement.text)
 
             # sedsed doesn't need to check this
             # if len(normalize_text(b)) != len(normalize_text(b2)):
@@ -1130,17 +1130,20 @@ def check_final_program():  #program):
 
     # was the final command an unterminated a/c/i command?
     if pending_text:
-        print("pending_text: %r" % pending_text)
+        debug("pending_text: %r" % pending_text)
         old_text_buf.text = pending_text
         free_buffer(pending_text)
         pending_text = NULL
 
 
 PARSER_DEBUG = False
-def debug(ch):
+def debug(msg, stats=False):
     if PARSER_DEBUG:
-        print("exp=%s line=%s cur=%s end=%s text=%r ch=%r" % (
-            cur_input.string_expr_count, cur_input.line, prog.cur, prog.end, prog.text, ch))
+        if stats:
+            print("exp=%s line=%s cur=%s end=%s text=%r ch=%r" % (
+                cur_input.string_expr_count, cur_input.line, prog.cur, prog.end, prog.text, msg))
+        else:
+            print(msg)
 
 if __name__ == '__main__':
 
@@ -1165,6 +1168,7 @@ if __name__ == '__main__':
                 indent_level += 1
         sys.exit(0)
 
+    PARSER_DEBUG = True
     if test == 1:
         pass
     elif test == 2:
