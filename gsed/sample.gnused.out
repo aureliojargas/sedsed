@@ -1,4 +1,4 @@
-Will parse file: sample.sed
+Will parse file: sample.gnused.sed
 exp=0 line=1 cur=None end=None text=None ch='#'
 ----- Found command: '#'
 exp=0 line=1 cur=None end=None text=None ch='n'
