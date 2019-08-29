@@ -99,8 +99,10 @@ class error_info:
 # /* Where we are in the processing of the input. */
 # static struct prog_info prog;
 # static struct error_info cur_input;
-class prog(prog_info): pass
-class cur_input(error_info): pass
+class prog(prog_info):
+    pass
+class cur_input(error_info):
+    pass
 
 # /* Information about labels and jumps-to-labels.  This is used to do
 #   the required backpatching after we have compiled all the scripts. */
@@ -272,7 +274,7 @@ def bad_command(ch):
 
 # /* Complain about a programming error and exit. */
 def bad_prog(why):
-    if (cur_input.name):
+    if cur_input.name:
         msg = "%s: file %s line %d: %s" % (
             program_name, cur_input.name, cur_input.line, why)
     else:
@@ -1143,7 +1145,7 @@ def compile_program(vector):
                 break
 
         if ch == EOF:
-            break;
+            break
 
         cur_cmd = next_cmd_entry(vector)
         cur_cmd.cmd = ch
@@ -1213,10 +1215,10 @@ def compile_program(vector):
 
         elif ch == 'r':
             b = read_filename()
-            if len(b) == 0:
+            if not b:
                 bad_prog(MISSING_FILENAME)
-            # cur_cmd->x.fname = xstrdup (get_buffer (b))
-            print("filename: %r" % ''.join(b))
+            cur_cmd.x.fname = ''.join(b)
+            print("filename: %s" % cur_cmd.x.fname)
             free_buffer(b)
 
         elif ch == EOF:
@@ -1951,7 +1953,7 @@ def debug(ch):
 prog.cur = 0
 cur_input.string_expr_count = 1
 ch = ''
-test = 9
+test = 6
 
 # In prog.text the leading @ is ignored, it's a 1-based index
 if test == 1:
@@ -1993,7 +1995,7 @@ elif test == 5:
     debug(ch)
     compile_program(None)
 elif test == 6:
-    # read file
+    # r
     prog.text = "r empty"
     prog.end = len(prog.text)
     prog.text = "@" + prog.text
