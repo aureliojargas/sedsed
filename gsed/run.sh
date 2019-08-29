@@ -55,13 +55,13 @@ echo "run errors tests..."
 python3 test.py
 
 echo "test sample.sed..."
-python3 gnused.py sample.sed > sample.sed.out 2>&1
+python3 gnused.py -v sample.sed > sample.sed.out 2>&1
 git diff sample.sed.out
 
 echo "test sedsed 'parsing' and 'script' test modules..."
 cat ../test/{parsing,scripts}/*.sed > blob.sed
-../sedsed.py -i -f blob.sed | fix_sedsed_b_t > blob-sedsed.sed
-python3 gnused.py blob.sed | remove_debug > blob-gsed.sed
+python3 ../sedsed.py -i -f blob.sed | fix_sedsed_b_t > blob-sedsed.sed
+python3 gnused.py blob.sed > blob-gsed.sed
 diff -u blob-{sedsed,gsed}.sed | view -
 
 echo "Converting all sed.sf.net scripts..."
@@ -72,6 +72,6 @@ find ../../sed.sf.net/ -name '*.sed' |
         cat "$file"
         echo
     done > blob2.sed
-../sedsed.py -i -f blob2.sed | fix_sedsed_b_t > blob2-sedsed.sed
-python3 gnused.py blob2.sed | remove_debug > blob2-gsed.sed
+python3 ../sedsed.py -i -f blob2.sed | fix_sedsed_b_t > blob2-sedsed.sed
+python3 gnused.py blob2.sed > blob2-gsed.sed
 diff -u blob2-{sedsed,gsed}.sed | view -

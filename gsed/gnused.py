@@ -8,6 +8,7 @@
 # Check if command is a GNU extension
 # if (posixicity == POSIXLY_EXTENDED)
 
+import argparse
 import sys
 
 ######################################## ported from regex.h
@@ -1147,9 +1148,16 @@ if __name__ == '__main__':
     the_program = []
     test = 17
 
-    if len(sys.argv) > 1:
-        print("Will parse file:", sys.argv[1])
-        compile_file(the_program, sys.argv[1])
+    argparser = argparse.ArgumentParser()
+    argparser.add_argument('-v', '--verbose', action='store_true', help='verbose mode')
+    argparser.add_argument('files', metavar='FILE', nargs='*', help='input files')
+    args = argparser.parse_args()
+
+    PARSER_DEBUG = args.verbose
+
+    if args.files:
+        debug("Will parse file: %s" % args.files[0])
+        compile_file(the_program, args.files[0])
         indent_level = 0
         indent_prefix = ' ' * 4
         for x in the_program:
@@ -1200,4 +1208,3 @@ if __name__ == '__main__':
         compile_string(the_program, "{s/a/b/g}")
     elif test == 17:  # unterminated a i c
         compile_string(the_program, "a\\")
-        # check_final_program()
