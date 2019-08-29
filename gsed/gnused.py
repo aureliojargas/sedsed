@@ -65,11 +65,14 @@ class struct_regex:
     endline = False
     re = ""
     slash = ""  # sedsed
+
+    def escape(self):  # sedsed
+        return '\\' if self.slash != '/' else ''
+
     def __repr__(self):
         return "[pattern=%s flags=%s]" % (self.pattern, self.flags)
     def __str__(self):
-        return ('\\' if self.slash != '/' else '') + \
-               self.slash + self.pattern + self.slash + self.flags
+        return self.escape() + self.slash + self.pattern + self.slash + self.flags
 
 # enum replacement_types {
 REPL_ASIS = 0
