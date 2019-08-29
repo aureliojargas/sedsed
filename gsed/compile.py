@@ -58,7 +58,7 @@ class prog_info:  # one-based index (as in GNU sed)
     text = ' '
 
 
-# /* Information used to give out useful and informative error messages. */
+# Information used to give out useful and informative error messages.
 # struct error_info {
 #   /* This is the name of the current script file. */
 #   const char *name;
@@ -75,7 +75,7 @@ class error_info:
     string_expr_count = 0
 
 
-# /* Label structure used to resolve GOTO's, labels, and block beginnings. */
+# Label structure used to resolve GOTO's, labels, and block beginnings.
 # struct sed_label {
 #   countT v_index;		/* index of vector element being referenced */
 #   char *name;			/* NUL-terminated name of the label */
@@ -96,7 +96,7 @@ class error_info:
 #   { { NULL, false, NULL, NULL }, NULL }
 # };
 
-# /* Where we are in the processing of the input. */
+# Where we are in the processing of the input.
 # static struct prog_info prog;
 # static struct error_info cur_input;
 class prog(prog_info):
@@ -116,7 +116,7 @@ labels = NULL
 # static bool first_script = true;
 first_script = True
 
-# /* Allow for scripts like "sed -e 'i\' -e foo": */
+# Allow for scripts like "sed -e 'i\' -e foo":
 # static struct buffer *pending_text = NULL;
 # static struct text_buf *old_text_buf = NULL;
 pending_text = NULL
@@ -127,10 +127,10 @@ old_text_buf = NULL
 # static struct sed_label *blocks = NULL;
 blocks = NULL
 
-# /* Use an obstack for compilation. */
+# Use an obstack for compilation.
 # static struct obstack obs;
 
-# /* Various error messages we may want to print */
+# Various error messages we may want to print
 # static const char errors[] =
 #   "multiple `!'s\0"
 #   "unexpected `,'\0"
@@ -215,8 +215,6 @@ blocks = NULL
 # /* #define END_ERRORS (DISALLOWED_CMD \
 #      + sizeof (N_( "e/r/w commands disabled in sandbox mode"))) */
 
-
-
 BAD_BANG = "multiple `!'s"
 BAD_COMMA = "unexpected `,'"
 BAD_STEP = "invalid usage of +N or ~N as first address"
@@ -251,7 +249,7 @@ MISSING_FILENAME = "missing filename in r/R/w/W commands"
 # static struct output *file_read = NULL;
 # static struct output *file_write = NULL;
 
-# /* Complain about an unknown command and exit. */
+# Complain about an unknown command and exit.
 def bad_command(ch):
     bad_prog(UNKNOWN_CMD % ch)
 #   const char *msg = _(UNKNOWN_CMD);
@@ -259,7 +257,7 @@ def bad_command(ch):
 #   sprintf (unknown_cmd, msg, ch);
 #   bad_prog (unknown_cmd);
 
-# /* Complain about a programming error and exit. */
+# Complain about a programming error and exit.
 def bad_prog(why):
     if cur_input.name:
         msg = "%s: file %s line %d: %s" % (
@@ -313,7 +311,7 @@ def inchar():
 #   return ch;
 
 
-# /* unget `ch' so the next call to inchar will return it.   */
+# unget `ch' so the next call to inchar will return it.
 def savchar(ch):
     if ch == EOF:
         return
@@ -337,7 +335,7 @@ def savchar(ch):
 #   else
 #     ungetc (ch, prog.file);
 
-# /* Read the next non-blank character from the program.  */
+# Read the next non-blank character from the program.
 def in_nonblank():
     while True:
         ch = inchar()
@@ -368,7 +366,7 @@ def read_end_of_cmd():
 #   else if (ch != EOF && ch != '\n' && ch != ';')
 #     bad_prog (_(EXCESS_JUNK));
 
-# /* Read an integer value from the program.  */
+# Read an integer value from the program.
 def in_integer(ch):
     num = []
     while ISDIGIT(ch):
@@ -435,7 +433,7 @@ def add_then_next(buffer, ch):
 #   return p;
 # }
 
-# /* Read in a filename for a `r', `w', or `s///w' command. */
+# Read in a filename for a `r', `w', or `s///w' command.
 def read_filename():
     b = init_buffer()
     ch = in_nonblank()
@@ -748,7 +746,7 @@ def next_cmd_entry(vector):
 #       }
 # }
 
-# /* read in a label for a `:', `b', or `t' command */
+# read in a label for a `:', `b', or `t' command
 def read_label():
     b = init_buffer()
     ch = in_nonblank()
@@ -934,6 +932,7 @@ def read_label():
 
 def read_text(buf, leadin_ch):
     global pending_text
+    global old_text_buf
     if buf:
         if pending_text:
             free_buffer(pending_text)
@@ -1608,7 +1607,7 @@ def compile_program(vector):
 #   return vector;
 # }
 
-# /* deal with \X escapes */
+# deal with \X escapes
 # size_t
 # normalize_text (char *buf, size_t len, enum text_types buftype)
 # {
@@ -1869,7 +1868,7 @@ def compile_program(vector):
 # }
 
 
-# /* Rewind all resources which were allocated in this module. */
+# Rewind all resources which were allocated in this module.
 # void
 # rewind_read_files (void)
 # {
@@ -1880,7 +1879,7 @@ def compile_program(vector):
 #       rewind (p->fp);
 # }
 
-# /* Release all resources which were allocated in this module. */
+# Release all resources which were allocated in this module.
 # void
 # finish_program (struct vector *program)
 # {
@@ -1948,7 +1947,7 @@ def debug(ch):
 
 prog.cur = 0
 cur_input.string_expr_count = 1
-ch = ''
+c = ''
 test = 10
 
 # In prog.text the leading @ is ignored, it's a 1-based index
@@ -1957,71 +1956,71 @@ if test == 1:
     prog.text = "p;p  \n  u"
     prog.end = len(prog.text)
     prog.text = "@" + prog.text
-    debug(ch)
+    debug(c)
     compile_program(None)
 elif test == 2:
     # sed: -e expression #1, char 2: extra characters after command
     prog.text = "dp"
     prog.end = len(prog.text)
     prog.text = "@" + prog.text
-    debug(ch)
-    ch = in_nonblank()
-    debug(ch)
+    debug(c)
+    c = in_nonblank()
+    debug(c)
     read_end_of_cmd()
 elif test == 3:
     # 123
     prog.text = "123d"
     prog.end = len(prog.text)
     prog.text = "@" + prog.text
-    debug(ch)
-    num = in_integer(ch)
-    print(num)
+    debug(c)
+    n = in_integer(c)
+    print(n)
 elif test == 4:
     # OK
     prog.text = "d;\np; "
     prog.end = len(prog.text)
     prog.text = "@" + prog.text
-    debug(ch)
+    debug(c)
     compile_program(None)
 elif test == 5:
     # sed: -e expression #1, char 5: unknown command: 'u'
     prog.text = "d;;;p;\nu"
     prog.end = len(prog.text)
     prog.text = "@" + prog.text
-    debug(ch)
+    debug(c)
     compile_program(None)
 elif test == 6:
     # r
     prog.text = "r empty"
     prog.end = len(prog.text)
     prog.text = "@" + prog.text
-    debug(ch)
+    debug(c)
     compile_program(None)
 elif test == 7:
     # q l
     prog.text = "q;Q;L;l;q123;L123"
     prog.end = len(prog.text)
     prog.text = "@" + prog.text
-    debug(ch)
+    debug(c)
     compile_program(None)
 elif test == 8:
     # q l
     prog.text = ":label1;bfoo;t bar #comment"
     prog.end = len(prog.text)
     prog.text = "@" + prog.text
-    debug(ch)
+    debug(c)
     compile_program(None)
 elif test == 9:
     # a i c
     prog.text = "a\\foo\\\nbar"
     prog.end = len(prog.text)
     prog.text = "@" + prog.text
-    debug(ch)
+    debug(c)
     compile_program(None)
 elif test == 10:
     # !
     prog.text = "!p;!!d"
     prog.end = len(prog.text)
     prog.text = "@" + prog.text
-    debug(ch)
+    debug(c)
     compile_program(None)
