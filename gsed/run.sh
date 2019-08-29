@@ -64,7 +64,7 @@ git diff sample.gnused.out
 
 echo "test sedsed 'parsing' and 'script' test modules..."
 cat ../test/{parsing,scripts}/*.sed > blob.sed
-python3 ../sedsed.py -i -f blob.sed | fix_sedsed_b_t > blob-sedsed.sed
+python3 ../sedsed12d.py -i -f blob.sed | fix_sedsed_b_t > blob-sedsed.sed
 python3 gnused.py blob.sed > blob-gsed.sed
 diff -u blob-{sedsed,gsed}.sed | view -
 
@@ -76,7 +76,7 @@ find ../../sed.sf.net/ -name '*.sed' |
         cat "$file"
         echo
     done > blob2.sed
-python3 ../sedsed.py -i -f blob2.sed | fix_sedsed_b_t > blob2-sedsed.sed
+python3 ../sedsed12d.py -i -f blob2.sed | fix_sedsed_b_t > blob2-sedsed.sed
 python3 gnused.py blob2.sed > blob2-gsed.sed
 diff -u blob2-{sedsed,gsed}.sed | view -
 
