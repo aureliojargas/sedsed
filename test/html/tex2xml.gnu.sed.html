@@ -46,10 +46,8 @@
 </b></font><font color="#ff6060"><b>,</b></font>
     <font color="#00ffff"><b># Isolate tag</b></font>
     <font color="#00ffff"><b># Patternspace: text \n newtag \n text</b></font>
-    <font color="#ffff00"><b>H</b></font>
-    <font color="#00ffff"><b># append to holdspace</b></font>
-    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>,</b></font><font color="#8080ff"><b>\n\<font color="#ff00ff"><b>(</b></font>[^\n]*\)\n</b></font><font color="#ff6060"><b>,</b></font>&lt;<font color="#00ff00"><b>\1</b></font>&gt;<font color="#ff6060"><b>,</b></font>
-    <font color="#00ffff"><b># generate XML tag</b></font>
+    <font color="#ffff00"><b>H</b></font>;# append to holdspace
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>,</b></font><font color="#8080ff"><b>\n\<font color="#ff00ff"><b>(</b></font>[^\n]*\)\n</b></font><font color="#ff6060"><b>,</b></font>&lt;<font color="#00ff00"><b>\1</b></font>&gt;<font color="#ff6060"><b>,</b></font>;# generate XML tag
 
     <font color="#00ffff"><b># Holdspace: ..\tagN \n text \n newtag \n text</b></font>
     <font color="#00ffff"><b># We only want oldtags + newtag</b></font>
@@ -72,14 +70,11 @@
     <font color="#ffff00"><b>G</b></font>
     <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>,</b></font><font color="#8080ff"><b>\n\n\n\<font color="#ff00ff"><b>(</b></font>[^\n]*\)\n.*\n\<font color="#ff00ff"><b>(</b></font>[^\n]*\)$</b></font><font color="#ff6060"><b>,</b></font>&lt;/<font color="#00ff00"><b>\2</b></font>&gt;<font color="#00ff00"><b>\1</b></font><font color="#ff6060"><b>,</b></font>
     <font color="#ffff00"><b>x</b></font>
-    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>,</b></font><font color="#8080ff"><b>\n[^\n]*$</b></font><font color="#ff6060"><b>,</b></font><font color="#ff6060"><b>,</b></font>
-    <font color="#00ffff"><b># delete tag from holdspace</b></font>
+    <font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>,</b></font><font color="#8080ff"><b>\n[^\n]*$</b></font><font color="#ff6060"><b>,</b></font><font color="#ff6060"><b>,</b></font>;# delete tag from holdspace
     <font color="#ffff00"><b>x</b></font>
 
-    <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^[^}]*{</b></font><font color="#ff6060"><b>/</b></font> <font color="#ffff00"><b>b</b></font> <a href="#open">open</a>
-    <font color="#00ffff"><b># if next bracket is an open one</b></font>
-    <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>}</b></font><font color="#ff6060"><b>/</b></font> <font color="#ffff00"><b>b</b></font> <a href="#close">close</a>
-    <font color="#00ffff"><b># another one?</b></font>
+    <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>^[^}]*{</b></font><font color="#ff6060"><b>/</b></font> <font color="#ffff00"><b>b</b></font> <a href="#open">open</a>;# if next bracket is an open one
+    <font color="#ff6060"><b>/</b></font><font color="#8080ff"><b>}</b></font><font color="#ff6060"><b>/</b></font> <font color="#ffff00"><b>b</b></font> <a href="#close">close</a>;# another one?
 <font color="#ff6060"><b>}</b></font>
 
 <font color="#ff00ff"><b>:</b></font><font color="#ff00ff"><b><a name="unescape">unescape</a></b></font>
