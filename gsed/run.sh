@@ -51,6 +51,10 @@ remove_broken_scripts() {
         -e sodelnum.sed$
 }
 
+cleanup() {
+    rm blob{,2}.sed blob{,2}-{sedsed,gsed}.sed
+}
+
 echo "run errors tests..."
 python3 test.py
 
@@ -75,3 +79,5 @@ find ../../sed.sf.net/ -name '*.sed' |
 python3 ../sedsed.py -i -f blob2.sed | fix_sedsed_b_t > blob2-sedsed.sed
 python3 gnused.py blob2.sed > blob2-gsed.sed
 diff -u blob2-{sedsed,gsed}.sed | view -
+
+cleanup
