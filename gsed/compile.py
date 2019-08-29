@@ -51,11 +51,12 @@ CLOSE_BRACE = '}'
 #      and `prog.cur' are NULL, we're in trouble! */
 #   FILE *file;
 # };
-class prog_info:  # one-based index (as in GNU sed)
-    base = 0
-    cur = 1
-    end = 1
-    text = ' '
+class prog_info:
+    base = None  # int
+    cur = None  # int
+    end = None  # int
+    text = None  # str
+    # Using None because some code checks for "is not None" to detect unset state
 
 
 # Information used to give out useful and informative error messages.
@@ -71,7 +72,7 @@ class prog_info:  # one-based index (as in GNU sed)
 # };
 class error_info:
     name = ''
-    line = 1
+    line = 0
     string_expr_count = 0
 
 
@@ -286,7 +287,7 @@ def bad_prog(why):
 #   can be meaningful. */
 def inchar():
     ch = EOF
-    if prog.cur:
+    if prog.cur is not None:
         # print("inchar: %s < %s" % (prog.cur, prog.end))
         if prog.cur < prog.end:
             prog.cur += 1
@@ -294,6 +295,7 @@ def inchar():
     # else if (prog.file)
     if ch == '\n':
         cur_input.line += 1
+    debug(ch)
     return ch
 #---------------------------------------------------------------------
 #   int ch = EOF;
@@ -314,6 +316,7 @@ def inchar():
 
 # unget `ch' so the next call to inchar will return it.
 def savchar(ch):
+    debug("savchar(%s)" % ch)
     if ch == EOF:
         return
     if ch == '\n' and cur_input.line > 0:
@@ -1141,6 +1144,7 @@ def compile_program(vector):
     while True:
         while True:
             ch = inchar()
+
             if ch != ';' and not ISSPACE(ch):
                 break
 
@@ -1240,6 +1244,8 @@ def compile_program(vector):
         else:
             bad_command(ch)
             # /*NOTREACHED*/
+        vector.append(cur_cmd)
+    # no return, vector edited in place
 
 #---------------------------------------------------------------------
 #   struct sed_cmd *cur_cmd;
@@ -1757,6 +1763,33 @@ def compile_program(vector):
 
 # /* `str' is a string (from the command line) that contains a sed command.
 #   Compile the command, and add it to the end of `cur_program'. */
+def compile_string(cur_program, string):
+    global first_script
+
+    # string_expr_count = 0
+
+    # prog and cur_input are global classes
+
+    prog.file = NULL
+    prog.base = 0  # first char of the string (will be 1-based)
+    prog.cur = prog.base
+    prog.end = prog.cur + len(string)
+    prog.text = '@' + string  # the leading @ is ignored, it's a 1-based index
+
+    cur_input.line = 1  # original was zero
+    cur_input.name = NULL
+    # string_expr_count += 1
+    cur_input.string_expr_count += 1
+
+    compile_program(cur_program)
+    # ret = compile_program(cur_program)
+    prog.base = NULL
+    prog.cur = NULL
+    prog.end = NULL
+
+    first_script = False
+    # no return, cur_program edited in place
+#---------------------------------------------------------------------
 # struct vector *
 # compile_string (struct vector *cur_program, char *str, size_t len)
 # {
@@ -1964,85 +1997,34 @@ def compile_program(vector):
 
 
 def debug(ch):
-    print("text=%r cur=%s end=%s line=%s ch=%r" % (
-        prog.text, prog.cur, prog.end, cur_input.line, ch))
+    print("exp=%s line=%s cur=%s end=%s text=%r ch=%r" % (
+        cur_input.string_expr_count, cur_input.line, prog.cur, prog.end, prog.text, ch))
 
-prog.cur = 0
-cur_input.string_expr_count = 1
-c = ''
-test = 10
+the_program = []
+test = 7
 
-# In prog.text the leading @ is ignored, it's a 1-based index
 if test == 1:
-    # sed: -e expression #0, char 9: unknown command: 'u'
-    prog.text = "p;p  \n  u"
-    prog.end = len(prog.text)
-    prog.text = "@" + prog.text
-    debug(c)
-    compile_program(None)
+    # sed: -e expression #1, char 9: unknown command: 'u'
+    compile_string(the_program, "p;p  \n  u")
 elif test == 2:
     # sed: -e expression #1, char 2: extra characters after command
-    prog.text = "dp"
-    prog.end = len(prog.text)
-    prog.text = "@" + prog.text
-    debug(c)
-    c = in_nonblank()
-    debug(c)
-    read_end_of_cmd()
-elif test == 3:
-    # 123
-    prog.text = "123d"
-    prog.end = len(prog.text)
-    prog.text = "@" + prog.text
-    debug(c)
-    n = in_integer(c)
-    print(n)
+    compile_string(the_program, "dp")
+elif test == 3:  # 123
+    compile_string(the_program, "q123")
 elif test == 4:
-    # OK
-    prog.text = "d;\np; "
-    prog.end = len(prog.text)
-    prog.text = "@" + prog.text
-    debug(c)
-    compile_program(None)
+    compile_string(the_program, "d;\np; ")
 elif test == 5:
     # sed: -e expression #1, char 5: unknown command: 'u'
-    prog.text = "d;;;p;\nu"
-    prog.end = len(prog.text)
-    prog.text = "@" + prog.text
-    debug(c)
-    compile_program(None)
-elif test == 6:
-    # r
-    prog.text = "r empty"
-    prog.end = len(prog.text)
-    prog.text = "@" + prog.text
-    debug(c)
-    compile_program(None)
-elif test == 7:
-    # q l
-    prog.text = "q;Q;L;l;q123;L123"
-    prog.end = len(prog.text)
-    prog.text = "@" + prog.text
-    debug(c)
-    compile_program(None)
-elif test == 8:
-    # q l
-    prog.text = ":label1;bfoo;t bar #comment"
-    prog.end = len(prog.text)
-    prog.text = "@" + prog.text
-    debug(c)
-    compile_program(None)
-elif test == 9:
-    # a i c
-    prog.text = "a\\foo\\\nbar"
-    prog.end = len(prog.text)
-    prog.text = "@" + prog.text
-    debug(c)
-    compile_program(None)
-elif test == 10:
-    # !
-    prog.text = "!p;!!d"
-    prog.end = len(prog.text)
-    prog.text = "@" + prog.text
-    debug(c)
-    compile_program(None)
+    compile_string(the_program, "d;;;p;\nu")
+elif test == 6:  # r
+    compile_string(the_program, "r empty")
+elif test == 7:  # q l
+    compile_string(the_program, "q;Q;\nL;l\n;q123;L123")
+    # sed: -e expression #2, char 2: extra characters after command
+    compile_string(the_program, "xx")
+elif test == 8:  # q l
+    compile_string(the_program, ":label1;bfoo;t bar #comment")
+elif test == 9:  # a i c
+    compile_string(the_program, "a\\foo\\\nbar")
+elif test == 10:  # !
+    compile_string(the_program, "!p;!!d")
