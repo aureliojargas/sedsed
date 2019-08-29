@@ -76,39 +76,7 @@
    replace:
       flag:
  extrainfo:
-   comment:# c1
-
-    linenr:5
-     addr1:
- addr1flag:
-     addr2:
- addr2flag:
-  lastaddr:
-  modifier:
-        id:#
-   content:
- delimiter:
-   pattern:
-   replace:
-      flag:
- extrainfo:
-   comment:# c1
-
-    linenr:5
-     addr1:
- addr1flag:
-     addr2:
- addr2flag:
-  lastaddr:
-  modifier:
-        id:c
-   content:\@#linesep#@1
- delimiter:
-   pattern:
-   replace:
-      flag:
- extrainfo:
-   comment:
+   comment:# c1;c1
 
     linenr:6
      addr1:
@@ -204,23 +172,7 @@
    replace:
       flag:
  extrainfo:
-   comment:# p4
-
-    linenr:11
-     addr1:
- addr1flag:
-     addr2:
- addr2flag:
-  lastaddr:
-  modifier:
-        id:p
-   content:
- delimiter:
-   pattern:
-   replace:
-      flag:
- extrainfo:
-   comment:
+   comment:# p4;p4
 
     linenr:12
      addr1:

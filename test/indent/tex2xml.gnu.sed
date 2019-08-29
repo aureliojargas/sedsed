@@ -40,10 +40,8 @@ s,\\},&cbrace;,g
 ,
     # Isolate tag
     # Patternspace: text \n newtag \n text
-    H
-    # append to holdspace
-    s,\n\([^\n]*\)\n,<\1>,
-    # generate XML tag
+    H                                  ;# append to holdspace
+    s,\n\([^\n]*\)\n,<\1>,             ;# generate XML tag
 
     # Holdspace: ..\tagN \n text \n newtag \n text
     # We only want oldtags + newtag
@@ -66,14 +64,11 @@ s,\\},&cbrace;,g
     G
     s,\n\n\n\([^\n]*\)\n.*\n\([^\n]*\)$,</\2>\1,
     x
-    s,\n[^\n]*$,,
-    # delete tag from holdspace
+    s,\n[^\n]*$,,                      ;# delete tag from holdspace
     x
 
-    /^[^}]*{/ b open
-    # if next bracket is an open one
-    /}/ b close
-    # another one?
+    /^[^}]*{/ b open                   ;# if next bracket is an open one
+    /}/ b close                        ;# another one?
 }
 
 :unescape

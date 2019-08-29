@@ -1625,8 +1625,59 @@ def gsed_parse(sedscript):
 
     return ret
 
+def fix_partial_comments(commands):
+    """
+    Scan all commands and move comments to the previous command, if necessary.
+
+    If there's only one command in the line, and a comment at the end, being it
+    preceded by a ';' or not, this comment will be "tied" to the command.
+    Examples:
+
+        /foo/ d    # remove foo
+        /bar/ d   ;# remove bar
+
+    In both cases, the comment will be moved to the 'comment' field of
+    the respective 'd' command. The --indent output will be:
+
+        /foo/ d                                ;# remove foo
+        /bar/ d                                ;# remove bar
+    """
+    headers = commands[0]
+    data = commands[1:]
+
+    accept_comment = sedcmds['solo'] + sedcmds['block'] + sedcmds['jump'] + sedcmds['multi']
+
+    fake = { 'linenr': 0 }
+    data.insert(0, fake)  # because of i-2
+    data.append(fake)     # because of i+1
+
+    # i==0  skip: it's the fake
+    # i==1  skip: first command (nothing previous to append)
+    # i==2  good: first possible partial comment
+    # last  skip: it's the fake
+    i = 2
+    while i < len(data) - 1:
+        # Move solo comment into previous command as partial comment when...
+        if (data[i]['id'] == '#'
+                # ...previous command accepts comments
+                and data[i - 1]['id'] in accept_comment
+
+                # ...there's only *one* previous command in the same source line
+                and data[i]['linenr'] != data[i - 2]['linenr']
+                and data[i]['linenr'] == data[i - 1]['linenr']
+                and data[i]['linenr'] != data[i + 1]['linenr']):
+
+            # Move solo comment to previous command
+            data[i - 1]['comment'] = data[i]['comment']
+            del data[i]
+            # Since we're removing, 'i' won't be incremented
+        else:
+            i += 1
+
+    return [headers] + data[1:-1]  # remove fakes
+
 # Test if the new parser is 100% compatible with the old one
-ZZg = gsed_parse(sedscript)
+ZZg = fix_partial_comments(gsed_parse(sedscript))
 
 # Test if ZZ and ZZg are exactly the same
 # unittest.main(argv=['foo'])
