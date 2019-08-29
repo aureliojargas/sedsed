@@ -2,17 +2,13 @@
 ### foo
 #foo
 #
-/foo/ {                                ;# c1
-    # c1
-    c\
-1
+/foo/ {                                ;# c1;c1
     # foo;bar
     #;
     p                                  ;#p1
     p                                  ;# p2
     p                                  ;### p3
-    p                                  ;# p4
-    p
+    p                                  ;# p4;p4
     p                                  ;# p5
     s/a/b/                             ;#s1
     s/a/b/                             ;# s2
