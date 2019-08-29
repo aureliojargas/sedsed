@@ -8,6 +8,7 @@ python:
 install:
   - if test $TRAVIS_PYTHON_VERSION = 3.6; then pip install -q pylint; fi
   - ln -s /bin/sed ~/bin/gsed
+  - pip install --quiet -r requirements.txt
 script:
   - if test $TRAVIS_PYTHON_VERSION = 3.6; then pylint sedsed.py test/unit.py; fi
   - ./ci/shellcheck

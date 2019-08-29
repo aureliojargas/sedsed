@@ -6,7 +6,11 @@ Website: https://aurelio.net/projects/sedsed/
 
 ## Download
 
-Sedsed is a single file Python application. Just download [sedsed.py](https://raw.githubusercontent.com/aureliojargas/sedsed/master/sedsed.py) and run it.
+Sedsed requires the `sedparse` module to be able to parse sed scripts. Install it first:
+
+    pip install --user sedparse
+
+Sedsed itself is a single file Python application. Just download [sedsed.py](https://raw.githubusercontent.com/aureliojargas/sedsed/master/sedsed.py) and run it.
 
 - Compatible with Python 2.7 and Python 3.x
 - License: GPLv3

@@ -1,0 +1,2 @@
+# Python module to parse sed scripts
+sedparse == 0.1.0

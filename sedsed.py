@@ -5,9 +5,7 @@
 # pylint: disable=bad-whitespace
 # pylint: disable=invalid-name
 # pylint: disable=redefined-outer-name
-# pylint: disable=too-few-public-methods
 # pylint: disable=too-many-branches
-# pylint: disable=too-many-instance-attributes
 # pylint: disable=too-many-lines
 # pylint: disable=too-many-locals
 # pylint: disable=too-many-statements
@@ -21,6 +19,10 @@ import re
 import os
 import getopt
 import tempfile
+
+# sedparse is a translation to Python of the GNU sed parser C code
+# https://github.com/aureliojargas/sedparse
+import sedparse
 
 myname = 'sedsed'
 myhome = 'https://aurelio.net/projects/sedsed/'
@@ -365,6 +367,13 @@ if color:
 else:
     color_YLW = color_RED = color_REV = color_NO = ''
 
+# sedsed expects multiline text (aic text, s/// replacement) to have this
+# odd string instead of inner \n's in the string
+linesep = '@#linesep#@'
+
+# When showing the inner \n's to the user use this red \N
+newlineshow = '%s\\N%s' % (color_RED, color_NO)
+
 
 # The SED debugger magic lines
 # ----------------------------
@@ -525,7 +534,6 @@ cmdfields = [
     'id', 'content', 'delimiter', 'pattern', 'replace', 'flag',
     'extrainfo', 'comment'
 ]
-# XXX Don't change the order! There is a piggy cmdfields[6:] ahead
 
 
 # -----------------------------------------------------------------------------
@@ -536,38 +544,6 @@ cmdfields = [
 def escape_text_commands_specials(text):
     text = text.replace('\\', '\\\\')  # escape the escape
     return text
-
-
-def is_open_bracket(text):
-    # bracket open:  [   \\[   \\\\[ ...
-    # not bracket : \[  \\\[  \\\\\[ ...
-    isis = 0
-    delim = '['
-    text = re.sub(r'\[:[a-z]+:]', '', text)  # del [:charclasses:]
-
-    if text.find(delim) == -1:  # hey, no brackets!
-        return 0
-
-    # Only the last two count
-    patterns = text.split(delim)[-2:]
-    devdebug('bracketpatts: %s' % patterns, 3)
-    possibleescape, bracketpatt = patterns
-
-    # Maybe the bracket is escaped, and is not a metachar?
-
-    m = re.search(r'\\+$', possibleescape)
-
-    # Found escaped bracket with an odd number of \
-    if m and len(m.group(0)) % 2:
-        devdebug('bracket INVALID! - escaped', 2)
-        isis = 0
-
-    # If not closed by ] it's opened! :)
-    elif bracketpatt.find(']') == -1:
-        devdebug('bracket OPEN! - found! found!', 2)
-        isis = 1
-
-    return isis
 
 
 def paint_html(element, txt=''):
@@ -618,299 +594,6 @@ def paint_html(element, txt=''):
         font_color = html_colors[element]
         txt = '<font color="%s"><b>%s</b></font>' % (font_color, txt)
     return txt
-
-
-# -----------------------------------------------------------------------------
-#                 SedCommand class - Know All About Commands
-# -----------------------------------------------------------------------------
-
-
-# TIP: SedCommand already receives lstrip()ed data and data != None
-class SedCommand(object):
-    def __init__(self, abcde):
-        self.id = abcde[0]   # s
-        self.content = ''    # txt, filename
-        self.modifier = ''   # !
-        self.full = ''       # !s/abc/def/g
-
-        # for s/// & y///
-        self.pattern = ''    # abc
-        self.replace = ''    # def
-        self.delimiter = ''  # /
-        self.flag = ''       # g
-
-        self.isok = 0
-        self.comment = ''
-        self.rest = self.junk = abcde
-        self.extrainfo = ''
-
-        if self.id == '!':
-            self.modifier = self.id
-            self.junk = self.junk[1:].lstrip()  # del !@junk
-            self.id = self.junk[0]  # set id again
-        self.junk = self.junk[1:]  # del id@junk
-
-        # self.setId()
-        self.do_it_all()
-
-    def do_it_all(self):
-        # here, junk arrives without the id, but not lstripped (s///)
-        sedcmd = self.id
-
-        # TODO put pending comment on the previous command (h ;#comm)
-        if sedcmd == '#':
-            devdebug('type: comment', 3)
-            self.comment = self.id + self.junk
-            self.junk = ''
-            self.isok = 1
-
-        elif sedcmd in sedcmds['solo']:
-            devdebug('type: solo', 3)
-            self.isok = 1
-
-        elif sedcmd in sedcmds['block']:
-            devdebug('type: block', 3)
-            self.isok = 1
-
-        elif sedcmd in sedcmds['text']:
-            devdebug('type: text', 3)
-
-            # if not \ at end, finished
-            if self.junk[-1] != '\\':
-
-                # ensure \LineSep at beginning
-                self.content = re.sub(r'^\\%s' % linesep, '', self.junk)
-                self.content = '\\%s%s' % (linesep, self.content)
-                self.isok = 1
-
-        elif sedcmd in sedcmds['jump']:
-            devdebug('type: jump', 3)
-
-            self.junk = self.junk.lstrip()
-            m = re.match(patt['jump_label'], self.junk)
-            if m:
-                self.content = m.group()
-                self.junk = self.junk[m.end():]
-                self.isok = 1
-
-        elif sedcmd in sedcmds['file']:
-            # TODO deal with valid cmds like 'r bla;bla' and 'r bla ;#comm'
-            # TODO spaces and ; are valid as filename chars
-            devdebug('type: file', 3)
-
-            self.junk = self.junk.lstrip()
-            m = re.match(patt['filename'], self.junk)
-            if m:
-                self.content = m.group()
-                self.junk = self.junk[m.end():]
-                self.isok = 1
-
-        elif sedcmd in sedcmds['multi']:  # s/// & y///
-            devdebug('type: multi', 3)
-
-            self.delimiter = self.junk[0]
-            ps = SedAddress(self.junk, 'pattern')
-            hs = ''
-            if ps.isok:
-                self.pattern = ps.pattern
-                self.junk = ps.rest
-                # 'replace' opt to avoid openbracket check,
-                # because 's/bla/[/' is ok
-                hs = SedAddress(self.delimiter + self.junk, 'replace')
-                if hs.isok:
-                    self.replace = hs.pattern
-                    self.junk = hs.rest.lstrip()
-
-                    # great, s/patt/rplc/ successfully taken
-
-            # are there flags?
-            if hs and hs.isok and self.junk:
-                devdebug('possible s/// flag: %s' % self.junk, 3)
-
-                # 'w' is the only flag that accepts an argument, so it will be
-                # handled after the other flags. Usually it is the last flag
-                # on the command, because other flags would be interpreted as
-                # part of a filename if put after 'w'.
-
-                flags_except_w = patt['flag'].replace('w', '')
-
-                m = re.match(r'^(%s\s*)+' % flags_except_w, self.junk)
-                if m:
-                    self.flag = m.group()
-                    self.junk = self.junk[m.end():].lstrip()  # del flag
-                    self.flag = re.sub(r'\s', '', self.flag)  # del blanks@flag
-                    devdebug('FOUND s/// flag: %s' % (self.flag.strip()))
-
-                    # now we've got flags also
-
-                # write file flag
-                if self.junk.startswith('w'):
-                    m = re.match(r'^w\s*(%s)' % patt['filename'], self.junk)
-                    if m:
-                        self.flag = self.flag + 'w'
-                        self.content = m.group(1)
-                        devdebug('FOUND s///w filename: %s' % self.content)
-                        self.junk = self.junk[m.end():].lstrip()
-                    else:
-                        fatal_error("missing filename for s///w at line %d" %
-                                    linenr)
-
-                    # and now, s///w filename is saved also
-
-            if hs and hs.isok:
-                self.isok = 1
-
-        else:
-            fatal_error("invalid SED command '%s' at line %d" % (
-                sedcmd, linenr))
-
-        if self.isok:
-            self.full = compose_sed_command(vars(self))
-            self.full = self.full.replace('\n', linesep)
-            self.rest = self.junk.lstrip()
-            devdebug('FOUND command: %s' % self.full)
-            devdebug('rest left: %s' % self.rest, 2)
-
-            possiblecomment = self.rest
-            if possiblecomment and possiblecomment[0] == '#':
-                self.comment = possiblecomment
-                devdebug('FOUND comment: %s' % self.comment)
-        devdebug('SedCommand: %s' % vars(self), 3)
-
-
-# -----------------------------------------------------------------------------
-#                 SedAddress class - Know All About Addresses
-# -----------------------------------------------------------------------------
-
-
-# TIP an address is NOT multiline
-class SedAddress(object):
-    def __init__(self, abcde, context='address'):
-        self.delimiter = ''
-        self.pattern = ''
-        self.flag = ''
-        self.full = ''
-        self.html = ''
-
-        self.isline = 0
-        self.isok = 0
-        self.escape = ''
-        self.rest = self.junk = abcde
-        self.context = context  # address, pattern, replace
-
-        self.set_type()  # numeric or pattern?
-        self.do_it_all()
-        devdebug('SedAddress: %s' % vars(self), 3)
-
-    def do_it_all(self):
-        if self.isline:
-            self.set_line_address()
-        else:
-            self.set_pattern_address()
-
-        if self.isok:
-            self.full = '%s%s%s%s' % (
-                self.escape,
-                self.delimiter,
-                self.pattern,
-                self.delimiter)
-            if action == 'html':
-                self.html = '%s%s%s%s' % (
-                    paint_html('escape',    self.escape),
-                    paint_html('delimiter', self.delimiter),
-                    paint_html('pattern',   self.pattern),
-                    paint_html('delimiter', self.delimiter))
-            devdebug('FOUND addr: %s' % self.full)
-
-            cutlen = len(self.full) + len(self.flag)
-            self.rest = self.rest[cutlen:]  # del junk's addr
-            self.flag = self.flag.strip()  # del flag's blank
-            devdebug('rest left: %s' % self.rest, 2)
-        else:
-            devdebug('OH NO! partial addr: %s' % self.rest)
-
-    def set_type(self):
-        first = self.junk[0]
-
-        # Numeric address detected
-        if re.match('[0-9$]', first):
-            self.isline = 1
-
-        # Pattern address
-        else:
-
-            # strange delimiter (!/)
-            if first == '\\':
-                self.escape = '\\'
-                self.junk = self.junk[1:]  # del escape
-
-            self.delimiter = self.junk[0]
-            self.junk = self.junk[1:]  # del delimiter@junk
-
-    def set_line_address(self):
-        m = re.match(r'[0-9]+|\$', self.junk)
-        self.pattern = m.group(0)
-        self.isok = 1
-
-    def set_pattern_address(self):
-        ###
-        # similar to command finder:
-        # - split at pattern delimiter
-        # - if address not terminated, join with next split chunk (loop)
-        # - address found, return it
-        #
-        # We can deal with really catchy valid addresses like:
-        #   /\/[/]\\/   and   \;\;[;;]\\;
-        incompleteaddr = ''
-
-        devdebug('addr delimiter: ' + self.delimiter, 2)
-        patterns = self.junk.split(self.delimiter)
-        devdebug('addr patterns: %s' % patterns, 2)
-
-        while patterns:
-            possiblepatt = patterns.pop(0)
-
-            # if address not terminated, join next
-            if incompleteaddr:
-                possiblepatt = self.delimiter.join(
-                    [incompleteaddr, possiblepatt])
-                incompleteaddr = ''
-            devdebug('possiblepatt: ' + possiblepatt, 2)
-
-            # maybe split at a (valid) escaped delimiter?
-            if re.search(r'\\+$', possiblepatt):
-                m = re.search(r'\\+$', possiblepatt)
-                if len(m.group(0)) % 2:
-                    devdebug('address INCOMPLETE! - ends with \\ alone')
-                    incompleteaddr = possiblepatt
-                    continue
-
-            if self.context != 'replace':
-                # maybe split at a delimiter inside
-                # char class []?
-                # BUG: []/[] is not caught - WONTFIX
-                if is_open_bracket(possiblepatt):
-                    devdebug('address INCOMPLETE! - open bracket')
-                    incompleteaddr = possiblepatt
-                    continue
-
-            break  # it's an address!
-
-        # must have something left
-        if patterns:
-
-            # the rest is a flag?
-            if patterns[0] and self.context == 'address':
-                devdebug('possible addr flag: %s' % patterns[0], 3)
-
-                m = re.match(r'\s*I\s*', patterns[0])
-                if m:
-                    # yes, a flag, set addr flag
-                    self.flag = m.group()
-                    devdebug('FOUND addr flag: %s' % (self.flag.strip()))
-
-            self.pattern = possiblepatt
-            self.isok = 1
 
 
 # -----------------------------------------------------------------------------
@@ -1224,213 +907,167 @@ def do_debug(datalist):
 #                                                                             #
 ###############################################################################
 #
-# Global view of the parser:
-#
-# - Load the original sed script to a list, then let the file free
-# - Scan the list (line by line)
-# - As user can do more than one sed command on the same line, we split
-#   "possible valid commands" by ; (brute force method)
-# - Validate each split command
-# - If not valid, join next, and try to validate again (loop here)
-# - If hit EOL and still not valid, join next line, validate (loop here)
-# - Hit EOF, we've got all info at hand
-# - Generate a result list with all sed command found and its data, each
-#   command having its own dictionary: {addr1: '', addr2: '', cmd: ''}
-# - ZZ is the list
-###
+# Here we used to have a custom brute force buggy parser.
+# Now using sedparse, a direct port of the GNU sed C code.
 
+def parse(sedscript):
+    #TODO handle xx.x.int_arg for QqLl (new) cmddict['content'] = xx.x.int_arg
+    #TODO handle all new GNU sed commands
 
-incompletecmd = ''
-incompleteaddr = ''
-incompletecmdline = ''
-addr1 = addr2 = ''
-lastaddr = ''
-lastsubref = ''
-has_t = 0
-cmdsep = ';'
-linesep = '@#linesep#@'
-newlineshow = '%s\\N%s' % (color_RED, color_NO)
-blanklines = []
-ZZ = []
-ZZ.append({})  # for header
+    the_program = []
+    ret = []
+    ret.append({})  # for header
 
-linenr = 0
-cmddict = {}
-for line in sedscript:
-    linenr = linenr + 1
+    # Parse the sed script and save the output to `the_program`
+    sedparse.compile_string(the_program, '\n'.join(sedscript)+'\n')
 
-    # 1st line, try to find #!/...
-    if linenr == 1:
-        m = re.match(patt['topopts'], line)
-        if m:  # we have options!
-            ZZ[0]['topopts'] = m.group(1)  # saved on list header
-            del m
+    ### Translate from GNU sed struct_sed_cmd objects to sedsed ZZ objects
 
-    if incompletecmdline:
-        line = linesep.join([incompletecmdline, line])
+    # Flag to detect if there's at least one 't' command in the script.
+    # If so, some special treatment is required in the debugger.
+    has_t = 0
 
-    # s/\n$//
-    if line and line[-1] == '\n':
-        line = line[:-1]
+    # Stores the lastest address. When an empty address command such as //p or
+    # s//foo/ is found, this value will be saved into `cmddict['lastaddr']`.
+    lastaddr = ''
 
-    # blank line
-    if not line.strip():
-        blanklines.append(linenr)
-        ZZ.append({'linenr': linenr, 'id': ''})
-        continue
+    # Save the index position (in `ret`) for the lastest s/// command found.
+    # This is later saved into `cmddict['extrainfo']`.
+    lastsubref = ''
 
-    if DEBUG:
-        print('')
-        devdebug('line:%d: %s' % (linenr, line))
+    def set_address(gsed_data, sedsed_data, prefix='addr1'):
+        if not gsed_data:
+            return
 
-    # bruteforce: split lines in ; char
-    # exceptions: comments and a,c,i text
-    if line.lstrip()[0] == '#':  # comments
-        linesplit = [line.lstrip()]
-    elif line.lstrip()[0] in sedcmds['text']:  # a, c, i
-        linesplit = [line]
-    else:
-        linesplit = line.split(cmdsep)  # split lines at ;
+        if gsed_data.addr_regex:
+            # set cmddict['addr1'] = /foo/
+            sedsed_data[prefix] = '%s%s%s%s' % (
+                gsed_data.addr_regex.escape(),
+                gsed_data.addr_regex.slash,
+                gsed_data.addr_regex.pattern,
+                gsed_data.addr_regex.slash)
 
-    while linesplit:
-        possiblecmd = linesplit.pop(0)
-        if not incompletecmdline:
-            if incompletecmd:
-                possiblecmd = cmdsep.join([incompletecmd, possiblecmd])
-            if incompleteaddr:
-                possiblecmd = cmdsep.join([incompleteaddr, possiblecmd])
+            # set cmddict['addr1html']
+            sedsed_data[prefix + 'html'] = '%s%s%s%s' % (
+                paint_html('escape', gsed_data.addr_regex.escape()),
+                paint_html('delimiter', gsed_data.addr_regex.slash),
+                paint_html('pattern', gsed_data.addr_regex.pattern),
+                paint_html('delimiter', gsed_data.addr_regex.slash))
+
+            # set cmddict['addr1flag'] = I
+            sedsed_data[prefix + 'flag'] = gsed_data.addr_regex.flags
+
         else:
-            incompletecmdline = ''
+            # set cmddict['addr1'] = 99 | $
+            sedsed_data[prefix] = str(gsed_data)
+            sedsed_data[prefix + 'html'] = paint_html('pattern', str(gsed_data))
 
-        # ; at EOL or useless seq of ;;;;
-        if not possiblecmd:
-            continue
+    # For each sed command found by the parser
+    for xx in the_program:
 
-        devdebug('possiblecmd: ' + possiblecmd, 2)
-        possiblecmd = possiblecmd.lstrip()
-        cmdid = possiblecmd[0]  # get 1st char(sed cmd)
+        # Set empty dict with all the keys
+        cmddict = {}
+        for key in cmdfields:
+            cmddict[key] = ''
 
-        if cmdid == '\\' and len(possiblecmd) == 1:  # to get \;addr;
-            incompleteaddr = cmdid
-            continue
+        cmddict['id'] = xx.cmd
+        cmddict['linenr'] = xx.line
 
-        # ------------- Get addresses routine ---------------
-        #
-        # To handle ranges, match addresses one by one:
-        # - Matched addr at ^   ? Get it and set addr1.
-        # - Next char is a comma? It's a range. Get & set addr2.
-        # - Addresses are cut from command, continue.
-        #
-        # We're not using split cause it fails at /bla[,]bla/ address
-        #
-        while True:
-            if not possiblecmd[0] in sedcmds['addr']:  # No address
-                break
+        if xx.addr_bang:
+            cmddict['modifier'] = '!'
 
-            addr = SedAddress(possiblecmd, 'address')  # get data
+        set_address(xx.a1, cmddict, 'addr1')
+        set_address(xx.a2, cmddict, 'addr2')
 
-            if addr.isok:
-                if 'addr1' not in cmddict:
-                    cmddict['linenr'] = linenr
-                    cmddict['addr1'] = addr.full
-                    cmddict['addr1flag'] = addr.flag
-                    cmddict['addr1html'] = addr.html
-                    if addr.pattern:
-                        lastaddr = addr.full
-                    else:
-                        cmddict['lastaddr'] = lastaddr
-                else:
-                    cmddict['addr2'] = addr.full
-                    cmddict['addr2flag'] = addr.flag
-                    cmddict['addr2html'] = addr.html
-                    if addr.pattern:
-                        lastaddr = addr.full
-                    else:
-                        cmddict['lastaddr'] = lastaddr
-                rest = addr.rest
-            else:
-                incompleteaddr = addr.rest
-                break  # join more cmds
-
-            # it's a range
-            if 'addr2' not in cmddict and rest.lstrip()[0] == ',':
-                # del comma and blanks
-                possiblecmd = re.sub(r'^\s*,\s*', '', rest)
-                continue  # process again
-            else:
-                incompleteaddr = ''
-                possiblecmd = rest.lstrip()
-                break  # we're done
-
-        if incompleteaddr:
-            continue  # need more commands
-
-        # fill unset address fields
-        for key in cmdfields[:6]:
-            if key not in cmddict:
-                cmddict[key] = ''
-
-        # -------------------------------------------------
-        # from here, address is no more
-        # -------------------------------------------------
-
-        if not incompletecmd:
-            if not possiblecmd:
-                fatal_error('missing command at line %d!' % linenr)
-            cmd = SedCommand(possiblecmd)
-            if not cmddict['linenr']:
-                cmddict['linenr'] = linenr
-        else:
-            cutme = len(cmd.modifier + cmd.id)
-            cmd.rest = possiblecmd
-            cmd.junk = possiblecmd[cutme:]
-            cmd.do_it_all()
-
-        if cmd.isok:
-            # fill command entry data
-            for key in cmdfields[6:]:
-                cmddict[key] = getattr(cmd, key)
-
-            # saving last address content
-            if cmd.pattern:
-                lastaddr = cmd.delimiter + cmd.pattern + cmd.delimiter
-            elif cmd.delimiter:
+        # Set cmddict['lastaddr'] when current address is //
+        # Otherwise just update lastaddr holder
+        #TODO sedsed bug: lastaddr must also include the flags
+        #TODO sedsed bug: only regex addresses should be saved as lastaddr, but
+        #     currently numbers and $ are also saved
+        #TODO investigate bug in sedsed if both addresses are regexes, the
+        #     'reset' address command should involve both addresses again, and
+        #     not only `lastaddr`
+        if xx.a1:
+            if xx.a1.addr_regex and not xx.a1.addr_regex.pattern:
                 cmddict['lastaddr'] = lastaddr
+            else:
+                lastaddr = cmddict['addr1']
+        if xx.a2:
+            if xx.a2.addr_regex and not xx.a2.addr_regex.pattern:
+                cmddict['lastaddr'] = lastaddr
+            else:
+                lastaddr = cmddict['addr2']
 
-            if cmd.id == 's':
-                lastsubref = len(ZZ)  # save s/// position
+        if xx.cmd == '\n':
+            ret.append({'linenr': xx.line, 'id': ''})
+            continue
+            #TODO only blank lines have this 'diet' dictionary, remove that
+            #     exception for consistency
 
-            if cmd.id == 't':
-                # related s/// reference
-                cmddict['extrainfo'] = lastsubref
-                has_t = 1
+        elif xx.cmd == '#':
+            cmddict['comment'] = '#' + xx.x.comment
 
-            # save full command entry
-            ZZ.append(cmddict)
-            devdebug('FULL entry: %s' % cmddict, 3)
+            # 1st line, try to find #!/...
+            if cmddict['linenr'] == 1:
+                m = re.match(patt['topopts'], cmddict['comment'])
+                if m:  # we have options!
+                    ret[0]['topopts'] = m.group(1)  # saved on list header
+                    del m
 
-            # reset data and incomplete holders
-            cmddict = {}
-            incompletecmd = incompletecmdline = ''
+        elif xx.cmd in sedcmds['solo'] + sedcmds['block']:
+            pass  # nothing else to collect
 
-            if cmd.id == '{':
-                linesplit.insert(0, cmd.rest)
-            if cmd.rest == '}':
-                linesplit.insert(0, cmd.rest)
-                # ^---  3{p;d} (gnu)
-            del cmd
-        else:
-            # not ok, will join next
-            incompletecmd = cmd.rest
-            devdebug('INCOMPLETE cmd: %s' % incompletecmd)
+        elif xx.cmd in sedcmds['text']:
+            cmddict['content'] = '\\%s%s' % (
+                linesep,
+                str(xx.x.cmd_txt).replace('\n', linesep))
 
-    if incompletecmd:
-        incompletecmdline = incompletecmd
+        elif xx.cmd in sedcmds['jump']:
+            cmddict['content'] = xx.x.label_name
 
-# populating list header
-ZZ[0]['blanklines'] = blanklines
-ZZ[0]['fields'] = cmdfields
-ZZ[0]['has_t'] = has_t
+        elif xx.cmd in sedcmds['file']:
+            cmddict['content'] = xx.x.fname
+
+        elif xx.cmd in sedcmds['multi']:  # s/// & y///
+            cmddict['delimiter'] = xx.x.cmd_subst.regx.slash
+            cmddict['pattern'] = str(xx.x.cmd_subst.regx.pattern)
+            cmddict['replace'] = str(xx.x.cmd_subst.replacement.text).replace('\n', linesep)
+            cmddict['flag'] = ''.join(xx.x.cmd_subst.regx.flags)
+            if 'w' in cmddict['flag']:
+                cmddict['content'] = xx.x.cmd_subst.outf.name
+
+        ## save sedsed specific data
+
+        # saving last address content
+        if cmddict['pattern']:
+            #TODO sedsed bug: y also have pattern defined, but it does not count
+            #     as a real pattern for lastaddr. Here it must be s only.
+            lastaddr = cmddict['delimiter'] + cmddict['pattern'] + cmddict['delimiter']
+        elif cmddict['delimiter']:
+            cmddict['lastaddr'] = lastaddr
+
+        if xx.cmd == 's':
+            lastsubref = len(ret)  # save s/// position
+
+        if xx.cmd == 't':
+            # related s/// reference
+            cmddict['extrainfo'] = lastsubref
+            #TODO sedsed bug: lastsubref is an integer saved to a string field
+            #TODO sedsed bug: I'm not sure the previous s in the code is really
+            #     the s that will relate to this t command in run time (see
+            #     issue #15). Maybe just remove this property, it seems useless.
+            has_t = 1
+
+        ret.append(cmddict)
+
+    # populating list header
+    ret[0]['fields'] = cmdfields
+    ret[0]['has_t'] = has_t
+
+    return ret
+
+ZZ = parse(sedscript)
+
 
 # Now the ZZ list is full.
 # It has every info that sedsed can extract from a SED script.
