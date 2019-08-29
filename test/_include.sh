@@ -21,7 +21,11 @@ test_message() {
 }
 
 tests_clean_up() {
-    rm -f $sed_output $sedsed_output w.out1 w.out2
+    rm -f $sed_output $sedsed_output \
+        w.out1 w.out2 \
+        'filesw;' \
+        filesw \
+        filew
 }
 
 tests_git_status() {
