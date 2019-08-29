@@ -1,8 +1,5 @@
 #!/usr/bin/env python
 
-# TODO
-# check: python3 -m pylint gnused.py
-
 # WONTDO
 #
 # Check if command only accepts one address
@@ -21,114 +18,24 @@ import sys
 REG_EXTENDED = 1
 REG_ICASE = 2
 REG_NEWLINE = 4
-# /* POSIX 'cflags' bits (i.e., information for 'regcomp').  */
-# /* If this bit is set, then use extended regular expression syntax.
-#   If not set, then use basic regular expression syntax.  */
-# #define REG_EXTENDED 1
-# /* If this bit is set, then ignore case when matching.
-#   If not set, then case is significant.  */
-# #define REG_ICASE (1 << 1)
-# /* If this bit is set, then anchors do not match at newline
-#      characters in the string.
-#   If not set, then anchors do match at newlines.  */
-# #define REG_NEWLINE (1 << 2)
 
 program_name = 'sed'
 EOF = '<EOF>'  # XXX read https://softwareengineering.stackexchange.com/a/197629
 NULL = None
 
-
 ######################################## ported from basicdefs.h
 
-# import curses.ascii
-
-#ifndef BASICDEFS_H
-# BASICDEFS_H	= #include <alloca.h>
-#include <wchar.h>
-#include <locale.h>
-#include <wctype.h>
-
-#include <gettext.h>
-# def N_(String):	return gettext_noop(String)
-# def _(String):	return gettext(String)
-
-# type countT is used to keep track of line numbers, etc.
-# typedef unsigned countT
-
-#include "xalloc.h"
-
-# some basic definitions to avoid undue promulgating of  ugliness
-# def REALLOC(x,n,t):	return ((t *)xnrealloc(()(x),(n),sizeof(t)))
-# def MEMDUP(x,n,t):	return ((t *)xmemdup((x),(n)*sizeof(t)))
-# def OB_MALLOC(o,n,t):	return ((t *)()obstack_alloc(o,(n)*sizeof(t)))
-
-# obstack_chunk_alloc	= xzalloc
-# obstack_chunk_free	= free
-
-# def STREQ(a, b):	return (strcmp (a, b) == 0)
-# def STREQ_LEN(a, b, n):	return (strncmp (a, b, n) == 0)
-# def STRPREFIX(a, b):	return (strncmp (a, b, strlen (b)) == 0)
-
-# MAX_PATH is not defined in some platforms, most notably GNU/Hurd.
-#   In that case we define it here to some constant.  Note however that
-#   this relies in the fact that sed does reallocation if a buffer
-#   needs to be larger than PATH_MAX.
-#ifndef PATH_MAX
-PATH_MAX	= 200
-#endif
-
-# handle misdesigned <ctype.h> macros (snarfed from lib/regex.c)
-# Jim Meyering writes:
-#
-#   "... Some ctype macros are valid only for character codes that
-#   isascii says are ASCII (SGI's IRIX-4.0.5 is one such system --when
-#   using /bin/cc or gcc but without giving an ansi option).  So, all
-#   ctype uses should be through macros like ISPRINT...  If
-#   STDC_HEADERS is defined, then autoconf has verified that the ctype
-#   macros don't need to be guarded with references to isascii. ...
-#   Defining isascii to 1 should let any compiler worth its salt
-#   eliminate the && through constant folding."
-#   Solaris defines some of these symbols so we must undefine them first.
-
-#undef ISASCII
-#if defined STDC_HEADERS or (not defined isascii and not defined HAVE_ISASCII)
-# def ISASCII(c):	1
-#else
-# def ISASCII(c):	return curses.ascii.isascii(c)
-#endif
-
-#if defined isblank or defined HAVE_ISBLANK
 # def ISBLANK(c):	return (ISASCII (c) and isblank (c))
-#else
 def ISBLANK(c):
     return c == ' ' or c == '\t'
-#endif
 
-#undef ISPRINT
-# def ISPRINT(c):	return (ISASCII (c) and isprint (c))
 # def ISDIGIT(c):	return (ISASCII (c) and isdigit ((unsigned char) (c)))
 def ISDIGIT(ch):
     return ch in '0123456789'
-# def ISALNUM(c):	return (ISASCII (c) and isalnum (c))
-# def ISALPHA(c):	return (ISASCII (c) and isalpha (c))
-# def ISCNTRL(c):	return (ISASCII (c) and iscntrl (c))
-# def ISLOWER(c):	return (ISASCII (c) and islower (c))
-# def ISPUNCT(c):	return (ISASCII (c) and ispunct (c))
+
 # def ISSPACE(c):	return (ISASCII (c) and isspace (c))
 def ISSPACE(c):
     return c in ' \t\n\v\f\r'
-# def ISUPPER(c):	return (ISASCII (c) and isupper (c))
-# def ISXDIGIT(c):	return (ISASCII (c) and isxdigit (c))
-
-#ifndef initialize_main
-#ifdef __EMX__
-# def initialize_main(argcp, argvp):	\
-#   { _response (argcp, argvp); _wildcard (argcp, argvp); }
-#else				# NOT __EMX__
-# def initialize_main(argcp, argvp):	#endif
-#endif
-
-#endif				#!BASICDEFS_H
 
 ######################################## ported from sed.c
 
@@ -145,6 +52,7 @@ class struct_output:
     missing_newline = False
     fp = None
     link = None
+#---------------------------------------------------------------------
 # struct output {
 #   char *name;
 #   bool missing_newline;
@@ -159,6 +67,7 @@ class struct_text_buf:
         return ''.join(self.text)[:-1]  # remove trailing \n
     def __repr__(self):
         return repr(''.join(self.text)[:-1])
+#---------------------------------------------------------------------
 # struct text_buf {
 #   char *text;
 #   size_t text_length;
@@ -178,7 +87,7 @@ class struct_regex:
     def __str__(self):
         return ('\\' if self.slash != '/' else '') + \
                self.slash + self.pattern + self.slash + self.flags
-
+#---------------------------------------------------------------------
 # struct regex {
 #   regex_t pattern;
 #   int flags;
@@ -242,6 +151,7 @@ class struct_addr:
             return str(self.addr_number)
         else:
             return '$'
+#---------------------------------------------------------------------
 # struct addr {
 #   enum addr_types addr_type;
 #   countT addr_number;
@@ -256,7 +166,7 @@ class struct_replacement:
     repl_type = REPL_ASIS  # enum replacement_types
     next_ = None  # struct_replacement
     text = ""  # aur
-
+#---------------------------------------------------------------------
 # struct replacement {
 #   char *prefix;
 #   size_t prefix_length;
@@ -281,7 +191,7 @@ class struct_subst:
         return self.slash + str(self.regx.pattern) + \
                self.slash + str(self.replacement.text) + \
                self.slash + self.flags
-
+#---------------------------------------------------------------------
 # struct subst {
 #   struct regex *regx;
 #   struct replacement *replacement;
@@ -362,8 +272,7 @@ class struct_sed_cmd:
             ret.append('\\\n%s' % self.x.cmd_txt)
 
         return ''.join(ret)
-
-
+#---------------------------------------------------------------------
 # struct sed_cmd {
 #   struct addr *a1;	/* save space: usually is NULL */
 #   struct addr *a2;
@@ -415,21 +324,14 @@ class struct_vector:
     v = struct_sed_cmd()
     v_allocated = 0
     v_length = 0
+#---------------------------------------------------------------------
 # struct vector {
 #     struct sed_cmd *v           # a dynamically allocated array
 #     size_t v_allocated          # ... number of slots allocated
 #     size_t v_length             # ... number of slots in use
 
 
-# _Noreturn void bad_prog (const char *why);
-# size_t normalize_text (char *text, size_t len, enum text_types buftype);
-# struct vector *compile_string (struct vector *, char *str, size_t len);
-# struct vector *compile_file (struct vector *, const char *cmdfile);
-# void check_final_program (struct vector *);
-# void rewind_read_files (void);
-# void finish_program (struct vector *);
-
-# This is probably from regex.c, but I'll fake it here
+# sedsed: This is probably from regex.c, but I'll fake it here
 # just saving the collected strings
 def compile_regex(pattern, flags):
     r = struct_regex()
@@ -437,113 +339,12 @@ def compile_regex(pattern, flags):
     r.flags = ''.join(flags)
     return r
 
-
-# struct regex *compile_regex (struct buffer *b, int flags, int needed_sub);
-# int match_regex (struct regex *regex,
-#                  char *buf, size_t buflen, size_t buf_start_offset,
-#                  struct re_registers *regarray, int regsize);
-# #ifdef lint
-# void release_regex (struct regex *);
-# #endif
-
-# void
-# debug_print_command (const struct vector *program, const struct sed_cmd *sc);
-# void
-# debug_print_program (const struct vector *program);
-# void
-# debug_print_char (char c);
-
-# int process_files (struct vector *, char **argv);
-
-# int main (int, char **);
-
-# extern struct localeinfo localeinfo;
-
-# extern int extended_regexp_flags;
-
-# /* one-byte buffer delimiter */
-# extern char buffer_delimiter;
-
-# /* If set, fflush(stdout) on every line output,
-#   and turn off stream buffering on inputs.  */
-# extern bool unbuffered;
-
-# /* If set, don't write out the line unless explicitly told to. */
-# extern bool no_default_output;
-
-# /* If set, reset line counts on every new file. */
-# extern bool separate_files;
-
-# /* If set, follow symlinks when invoked with -i option */
-# extern bool follow_symlinks;
-
-# /* Do we need to be pedantically POSIX compliant? */
-# extern enum posixicity_types posixicity;
-
-# /* How long should the `l' command's output line be? */
-# extern countT lcmd_out_line_len;
-
-# /* How do we edit files in-place? (we don't if NULL) */
-# extern char *in_place_extension;
-
-# /* The mode to use to read and write files, either "rt"/"w" or "rb"/"wb".  */
-# extern char const *read_mode;
-# extern char const *write_mode;
-
-# /* Should we use EREs? */
-# extern bool use_extended_syntax_p;
-
-# /* Declarations for multibyte character sets.  */
-# extern int mb_cur_max;
-# extern bool is_utf8;
-
-# /* If set, operate in 'sandbox' mode - disable e/r/w commands */
-# extern bool sandbox;
-
-# /* If set, print debugging information.  */
-# extern bool debug;
-
-# #define MBRTOWC(pwc, s, n, ps) \
-#   (mb_cur_max == 1 ? \
-#   (*(pwc) = btowc (*(unsigned char *) (s)), 1) : \
-#   mbrtowc ((pwc), (s), (n), (ps)))
-
-# #define WCRTOMB(s, wc, ps) \
-#   (mb_cur_max == 1 ? \
-#   (*(s) = wctob ((wint_t) (wc)), 1) : \
-#   wcrtomb ((s), (wc), (ps)))
-
-# #define MBSINIT(s) \
-#   (mb_cur_max == 1 ? 1 : mbsinit ((s)))
-
-# #define MBRLEN(s, n, ps) \
-#   (mb_cur_max == 1 ? 1 : mbrtowc (NULL, s, n, ps))
-
-# #define IS_MB_CHAR(ch, ps)                \
-#   (mb_cur_max == 1 ? 0 : is_mb_char (ch, ps))
 def IS_MB_CHAR(ch):
     return ch != EOF and ord(ch) > 127
     # This exception is because I chose to store EOF as '<EOF>'
-
-# extern int is_mb_char (int ch, mbstate_t *ps);
-# extern void initialize_mbcs (void);
-# extern void register_cleanup_file (char const *file);
-# extern void cancel_cleanup (void);
-
-# /* Use this to suppress gcc's '...may be used before initialized' warnings. */
-# #ifdef lint
-# # define IF_LINT(Code) Code
-# #else
-# # define IF_LINT(Code) /* empty */
-# #endif
-
-# #ifndef FALLTHROUGH
-# # if __GNUC__ < 7
-# #  define FALLTHROUGH ((void) 0)
-# # else
-# #  define FALLTHROUGH __attribute__ ((__fallthrough__))
-# # endif
-# #endif
+#---------------------------------------------------------------------
+# #define IS_MB_CHAR(ch, ps)                \
+#   (mb_cur_max == 1 ? 0 : is_mb_char (ch, ps))
 
 ######################################## ported from utils.h
 
@@ -555,21 +356,11 @@ EXIT_PANIC = 4              # PANIC during program execution
 
 ######################################## ported from utils.c
 
-# Store information about files opened with ck_fopen
-#   so that error messages from ck_fread, ck_fwrite, etc. can print the
-#   name of the file that had the error
-
-# struct open_file {
-#     struct open_file *link
-#     unsigned temp:1
-
-# static struct open_file *open_files = NULL
-# static do_ck_fclose(fp)
-
 # Print an error message and exit
 def panic(msg):
     print("%s: %s" % (program_name, msg), file=sys.stderr)
     sys.exit(EXIT_PANIC)
+#---------------------------------------------------------------------
 # def panic(const str, ...):
 #     va_list ap
 
@@ -599,259 +390,11 @@ def panic(msg):
 #     os.exit(EXIT_PANIC)
 
 
-# # Internal routine to get a filename from open_files
-# static const _GL_ATTRIBUTE_PURE utils_fp_name(fp)
-#     struct open_file *p
-
-#     for (p = open_files; p; p = p.link)
-#         if p.fp == fp:
-#             return p.name
-#     if fp == stdin:
-#         return "stdin"
-#     elif fp == stdout:
-#         return "stdout"
-#     elif fp == stderr:
-#         return "stderr"
-
-#     return "<unknown>"
-
-# def register_open_file(fp, const name):
-#     struct open_file *p
-#     for (p = open_files; p; p = p.link) {
-#         if fp == p.fp:
-#             free(p.name)
-#             break
-#     if not p:
-#         p = XCALLOC(1, struct open_file)
-#         p.link = open_files
-#         open_files = p
-#     p.name = xstrdup(name)
-#     p.fp = fp
-#     p.temp = False
-
-# # Panic on failing fopen
-# def ck_fopen(const name, const mode, fail):
-
-#     fp = open(name, mode)
-#     if not fp:
-#         if fail:
-#             panic(_("couldn't open file %s: %s") % (name, os.strerror(errno)))
-
-#         return NULL
-
-#     register_open_file(fp, name)
-#     return fp
-
-# # Panic on failing fdopen
-# def ck_fdopen(fd, const name, const mode, fail):
-
-#     fp = os.fdopen(fd, mode)
-#     if not fp:
-#         if fail:
-#             panic(_("couldn't attach to %s: %s") % (name, os.strerror(errno)))
-
-#         return NULL
-
-#     register_open_file(fp, name)
-#     return fp
-
-# ck_mkstemp(p_filename, const tmpdir,
-#                  const base, const mode)
-#     template = xmalloc(len(tmpdir) + len(base) + 8)
-#     sprintf(template, "%s/%sXXXXXX" % (tmpdir, base))
-
-#     # The ownership might change, so omit some permissions at first
-# #       so unauthorized users cannot nip in before the file is ready.
-# #       mkstemp forces O_BINARY on cygwin, so use mkostemp instead.
-#     mode_t save_umask = os.umask(0700)
-#     fd = mkostemp(template; 0)
-#     os.umask(save_umask)
-#     if fd == -1:
-#         panic(_("couldn't open temporary file %s: %s") % (template,
-#               os.strerror(errno)))
-# #if O_BINARY
-#     if binary_mode and (set_binary_mode(fd, O_BINARY) == -1):
-#         panic(_("failed to set binary mode on '%s'") % (template))
-# #endif
-
-#     *p_filename = template
-#     fp = os.fdopen(fd; mode)
-#     register_open_file(fp, template)
-#     return fp
-
-# # Panic on failing fwrite
-# def ck_fwrite(const ptr, size_t size, size_t nmemb, stream):
-#     clearerr(stream)
-#     if size and fwrite(ptr, size, nmemb, stream) != nmemb:
-#         panic(ngettext("couldn't write %llu item to %s: %s" % ("couldn't write %llu items to %s: %s" % (nmemb)),
-#               (unsigned long) nmemb, utils_fp_name(stream),
-#               os.strerror(errno))
-
-# # Panic on failing fread
-# size_t ck_fread(ptr, size_t size, size_t nmemb, stream)
-#     clearerr(stream)
-#     if size and (nmemb = fread(ptr, size, nmemb, stream): <= 0
-#          and ferror(stream))
-#         panic(_("read error on %s: %s") % (utils_fp_name(stream),
-#               os.strerror(errno)))
-
-#     return nmemb
-
-# size_t
-# ck_getdelim(text, size_t * buflen, buffer_delimiter,
-
-#     error = ferror(stream)
-#     if not error:
-#         result = getdelim(text, buflen, buffer_delimiter, stream)
-#         error = ferror(stream)
-
-#     if error:
-#         panic(_("read error on %s: %s") % (utils_fp_name(stream),
-#               os.strerror(errno)))
-
-#     return result
-
-# # Panic on failing fflush
-# def ck_fflush(stream):
-#     if not fwriting(stream):
-#         return
-
-#     clearerr(stream)
-#     if fflush(stream) == EOF and errno != errno.EBADF:
-#         panic("couldn't flush %s: %s" % (utils_fp_name(stream),
-#               os.strerror(errno)))
-
-# # Panic on failing fclose
-# def ck_fclose(stream):
-#     struct open_file r
-#     struct open_file *prev
-#     struct open_file *cur
-
-#     # a NULL stream means to close all files
-#     r.link = open_files
-#     prev = r
-#     while (cur = prev.link):
-#         if not stream or stream == cur.fp:
-#             do_ck_fclose(cur.fp)
-#             prev.link = cur.link
-#             free(cur.name)
-#             free(cur)
-#         } else:
-#             prev = cur
-
-#     open_files = r.link
-
-#     # Also care about stdout, because if it is redirected the
-# #       last output operations might fail and it is important
-# #       to signal this as an error (perhaps to make).
-#     if not stream:
-#         do_ck_fclose(stdout)
-
-# # Close a single file.
-# def do_ck_fclose(fp):
-#     ck_fflush(fp)
-#     clearerr(fp)
-
-#     if fclose(fp) == EOF:
-#         panic("couldn't close %s: %s" % (utils_fp_name(fp), os.strerror(errno)))
-
-# # Follow symlink and panic if something fails.  Return the ultimate
-# #   symlink target, stored in a temporary buffer that the caller should
-# #   not free.
-# const follow_symlink(const fname)
-# #ifdef ENABLE_FOLLOW_SYMLINKS
-#     static buf1, buf2
-#     static buf_size
-
-#     struct stat statbuf
-#     const buf = fname, c
-
-#     if buf_size == 0:
-#         buf1 = xzalloc(PATH_MAX + 1)
-#         buf2 = xzalloc(PATH_MAX + 1)
-#         buf_size = PATH_MAX + 1
-
-#     while (rc = os.lstat(buf, &statbuf): == 0
-#          and (statbuf.st_mode & S_IFLNK) == S_IFLNK) {
-#         if buf == buf2:
-#             buf1 = buf2
-#             buf = buf1
-
-#         while (rc = readlink(buf, buf2, buf_size)) == buf_size:
-#             buf_size *= 2
-#             buf1 = xrealloc(buf1, buf_size)
-#             buf2 = xrealloc(buf2, buf_size)
-#         if rc < 0:
-#             panic(_("couldn't follow symlink %s: %s") % (buf,
-#                   os.strerror(errno)))
-#         else:
-#             buf2[rc] = '\0'
-
-#         if buf2[0] != '/' and (c = strrchr(buf, '/')) != NULL:
-#             # Need to handle relative paths with care.  Reallocate buf1 and
-#               buf2 to be big enough.
-#             len = c - buf + 1
-#             if len + rc + 1 > buf_size:
-#                 buf_size = len + rc + 1
-#                 buf1 = xrealloc(buf1, buf_size)
-#                 buf2 = xrealloc(buf2, buf_size)
-
-#             # Always store the new path in buf1.
-#             if buf != buf1:
-#                 memcpy(buf1, buf, len)
-
-#             # Tack the relative symlink at the end of buf1.
-#             memcpy(buf1 + len, buf2, rc + 1)
-#             buf = buf1
-#         else:
-#             # Use buf2 as the buffer, it saves a strcpy if it is not pointing to
-# #              another link.  It works for absolute symlinks, and as long as
-# #              symlinks do not leave the current directory.
-#             buf = buf2
-
-#     if rc < 0:
-#         panic(_("cannot stat %s: %s") % (buf, os.strerror(errno)))
-
-#     return buf
-# #else
-#     return fname
-# #endif                          # ENABLE_FOLLOW_SYMLINKS
-
-# # Panic on failing rename
-# ck_rename(const from, const to, const unlink_if_fail)
-#     rd = rename(from; to)
-#     if rd != -1:
-#         return
-
-#     if unlink_if_fail:
-#         save_errno = errno
-#         errno = 0
-#         os.unlink(unlink_if_fail)
-
-#         # Failure to remove the temporary file is more severe,
-#           so trigger it first.
-#         if errno != 0:
-#             panic(_("cannot remove %s: %s") % (unlink_if_fail,
-#                   os.strerror(errno)))
-
-#         errno = save_errno
-
-#     panic(_("cannot rename %s: %s") % (from, os.strerror(errno)))
-
-
-
-
-# Implement a variable sized buffer of `stuff'.  We don't know what it is,
-# nor do we care, as long as it doesn't mind being aligned by malloc.
-
-# struct buffer {
-#     size_t allocated
-#     size_t length
-
 MIN_ALLOCATE = 50
 
 def init_buffer():
     return []
+#---------------------------------------------------------------------
 # struct buffer *init_buffer(void)
 #     struct buffer *b = XCALLOC(1, struct buffer)
 #     b.b = XCALLOC(MIN_ALLOCATE, char)
@@ -859,39 +402,11 @@ def init_buffer():
 #     b.length = 0
 #     return b
 
-# def get_buffer(struct buffer const *b):
-#     return b.b
-
-# size_t size_buffer(struct buffer const *b)
-#     return b.length
-
-# def resize_buffer(struct buffer *b, size_t newlen):
-#     try = NULL
-#     size_t alen = b.allocated
-
-#     if newlen <= alen:
-#         return
-#     alen *= 2
-#     if newlen < alen:
-#         try = realloc(b.b, alen)        # Note: *not* the REALLOC() macro!
-#     if not try:
-#         alen = newlen
-#         try = REALLOC(b.b, alen, char)
-#     b.allocated = alen
-#     b.b = try
-
-# def add_buffer(struct buffer *b, const p, size_t n):
-#     if b.allocated - b.length < n:
-#         resize_buffer(b, b.length + n)
-#     result = memcpy(b.b + b.length, p, n)
-#     b.length += n
-#     return result
-
 def add1_buffer(buffer, ch):
     if ch != EOF:
         buffer.append(ch)  # in-place
     # the return is never used
-#
+#---------------------------------------------------------------------
 # def add1_buffer(struct buffer *b, c):
 #     # This special case should be kept cheap
 # #     *  don't make it just a mere convenience
@@ -910,6 +425,7 @@ def add1_buffer(buffer, ch):
 
 def free_buffer(b):
     del b
+#---------------------------------------------------------------------
 # def free_buffer(struct buffer *b):
 #     if b:
 #         free(b.b)
@@ -917,19 +433,12 @@ def free_buffer(b):
 
 ######################################## ported from compile.c
 
-#define YMAP_LENGTH		256
-#define VECTOR_ALLOC_INCREMENT	40
-#define OPEN_BRACKET	'['
-#define CLOSE_BRACKET	']'
-#define OPEN_BRACE	'{'
-#define CLOSE_BRACE	'}'
 YMAP_LENGTH = 256
 VECTOR_ALLOC_INCREMENT = 40
 OPEN_BRACKET = '['
 CLOSE_BRACKET = ']'
 OPEN_BRACE = '{'
 CLOSE_BRACE = '}'
-
 
 # struct prog_info {
 #   /* When we're reading a script command from a string, `prog.base'
@@ -972,27 +481,6 @@ class error_info:
     string_expr_count = 0
 
 
-# Label structure used to resolve GOTO's, labels, and block beginnings.
-# struct sed_label {
-#   countT v_index;		/* index of vector element being referenced */
-#   char *name;			/* NUL-terminated name of the label */
-#   struct error_info err_info;	/* track where `{}' blocks start */
-#   struct sed_label *next;	/* linked list (stack) */
-# };
-
-# struct special_files {
-#   struct output outf;
-#   FILE **pfp;
-# };
-
-# static FILE *my_stdin, *my_stdout, *my_stderr;
-# static struct special_files special_files[] = {
-#   { { (char *) "/dev/stdin", false, NULL, NULL }, &my_stdin },
-#   { { (char *) "/dev/stdout", false, NULL, NULL }, &my_stdout },
-#   { { (char *) "/dev/stderr", false, NULL, NULL }, &my_stderr },
-#   { { NULL, false, NULL, NULL }, NULL }
-# };
-
 # Where we are in the processing of the input.
 # static struct prog_info prog;
 # static struct error_info cur_input;
@@ -1024,94 +512,7 @@ old_text_buf = NULL
 # static struct sed_label *blocks = NULL;
 blocks = 0
 
-# Use an obstack for compilation.
-# static struct obstack obs;
-
 # Various error messages we may want to print
-# static const char errors[] =
-#   "multiple `!'s\0"
-#   "unexpected `,'\0"
-#   "invalid usage of +N or ~N as first address\0"
-#   "unmatched `{'\0"
-#   "unexpected `}'\0"
-#   "extra characters after command\0"
-#   "expected \\ after `a', `c' or `i'\0"
-#   "`}' doesn't want any addresses\0"
-#   ": doesn't want any addresses\0"
-#   "comments don't accept any addresses\0"
-#   "missing command\0"
-#   "command only uses one address\0"
-#   "unterminated address regex\0"
-#   "unterminated `s' command\0"
-#   "unterminated `y' command\0"
-#   "unknown option to `s'\0"
-#   "multiple `p' options to `s' command\0"
-#   "multiple `g' options to `s' command\0"
-#   "multiple number options to `s' command\0"
-#   "number option to `s' command may not be zero\0"
-#   "strings for `y' command are different lengths\0"
-#   "delimiter character is not a single-byte character\0"
-#   "expected newer version of sed\0"
-#   "invalid usage of line address 0\0"
-#   "unknown command: `%c'\0"
-#   "incomplete command\0"
-#   "\":\" lacks a label\0"
-#   "recursive escaping after \\c not allowed\0"
-#   "e/r/w commands disabled in sandbox mode\0"
-#   "missing filename in r/R/w/W commands";
-
-# #define BAD_BANG (errors)
-# #define BAD_COMMA (BAD_BANG + sizeof (N_("multiple `!'s")))
-# #define BAD_STEP (BAD_COMMA + sizeof (N_("unexpected `,'")))
-# #define EXCESS_OPEN_BRACE (BAD_STEP \
-#   + sizeof (N_("invalid usage of +N or ~N as first address")))
-# #define EXCESS_CLOSE_BRACE (EXCESS_OPEN_BRACE + sizeof (N_("unmatched `{'")))
-# #define EXCESS_JUNK (EXCESS_CLOSE_BRACE + sizeof (N_("unexpected `}'")))
-# #define EXPECTED_SLASH (EXCESS_JUNK \
-#   + sizeof (N_("extra characters after command")))
-# #define NO_CLOSE_BRACE_ADDR (EXPECTED_SLASH \
-#   + sizeof (N_("expected \\ after `a', `c' or `i'")))
-# #define NO_COLON_ADDR (NO_CLOSE_BRACE_ADDR \
-#   + sizeof (N_("`}' doesn't want any addresses")))
-# #define NO_SHARP_ADDR (NO_COLON_ADDR \
-#   + sizeof (N_(": doesn't want any addresses")))
-# #define NO_COMMAND (NO_SHARP_ADDR \
-#   + sizeof (N_("comments don't accept any addresses")))
-# #define ONE_ADDR (NO_COMMAND + sizeof (N_("missing command")))
-# #define UNTERM_ADDR_RE (ONE_ADDR + sizeof (N_("command only uses one address")))
-# #define UNTERM_S_CMD (UNTERM_ADDR_RE \
-#   + sizeof (N_("unterminated address regex")))
-# #define UNTERM_Y_CMD (UNTERM_S_CMD + sizeof (N_("unterminated `s' command")))
-# #define UNKNOWN_S_OPT (UNTERM_Y_CMD + sizeof (N_("unterminated `y' command")))
-# #define EXCESS_P_OPT (UNKNOWN_S_OPT + sizeof (N_("unknown option to `s'")))
-# #define EXCESS_G_OPT (EXCESS_P_OPT \
-#   + sizeof (N_("multiple `p' options to `s' command")))
-# #define EXCESS_N_OPT (EXCESS_G_OPT \
-#   + sizeof (N_("multiple `g' options to `s' command")))
-# #define ZERO_N_OPT (EXCESS_N_OPT \
-#   + sizeof (N_("multiple number options to `s' command")))
-# #define Y_CMD_LEN (ZERO_N_OPT \
-#   + sizeof (N_("number option to `s' command may not be zero")))
-# #define BAD_DELIM (Y_CMD_LEN \
-#   + sizeof (N_("strings for `y' command are different lengths")))
-# #define ANCIENT_VERSION (BAD_DELIM \
-#   + sizeof (N_("delimiter character is not a single-byte character")))
-# #define INVALID_LINE_0 (ANCIENT_VERSION \
-#   + sizeof (N_("expected newer version of sed")))
-# #define UNKNOWN_CMD (INVALID_LINE_0 \
-#   + sizeof (N_("invalid usage of line address 0")))
-# #define INCOMPLETE_CMD (UNKNOWN_CMD + sizeof (N_("unknown command: `%c'")))
-# #define COLON_LACKS_LABEL (INCOMPLETE_CMD \
-#   + sizeof (N_("incomplete command")))
-# #define RECURSIVE_ESCAPE_C (COLON_LACKS_LABEL \
-#   + sizeof (N_("\":\" lacks a label")))
-# #define DISALLOWED_CMD (RECURSIVE_ESCAPE_C \
-#   + sizeof (N_("recursive escaping after \\c not allowed")))
-# #define MISSING_FILENAME (DISALLOWED_CMD \
-#   + sizeof (N_( "e/r/w commands disabled in sandbox mode")))
-# /* #define END_ERRORS (DISALLOWED_CMD \
-#      + sizeof (N_( "e/r/w commands disabled in sandbox mode"))) */
-
 BAD_BANG = "multiple `!'s"
 BAD_COMMA = "unexpected `,'"
 BAD_STEP = "invalid usage of +N or ~N as first address"
@@ -1142,9 +543,6 @@ COLON_LACKS_LABEL = "\":\" lacks a label"
 RECURSIVE_ESCAPE_C = "recursive escaping after \\c not allowed"
 DISALLOWED_CMD = "e/r/w commands disabled in sandbox mode"
 MISSING_FILENAME = "missing filename in r/R/w/W commands"
-
-# static struct output *file_read = NULL;
-# static struct output *file_write = NULL;
 
 # Complain about an unknown command and exit.
 def bad_command(ch):
@@ -1289,7 +687,6 @@ def read_end_of_cmd():
     # sedsed: Ignore multiple trailing blanks and ; until EOC/EOL/EOF
     elif ch == ';':
         ignore_trailing_fluff()
-
 #---------------------------------------------------------------------
 #   const int ch = in_nonblank ();
 #   if (ch == CLOSE_BRACE || ch == '#')
@@ -1323,46 +720,6 @@ def add_then_next(buffer, ch):
 # {
 #   add1_buffer (b, ch);
 #   return inchar ();
-# }
-
-# static char *
-# convert_number (char *result, char *buf, const char *bufend, int base)
-# {
-#   int n = 0;
-#   int max = 1;
-#   char *p;
-
-#   for (p=buf+1; p < bufend && max <= 255; ++p, max *= base)
-#     {
-#       int d = -1;
-#       switch (*p)
-#         {
-#         case '0': d = 0x0; break;
-#         case '1': d = 0x1; break;
-#         case '2': d = 0x2; break;
-#         case '3': d = 0x3; break;
-#         case '4': d = 0x4; break;
-#         case '5': d = 0x5; break;
-#         case '6': d = 0x6; break;
-#         case '7': d = 0x7; break;
-#         case '8': d = 0x8; break;
-#         case '9': d = 0x9; break;
-#         case 'A': case 'a': d = 0xa; break;
-#         case 'B': case 'b': d = 0xb; break;
-#         case 'C': case 'c': d = 0xc; break;
-#         case 'D': case 'd': d = 0xd; break;
-#         case 'E': case 'e': d = 0xe; break;
-#         case 'F': case 'f': d = 0xf; break;
-#         }
-#       if (d < 0 || base <= d)
-#         break;
-#       n = n * base + d;
-#     }
-#   if (p == buf+1)
-#     *result = *buf;
-#   else
-#     *result = n;
-#   return p;
 # }
 
 # This is a copy of read_filename, but preserving blanks
@@ -1404,64 +761,6 @@ def read_filename():
 #     }
 #   add1_buffer (b, '\0');
 #   return b;
-
-
-#def get_openfile(file_ptrs, mode, fail);
-#    struct output *p
-#
-#    b = read_filename()
-#    file_name = get_buffer(b)
-#    if len(file_name) == 0:
-#        bad_prog(_(MISSING_FILENAME))
-#
-#    free_buffer(b)
-#    return p
-#---------------------------------------------------------------------
-# get_openfile (struct output **file_ptrs, const char *mode, int fail)
-# {
-#   struct buffer *b;
-#   char *file_name;
-#   struct output *p;
-#
-#   b = read_filename ();
-#   file_name = get_buffer (b);
-#   if (strlen (file_name) == 0)
-#     bad_prog (_(MISSING_FILENAME));
-#
-#   for (p=*file_ptrs; p; p=p->link)
-#     if (strcmp (p->name, file_name) == 0)
-#       break;
-#
-#   if (posixicity == POSIXLY_EXTENDED)
-#     {
-#       /* Check whether it is a special file (stdin, stdout or stderr) */
-#       struct special_files *special = special_files;
-#
-#       /* std* sometimes are not constants, so they
-#          cannot be used in the initializer for special_files */
-#       my_stdin = stdin; my_stdout = stdout; my_stderr = stderr;
-#       for (special = special_files; special->outf.name; special++)
-#         if (strcmp (special->outf.name, file_name) == 0)
-#           {
-#             special->outf.fp = *special->pfp;
-#             free_buffer (b);
-#             return &special->outf;
-#           }
-#     }
-#
-#   if (!p)
-#     {
-#       p = OB_MALLOC (&obs, 1, struct output);
-#       p->name = xstrdup (file_name);
-#       p->fp = ck_fopen (p->name, mode, fail);
-#       p->missing_newline = false;
-#       p->link = *file_ptrs;
-#       *file_ptrs = p;
-#     }
-#   free_buffer (b);
-#   return p;
-# }
-
 
 def next_cmd_entry(vector):
     cmd = struct_sed_cmd()
@@ -1927,161 +1226,6 @@ def read_label():
 #   ret = xstrdup (get_buffer (b));
 #   free_buffer (b);
 #   return ret;
-
-
-# /* Store a label (or label reference) created by a `:', `b', or `t'
-#   command so that the jump to/from the label can be backpatched after
-#   compilation is complete, or a reference created by a `{' to be
-#   backpatched when the corresponding `}' is found.  */
-# static struct sed_label *
-# setup_label (struct sed_label *list, countT idx, char *name,
-#              const struct error_info *err_info)
-# {
-#   struct sed_label *ret = OB_MALLOC (&obs, 1, struct sed_label);
-#   ret->v_index = idx;
-#   ret->name = name;
-#   if (err_info)
-#     memcpy (&ret->err_info, err_info, sizeof (ret->err_info));
-#   ret->next = list;
-#   return ret;
-# }
-
-
-# static struct sed_label *
-# release_label (struct sed_label *list_head)
-# {
-#   struct sed_label *ret;
-#
-#   if (!list_head)
-#     return NULL;
-#   ret = list_head->next;
-#
-#   free (list_head->name);
-#
-# #if 0
-#   /* We use obstacks */
-#   free (list_head);
-# #endif
-#   return ret;
-# }
-
-
-# static struct replacement *
-# new_replacement (char *text, size_t length, enum replacement_types type)
-# {
-#   struct replacement *r = OB_MALLOC (&obs, 1, struct replacement);
-#
-#   r->prefix = text;
-#   r->prefix_length = length;
-#   r->subst_id = -1;
-#   r->repl_type = type;
-#
-#   /* r-> next = NULL; */
-#   return r;
-# }
-
-# static void
-# setup_replacement (struct subst *sub, const char *text, size_t length)
-# {
-#   char *base;
-#   char *p;
-#   char *text_end;
-#   enum replacement_types repl_type = REPL_ASIS, save_type = REPL_ASIS;
-#   struct replacement root;
-#   struct replacement *tail;
-#
-#   sub->max_id = 0;
-#   base = MEMDUP (text, length, char);
-#   length = normalize_text (base, length, TEXT_REPLACEMENT);
-#
-#   IF_LINT (sub->replacement_buffer = base);
-#
-#   text_end = base + length;
-#   tail = &root;
-#
-#   for (p=base; p<text_end; ++p)
-#     {
-#       if (*p == '\\')
-#         {
-#           /* Preceding the backslash may be some literal text: */
-#           tail = tail->next =
-#             new_replacement (base, (size_t)(p - base), repl_type);
-#
-#           repl_type = save_type;
-#
-#           /* Skip the backslash and look for a numeric back-reference,
-#              or a case-munging escape if not in POSIX mode: */
-#           ++p;
-#           if (p == text_end)
-#             ++tail->prefix_length;
-#
-#           else if (posixicity == POSIXLY_BASIC && !ISDIGIT (*p))
-#             {
-#               p[-1] = *p;
-#               ++tail->prefix_length;
-#             }
-#
-#           else
-#             switch (*p)
-#               {
-#               case '0': case '1': case '2': case '3': case '4':
-#               case '5': case '6': case '7': case '8': case '9':
-#                 tail->subst_id = *p - '0';
-#                 if (sub->max_id < tail->subst_id)
-#                   sub->max_id = tail->subst_id;
-#                 break;
-#
-#               case 'L':
-#                 repl_type = REPL_LOWERCASE;
-#                 save_type = REPL_LOWERCASE;
-#                 break;
-#
-#               case 'U':
-#                 repl_type = REPL_UPPERCASE;
-#                 save_type = REPL_UPPERCASE;
-#                 break;
-#
-#               case 'E':
-#                 repl_type = REPL_ASIS;
-#                 save_type = REPL_ASIS;
-#                 break;
-#
-#               case 'l':
-#                 save_type = repl_type;
-#                 repl_type |= REPL_LOWERCASE_FIRST;
-#                 break;
-#
-#               case 'u':
-#                 save_type = repl_type;
-#                 repl_type |= REPL_UPPERCASE_FIRST;
-#                 break;
-#
-#               default:
-#                 p[-1] = *p;
-#                 ++tail->prefix_length;
-#               }
-#
-#           base = p + 1;
-#         }
-#       else if (*p == '&')
-#         {
-#           /* Preceding the ampersand may be some literal text: */
-#           tail = tail->next =
-#             new_replacement (base, (size_t)(p - base), repl_type);
-#
-#           repl_type = save_type;
-#           tail->subst_id = 0;
-#           base = p + 1;
-#         }
-#   }
-#   /* There may be some trailing literal text: */
-#   if (base < text_end)
-#     tail = tail->next =
-#       new_replacement (base, (size_t)(text_end - base), repl_type);
-#
-#   tail->next = NULL;
-#   sub->replacement = root.next;
-# }
 
 
 def read_text(buf, leadin_ch):
@@ -2940,136 +2084,6 @@ def compile_program(vector):
 # }
 
 
-# deal with \X escapes
-# size_t
-# normalize_text (char *buf, size_t len, enum text_types buftype)
-# {
-#   const char *bufend = buf + len;
-#   char *p = buf;
-#   char *q = buf;
-#   char ch;
-#   int base;
-#
-#   /* This variable prevents normalizing text within bracket
-#      subexpressions when conforming to POSIX.  If 0, we
-#      are not within a bracket expression.  If -1, we are within a
-#      bracket expression but are not within [.FOO.], [=FOO=],
-#      or [:FOO:].  Otherwise, this is the '.', '=', or ':'
-#      respectively within these three types of subexpressions.  */
-#   int bracket_state = 0;
-#
-#   int mbclen;
-#   mbstate_t cur_stat = { 0, };
-#
-#   while (p < bufend)
-#     {
-#       mbclen = MBRLEN (p, bufend - p, &cur_stat);
-#       if (mbclen != 1)
-#         {
-#           /* An invalid sequence, or a truncated multibyte character.
-#              We treat it as a single-byte character.  */
-#           if (mbclen == (size_t) -1 || mbclen == (size_t) -2 || mbclen == 0)
-#             mbclen = 1;
-#
-#           memmove (q, p, mbclen);
-#           q += mbclen;
-#           p += mbclen;
-#           continue;
-#         }
-#
-#       if (*p == '\\' && p+1 < bufend && bracket_state == 0)
-#         switch (*++p)
-#           {
-# #if defined __STDC__ && __STDC__-0
-#           case 'a': *q++ = '\a'; p++; continue;
-# #else /* Not STDC; we'll just assume ASCII */
-#           case 'a': *q++ = '\007'; p++; continue;
-# #endif
-#           /* case 'b': *q++ = '\b'; p++; continue; --- conflicts with \b RE */
-#           case 'f': *q++ = '\f'; p++; continue;
-#           case '\n': /*fall through */
-#           case 'n': *q++ = '\n'; p++; continue;
-#           case 'r': *q++ = '\r'; p++; continue;
-#           case 't': *q++ = '\t'; p++; continue;
-#           case 'v': *q++ = '\v'; p++; continue;
-#
-#           case 'd': /* decimal byte */
-#             base = 10;
-#             goto convert;
-#
-#           case 'x': /* hexadecimal byte */
-#             base = 16;
-#             goto convert;
-#
-#           case 'o': /* octal byte */
-#             base = 8;
-# convert:
-#             p = convert_number (&ch, p, bufend, base);
-#
-#             /* for an ampersand in a replacement, pass the \ up one level */
-#             if (buftype == TEXT_REPLACEMENT && (ch == '&' || ch == '\\'))
-#               *q++ = '\\';
-#             *q++ = ch;
-#             continue;
-#
-#           case 'c':
-#             if (++p < bufend)
-#               {
-#                 *q++ = toupper ((unsigned char) *p) ^ 0x40;
-#                 if (*p == '\\')
-#                   {
-#                     p++;
-#                     if (*p != '\\')
-#                       bad_prog (RECURSIVE_ESCAPE_C);
-#                   }
-#                 p++;
-#                 continue;
-#               }
-#             else
-#               {
-#                 /* we just pass the \ up one level for interpretation */
-#                 if (buftype != TEXT_BUFFER)
-#                   *q++ = '\\';
-#                 continue;
-#               }
-#
-#           default:
-#             /* we just pass the \ up one level for interpretation */
-#             if (buftype != TEXT_BUFFER)
-#               *q++ = '\\';
-#             break;
-#           }
-#       else if (buftype == TEXT_REGEX && posixicity != POSIXLY_EXTENDED)
-#         switch (*p)
-#           {
-#           case '[':
-#             if (!bracket_state)
-#               bracket_state = -1;
-#             break;
-#
-#           case ':':
-#           case '.':
-#           case '=':
-#             if (bracket_state == -1 && p[-1] == '[')
-#               bracket_state = *p;
-#             break;
-#
-#           case ']':
-#             if (bracket_state == 0)
-#               ;
-#             else if (bracket_state == -1)
-#               bracket_state = 0;
-#             else if (p[-2] != bracket_state && p[-1] == bracket_state)
-#               bracket_state = -1;
-#             break;
-#           }
-#
-#       *q++ = *p++;
-#     }
-#     return (size_t)(q - buf);
-# }
-
-
 # /* `str' is a string (from the command line) that contains a sed command.
 #   Compile the command, and add it to the end of `cur_program'. */
 def compile_string(cur_program, string):
@@ -3178,29 +2192,6 @@ def compile_file(cur_program, cmdfile):
 # }
 
 
-# static void
-# cleanup_program_filenames (void)
-# {
-#   {
-#     struct output *p;
-#
-#     for (p = file_read; p; p = p->link)
-#       if (p->name)
-#         {
-#           free (p->name);
-#           p->name = NULL;
-#         }
-#
-#     for (p = file_write; p; p = p->link)
-#       if (p->name)
-#         {
-#           free (p->name);
-#           p->name = NULL;
-#         }
-#   }
-# }
-
-
 # Make any checks which require the whole program to have been read.
 #   In particular: this backpatches the jump targets.
 #   Any cleanup which can be done after these checks is done here also.
@@ -3263,80 +2254,6 @@ def check_final_program():  #program):
 #   for (lbl = labels; lbl; lbl = release_label (lbl))
 #     ;
 #   labels = NULL;
-# }
-
-
-# Rewind all resources which were allocated in this module.
-# void
-# rewind_read_files (void)
-# {
-#   struct output *p;
-#
-#   for (p=file_read; p; p=p->link)
-#     if (p->fp)
-#       rewind (p->fp);
-# }
-
-
-# Release all resources which were allocated in this module.
-# void
-# finish_program (struct vector *program)
-# {
-#   cleanup_program_filenames ();
-#
-#   /* close all files... */
-#   {
-#     struct output *p, *q;
-#
-#     for (p=file_read; p; p=q)
-#       {
-#         if (p->fp)
-#           ck_fclose (p->fp);
-#         q = p->link;
-# #if 0
-#         /* We use obstacks. */
-#         free (p);
-# #endif
-#       }
-#
-#     for (p=file_write; p; p=q)
-#       {
-#         if (p->fp)
-#           ck_fclose (p->fp);
-#         q = p->link;
-# #if 0
-#         /* We use obstacks. */
-#         free (p);
-# #endif
-#       }
-#     file_read = file_write = NULL;
-#   }
-#
-# #ifdef lint
-#   for (int i = 0; i < program->v_length; ++i)
-#     {
-#       const struct sed_cmd *sc = &program->v[i];
-#
-#       if (sc->a1 && sc->a1->addr_regex)
-#         release_regex (sc->a1->addr_regex);
-#       if (sc->a2 && sc->a2->addr_regex)
-#         release_regex (sc->a2->addr_regex);
-#
-#       switch (sc->cmd)
-#         {
-#         case 's':
-#           free (sc->x.cmd_subst->replacement_buffer);
-#           if (sc->x.cmd_subst->regx)
-#             release_regex (sc->x.cmd_subst->regx);
-#           break;
-#         }
-#     }
-#
-#   obstack_free (&obs, NULL);
-# #else
-#   (void)program;
-# #endif /* lint */
-#
 # }
 
 
