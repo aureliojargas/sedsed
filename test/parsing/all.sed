@@ -1,4 +1,5 @@
 #n
+# IMPORTANT: This file has significant trailing spaces, do not remove them!
 5!H
 1,5g
 /xxx/IG
@@ -18,16 +19,11 @@ $h
 
 /no arguments/ {
 =
-d
-D
-g
-G
-h
-H
-n
-N
-p
-P
+d;D
+g;G
+h;H
+n;N
+p;P
 x
 }
 
@@ -38,10 +34,11 @@ l
 
 /labels/ {
 :abc1
-t abc2
-b abc3
+:ABC2 
+b abc1 
+t ABC2
+b 
 t
-b
 }
 
 /files/ {
@@ -61,29 +58,19 @@ p
 c\
 text_c1\
 text_c2 \
-text_c3
+text_c3  
 }
 
-/extra useless ;/ {
-p;
-p ;
+/extra useless ;/ { ;
 p;
 p ;
 p;;;;
 s/a/b/g;
 s/a/b/g ;
-s/a/b/g;
-s/a/b/g ;
-r foo
-s/a/b/w filesw
 :foo;
-:foo ;
 :foo ;
 b foo;
 b foo ;
-b foo ;
-b;
-b ;
 b;
 b ;
 } ;
