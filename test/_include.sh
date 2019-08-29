@@ -14,7 +14,7 @@ failed=0
 sed_output='sed-output.txt'
 sedsed_output='sedsed-output.txt'
 
-text=$(printf "one\ntwo\nthree\nfour\nfive\nsix\n")
+text=$(echo one two three four five six | tr ' ' '\n')
 
 test_message() {
     echo "                $*"
