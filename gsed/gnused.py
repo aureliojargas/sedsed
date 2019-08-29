@@ -1,5 +1,17 @@
 #!/usr/bin/env python
 
+#TODO
+# - identify and document all sedsed additions
+# - document how it works
+# - descriptive header with a sed script and its object after parsing
+# - fix the 1~0 problem (see unit tests for step)
+# - decide moving and renaming this file (or even integrating it into sedsed)
+
+# Based on this GNU sed version:
+#   commit a9cb52bcf39f0ee307301ac73c11acb24372b9d8
+#   Author: Assaf Gordon <assafgordon@gmail.com>
+#   Date:   Sun Jun 2 01:14:00 2019 -0600
+
 # WONTDO
 #
 # Check if command only accepts one address
@@ -136,7 +148,7 @@ class struct_replacement:
     subst_id = 0
     repl_type = REPL_ASIS  # enum replacement_types
     next_ = None  # struct_replacement
-    text = ""  # aur
+    text = ""  # sedsed
 
 class struct_subst:
     regx = struct_regex()
@@ -148,8 +160,8 @@ class struct_subst:
     eval_ = False  # 'e' option given
     max_id = 0  # maximum backreference on the RHS
     replacement_buffer = ""  #ifdef lint
-    flags = []  # aur
-    slash = ""  # aur
+    flags = []  # sedsed
+    slash = ""  # sedsed
     def __str__(self):
         return self.slash + str(self.regx.pattern) + \
                self.slash + str(self.replacement.text) + \
@@ -164,21 +176,21 @@ class struct_sed_cmd_x:
     int_arg = -1
     # This is used for the {}, b, and t commands.
     jump_index = 0
-    # This is used for the r command. (sedsed: and RwW)
+    # This is used for the r command. (sedsed: and R w W)
     fname = ""
     # This is used for the hairy s command. (sedsed: and y)
     cmd_subst = struct_subst()
     # This is used for the w command.
     outf = struct_output()
     # This is used for the R command.
-    # (despite the struct name, it is used for both in and out files).
+    # (despite the struct name, it is used for both in and out files). (sedsed: not used)
     inf = struct_output()
     # This is used for the y command.
     translate = ""
     translatemb = ""
     # This is used for the ':' command (debug only).
     label_name = ""
-    comment = ""  # aur
+    comment = ""  # sedsed
 
 class struct_sed_cmd:
     a1 = struct_addr()
@@ -488,7 +500,7 @@ def add_then_next(buffer, ch):
     return inchar()
 
 
-# This is a copy of read_filename, but preserving blanks
+# sedsed: This is a copy of read_filename, but preserving blanks
 def read_comment():
     b = init_buffer()
     ch = inchar()
@@ -624,6 +636,7 @@ def match_slash(slash, regex):  # char, bool
                 ch = inchar()
                 if ch == EOF:
                     break
+                # sedsed
                 # # GNU sed interprets \n here, we don't
                 # elif ch == 'n' and regex:
                 #     ch = '\n'
@@ -723,6 +736,7 @@ def read_label():
     b = init_buffer()
     ch = in_nonblank()
 
+    #XXX use not in (...) here
     while ch != EOF and ch != '\n' and not ISBLANK(ch) and ch != ';' and ch != CLOSE_BRACE and ch != '#':
         ch = add_then_next(b, ch)
 
@@ -793,7 +807,7 @@ def compile_address(addr, ch):  # struct_addr, str
     addr.addr_regex = NULL
 
     if ch in ('/', '\\'):
-        # Instead of using bit flags as regex.c, I'll just save the flags as text
+        # sedsed: Instead of using bit flags as regex.c, I'll just save the flags as text
         flags = []
         # flags = 0
         # struct buffer *b
@@ -944,7 +958,6 @@ def compile_program(vector):
             #       no_default_output = true
 
             # GNU sed discards the comment contents, but I must save it
-            # Using read_filename because it's the same logic of reading until \n or EOF
             b = read_comment()
             cur_cmd.x.comment = ''.join(b)
             debug("comment: %r" % cur_cmd.x.comment)
@@ -1073,7 +1086,9 @@ def compile_program(vector):
             cur_cmd.x.cmd_subst.replacement.text = ''.join(b2)
             debug("y replacement: %r" % cur_cmd.x.cmd_subst.replacement.text)
 
-            # sedsed doesn't need to check this
+            # sedsed: Since we do not perform the de-escaping of \/, \\ and \\n
+            # (see match_slash()), the length check is turned off.
+            #
             # if len(normalize_text(b)) != len(normalize_text(b2)):
             #     bad_prog(Y_CMD_LEN)
 
