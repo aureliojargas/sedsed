@@ -54,9 +54,9 @@ remove_broken_scripts() {
 echo "run errors tests..."
 python3 test.py
 
-echo "test sample.sed..."
-python3 gnused.py -v sample.sed > sample.sed.out 2>&1
-git diff sample.sed.out
+echo "test sample..."
+python3 gnused.py -v sample.gnused.sed > sample.gnused.out 2>&1
+git diff sample.gnused.out
 
 echo "test sedsed 'parsing' and 'script' test modules..."
 cat ../test/{parsing,scripts}/*.sed > blob.sed
