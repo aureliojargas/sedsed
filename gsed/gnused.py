@@ -25,15 +25,12 @@ NULL = None
 
 ######################################## ported from basicdefs.h
 
-# def ISBLANK(c):	return (ISASCII (c) and isblank (c))
 def ISBLANK(c):
     return c == ' ' or c == '\t'
 
-# def ISDIGIT(c):	return (ISASCII (c) and isdigit ((unsigned char) (c)))
 def ISDIGIT(ch):
     return ch in '0123456789'
 
-# def ISSPACE(c):	return (ISASCII (c) and isspace (c))
 def ISSPACE(c):
     return c in ' \t\n\v\f\r'
 
@@ -52,13 +49,6 @@ class struct_output:
     missing_newline = False
     fp = None
     link = None
-#---------------------------------------------------------------------
-# struct output {
-#   char *name;
-#   bool missing_newline;
-#   FILE *fp;
-#   struct output *link;
-# };
 
 class struct_text_buf:
     text = []
@@ -67,36 +57,21 @@ class struct_text_buf:
         return ''.join(self.text)[:-1]  # remove trailing \n
     def __repr__(self):
         return repr(''.join(self.text)[:-1])
-#---------------------------------------------------------------------
-# struct text_buf {
-#   char *text;
-#   size_t text_length;
-# };
 
 class struct_regex:
     pattern = ""
-    flags = ""  # aur: was 0 in the original
+    flags = ""  # sedsed: was 0 in the original
     sz = 0
     dfa = None  # struct_dfa()
     begline = False
     endline = False
     re = ""
-    slash = ""  # aur
+    slash = ""  # sedsed
     def __repr__(self):
         return "[pattern=%s flags=%s]" % (self.pattern, self.flags)
     def __str__(self):
         return ('\\' if self.slash != '/' else '') + \
                self.slash + self.pattern + self.slash + self.flags
-#---------------------------------------------------------------------
-# struct regex {
-#   regex_t pattern;
-#   int flags;
-#   size_t sz;
-#   struct dfa *dfa;
-#   bool begline;
-#   bool endline;
-#   char re[1];
-# };
 
 # enum replacement_types {
 REPL_ASIS = 0
@@ -115,11 +90,6 @@ REPL_LOWERCASE_LOWERCASE = REPL_LOWERCASE_FIRST | REPL_LOWERCASE
 TEXT_BUFFER = 1
 TEXT_REPLACEMENT = 2
 TEXT_REGEX = 3
-
-# enum posixicity_types {
-#     POSIXLY_EXTENDED,           # with GNU extensions
-#     POSIXLY_CORRECT,            # with POSIX-compatible GNU extensions
-#     POSIXLY_BASIC               # pedantically POSIX
 
 # enum addr_state {
 RANGE_INACTIVE = 1           # never been active
@@ -151,13 +121,6 @@ class struct_addr:
             return str(self.addr_number)
         else:
             return '$'
-#---------------------------------------------------------------------
-# struct addr {
-#   enum addr_types addr_type;
-#   countT addr_number;
-#   countT addr_step;
-#   struct regex *addr_regex;
-# };
 
 class struct_replacement:
     prefix = ""
@@ -166,14 +129,6 @@ class struct_replacement:
     repl_type = REPL_ASIS  # enum replacement_types
     next_ = None  # struct_replacement
     text = ""  # aur
-#---------------------------------------------------------------------
-# struct replacement {
-#   char *prefix;
-#   size_t prefix_length;
-#   int subst_id;
-#   enum replacement_types repl_type;
-#   struct replacement *next;
-# };
 
 class struct_subst:
     regx = struct_regex()
@@ -191,21 +146,6 @@ class struct_subst:
         return self.slash + str(self.regx.pattern) + \
                self.slash + str(self.replacement.text) + \
                self.slash + self.flags
-#---------------------------------------------------------------------
-# struct subst {
-#   struct regex *regx;
-#   struct replacement *replacement;
-#   countT numb;		/* if >0, only substitute for match number "numb" */
-#   struct output *outf;	/* 'w' option given */
-#   unsigned global : 1;	/* 'g' option given */
-#   unsigned print : 2;	/* 'p' option given (before/after eval) */
-#   unsigned eval : 1;	/* 'e' option given */
-#   unsigned max_id : 4;  /* maximum backreference on the RHS */
-# #ifdef lint
-#   char* replacement_buffer;
-# #endif
-# };
-
 
 class struct_sed_cmd_x:
     "auxiliary data for various commands"
@@ -215,9 +155,9 @@ class struct_sed_cmd_x:
     int_arg = 0
     # This is used for the {}, b, and t commands.
     jump_index = 0
-    # This is used for the r command. (aur: and RwW)
+    # This is used for the r command. (sedsed: and RwW)
     fname = ""
-    # This is used for the hairy s command. (aur: and y)
+    # This is used for the hairy s command. (sedsed: and y)
     cmd_subst = struct_subst()
     # This is used for the w command.
     outf = struct_output()
@@ -235,7 +175,7 @@ class struct_sed_cmd:
     a1 = struct_addr()
     a2 = struct_addr()
     range_state = RANGE_INACTIVE  # See enum addr_state
-    addr_bang = False  # Non-zero if command is to be applied to non-matches. (aur: using bool)
+    addr_bang = False  # Non-zero if command is to be applied to non-matches. (sedsed: using bool)
     cmd = ""  # The actual command character.
     x = struct_sed_cmd_x()
 
@@ -272,64 +212,12 @@ class struct_sed_cmd:
             ret.append('\\\n%s' % self.x.cmd_txt)
 
         return ''.join(ret)
-#---------------------------------------------------------------------
-# struct sed_cmd {
-#   struct addr *a1;	/* save space: usually is NULL */
-#   struct addr *a2;
-
-#   /* See description the enum, above.  */
-#   enum addr_state range_state;
-
-#   /* Non-zero if command is to be applied to non-matches. */
-#   char addr_bang;
-
-#   /* The actual command character. */
-#   char cmd;
-
-#   /* auxiliary data for various commands */
-#   union {
-#     /* This structure is used for a, i, and c commands. */
-#     struct text_buf cmd_txt;
-
-#     /* This is used for the l, q and Q commands. */
-#     int int_arg;
-
-#     /* This is used for the {}, b, and t commands. */
-#     countT jump_index;
-
-#     /* This is used for the r command. */
-#     char *fname;
-
-#     /* This is used for the hairy s command. */
-#     struct subst *cmd_subst;
-
-#     /* This is used for the w command. */
-#     struct output *outf;
-
-#     /* This is used for the R command.
-#       (despite the struct name, it is used for both in and out files). */
-#     struct output *inf;
-
-#     /* This is used for the y command. */
-#     unsigned char *translate;
-#     char **translatemb;
-
-#     /* This is used for the ':' command (debug only).  */
-#     char* label_name;
-#   } x;
-# };
 
 # Struct vector is used to describe a compiled sed program.
 class struct_vector:
     v = struct_sed_cmd()
     v_allocated = 0
     v_length = 0
-#---------------------------------------------------------------------
-# struct vector {
-#     struct sed_cmd *v           # a dynamically allocated array
-#     size_t v_allocated          # ... number of slots allocated
-#     size_t v_length             # ... number of slots in use
-
 
 # sedsed: This is probably from regex.c, but I'll fake it here
 # just saving the collected strings
@@ -342,9 +230,6 @@ def compile_regex(pattern, flags):
 def IS_MB_CHAR(ch):
     return ch != EOF and ord(ch) > 127
     # This exception is because I chose to store EOF as '<EOF>'
-#---------------------------------------------------------------------
-# #define IS_MB_CHAR(ch, ps)                \
-#   (mb_cur_max == 1 ? 0 : is_mb_char (ch, ps))
 
 ######################################## ported from utils.h
 
@@ -360,76 +245,19 @@ EXIT_PANIC = 4              # PANIC during program execution
 def panic(msg):
     print("%s: %s" % (program_name, msg), file=sys.stderr)
     sys.exit(EXIT_PANIC)
-#---------------------------------------------------------------------
-# def panic(const str, ...):
-#     va_list ap
-
-#     fprintf(stderr, "%s: " % (program_name))
-#     va_start(ap, str)
-#     vfprintf(stderr, str, ap)
-#     va_end(ap)
-#     putc('\n', stderr)
-
-#     # Unlink the temporary files.
-#     while open_files:
-#         if open_files.temp:
-#             fclose(open_files.fp)
-#             errno = 0
-#             os.unlink(open_files.name)
-#             if errno != 0:
-#                 fprintf(stderr, _("cannot remove %s: %s") % (open_files.name, os.strerror(errno)))
-# #ifdef lint
-#         struct open_file *next = open_files.link
-#         free(open_files.name)
-#         free(open_files)
-#         open_files = next
-# #else
-#         open_files = open_files.link
-# #endif
-
-#     os.exit(EXIT_PANIC)
-
 
 MIN_ALLOCATE = 50
 
 def init_buffer():
     return []
-#---------------------------------------------------------------------
-# struct buffer *init_buffer(void)
-#     struct buffer *b = XCALLOC(1, struct buffer)
-#     b.b = XCALLOC(MIN_ALLOCATE, char)
-#     b.allocated = MIN_ALLOCATE
-#     b.length = 0
-#     return b
 
 def add1_buffer(buffer, ch):
     if ch != EOF:
         buffer.append(ch)  # in-place
     # the return is never used
-#---------------------------------------------------------------------
-# def add1_buffer(struct buffer *b, c):
-#     # This special case should be kept cheap
-# #     *  don't make it just a mere convenience
-# #     *  wrapper for add_buffer() -- even "builtin"
-# #     *  versions of memcpy(a, b, 1) can become
-# #     *  expensive when called too often.
-# #
-#     if c != EOF:
-#         if b.allocated - b.length < 1:
-#             resize_buffer(b, b.length + 1)
-#         result = b.b + b.length += 1
-#         *result = c
-#         return result
-
-#     return NULL
 
 def free_buffer(b):
     del b
-#---------------------------------------------------------------------
-# def free_buffer(struct buffer *b):
-#     if b:
-#         free(b.b)
-#     free(b)
 
 ######################################## ported from compile.c
 
@@ -482,8 +310,6 @@ class error_info:
 
 
 # Where we are in the processing of the input.
-# static struct prog_info prog;
-# static struct error_info cur_input;
 class prog(prog_info):
     pass
 class cur_input(error_info):
@@ -491,8 +317,6 @@ class cur_input(error_info):
 
 # /* Information about labels and jumps-to-labels.  This is used to do
 #   the required backpatching after we have compiled all the scripts. */
-# static struct sed_label *jumps = NULL;
-# static struct sed_label *labels = NULL;
 jumps = NULL
 labels = NULL
 
@@ -547,11 +371,6 @@ MISSING_FILENAME = "missing filename in r/R/w/W commands"
 # Complain about an unknown command and exit.
 def bad_command(ch):
     bad_prog(UNKNOWN_CMD % ch)
-#---------------------------------------------------------------------
-#   const char *msg = _(UNKNOWN_CMD);
-#   char *unknown_cmd = xmalloc (strlen (msg));
-#   sprintf (unknown_cmd, msg, ch);
-#   bad_prog (unknown_cmd);
 
 # Complain about a programming error and exit.
 def bad_prog(why):
@@ -563,17 +382,6 @@ def bad_prog(why):
             program_name, cur_input.string_expr_count, prog.cur - prog.base, why)
     print(msg, file=sys.stderr)
     sys.exit(EXIT_BAD_USAGE)
-#---------------------------------------------------------------------
-#   if (cur_input.name)
-#     fprintf (stderr, _("%s: file %s line %lu: %s\n"), program_name,
-#              cur_input.name, (unsigned long)cur_input.line, why);
-#   else
-#     fprintf (stderr, _("%s: -e expression #%lu, char %lu: %s\n"),
-#              program_name,
-#              (unsigned long)cur_input.string_expr_count,
-#              (unsigned long)(prog.cur-prog.base),
-#              why);
-#   exit(EXIT_BAD_USAGE);
 
 
 # /* Read the next character from the program.  Return EOF if there isn't
@@ -594,22 +402,6 @@ def inchar():
         cur_input.line += 1
     debug(ch)
     return ch
-#---------------------------------------------------------------------
-#   int ch = EOF;
-#   if (prog.cur)
-#     {
-#       if (prog.cur < prog.end)
-#         ch = *prog.cur++;
-#     }
-#   else if (prog.file)
-#     {
-#       if (!feof (prog.file))
-#         ch = getc (prog.file);
-#     }
-#   if (ch == '\n')
-#     ++cur_input.line;
-#   return ch;
-
 
 # unget `ch' so the next call to inchar will return it.
 def savchar(ch):
@@ -629,19 +421,7 @@ def savchar(ch):
             prog.file.seek(prog.file.tell() - 1)  # ungetc (ch, prog.file)
         except ValueError:  # negative seek position -1
             pass
-#---------------------------------------------------------------------
-# #   if (ch == EOF)
-#     return;
-#   if (ch == '\n' && cur_input.line > 0)
-#     --cur_input.line;
-#   if (prog.cur)
-#     {
-#       if (prog.cur <= prog.base || *--prog.cur != ch)
-#         panic ("Called savchar with unexpected pushback (%x)",
-#               (unsigned int) ch);
-#     }
-#   else
-#     ungetc (ch, prog.file);
+
 
 # Read the next non-blank character from the program.
 def in_nonblank():
@@ -650,12 +430,6 @@ def in_nonblank():
         if not ISBLANK(ch):
             break
     return ch
-#---------------------------------------------------------------------
-#   int ch;
-#   do
-#     ch = inchar ();
-#     while (ISBLANK (ch));
-#   return ch;
 
 
 # sedsed: Ignore multiple trailing blanks and ; until EOC/EOL/EOF
@@ -687,12 +461,7 @@ def read_end_of_cmd():
     # sedsed: Ignore multiple trailing blanks and ; until EOC/EOL/EOF
     elif ch == ';':
         ignore_trailing_fluff()
-#---------------------------------------------------------------------
-#   const int ch = in_nonblank ();
-#   if (ch == CLOSE_BRACE || ch == '#')
-#     savchar (ch);
-#   else if (ch != EOF && ch != '\n' && ch != ';')
-#     bad_prog (_(EXCESS_JUNK));
+
 
 # Read an integer value from the program.
 def in_integer(ch):
@@ -702,25 +471,12 @@ def in_integer(ch):
         ch = inchar()
     savchar(ch)
     return int(''.join(num))
-#---------------------------------------------------------------------
-#   countT num = 0;
-#   while (ISDIGIT (ch))
-#     {
-#       num = num * 10 + ch - '0';
-#       ch = inchar ();
-#     }
-#   savchar (ch);
-#   return num;
+
 
 def add_then_next(buffer, ch):
     add1_buffer(buffer, ch)
     return inchar()
-#---------------------------------------------------------------------
-# add_then_next (struct buffer *b, int ch)
-# {
-#   add1_buffer (b, ch);
-#   return inchar ();
-# }
+
 
 # This is a copy of read_filename, but preserving blanks
 def read_comment():
@@ -730,6 +486,7 @@ def read_comment():
         ch = add_then_next(b, ch)
     return b
 
+
 # Read in a filename for a `r', `w', or `s///w' command.
 def read_filename():
     b = init_buffer()
@@ -738,29 +495,7 @@ def read_filename():
         ch = add_then_next(b, ch)
     # add1_buffer(b, '\0');  # not necessary in Python
     return b
-#---------------------------------------------------------------------
-#   struct buffer *b;
-#   int ch;
-#
-#   if (sandbox)
-#     bad_prog (_(DISALLOWED_CMD));
-#
-#   b = init_buffer ();
-#   ch = in_nonblank ();
-#   while (ch != EOF && ch != '\n')
-#     {
-# #if 0 /*XXX ZZZ 1998-09-12 kpp: added, then had second thoughts*/
-#       if (posixicity == POSIXLY_EXTENDED)
-#         if (ch == ';' || ch == '#')
-#           {
-#             savchar (ch);
-#             break;
-#           }
-# #endif
-#       ch = add_then_next (b, ch);
-#     }
-#   add1_buffer (b, '\0');
-#   return b;
+
 
 def next_cmd_entry(vector):
     cmd = struct_sed_cmd()
@@ -780,29 +515,6 @@ def next_cmd_entry(vector):
     cmd.x.inf = struct_output()
     vector.append(cmd)
     return cmd
-#---------------------------------------------------------------------
-# next_cmd_entry (struct vector **vectorp)
-# {
-#   struct sed_cmd *cmd;
-#   struct vector *v;
-#
-#   v = *vectorp;
-#   if (v->v_length == v->v_allocated)
-#     {
-#       v->v_allocated += VECTOR_ALLOC_INCREMENT;
-#       v->v = REALLOC (v->v, v->v_allocated, struct sed_cmd);
-#     }
-#
-#   cmd = v->v + v->v_length;
-#   cmd->a1 = NULL;
-#   cmd->a2 = NULL;
-#   cmd->range_state = RANGE_INACTIVE;
-#   cmd->addr_bang = false;
-#   cmd->cmd = '\0';	/* something invalid, to catch bugs early */
-#
-#   *vectorp  = v;
-#   return cmd;
-# }
 
 
 def snarf_char_class(b):  #, cur_stat):
@@ -873,82 +585,6 @@ def snarf_char_class(b):  #, cur_stat):
             state = 2
 
         # state &= ~1  # please, no magic
-#---------------------------------------------------------------------
-# snarf_char_class (struct buffer *b, mbstate_t *cur_stat)
-# {
-#   int ch;
-#   int state = 0;
-#   int delim IF_LINT ( = 0) ;
-#
-#   ch = inchar ();
-#   if (ch == '^')
-#     ch = add_then_next (b, ch);
-#   if (ch == CLOSE_BRACKET)
-#     ch = add_then_next (b, ch);
-#
-#   /* States are:
-#         0 outside a collation element, character class or collation class
-#         1 after the bracket
-#         2 after the opening ./:/=
-#         3 after the closing ./:/= */
-#
-#   for (;; ch = add_then_next (b, ch))
-#     {
-#       const int mb_char = IS_MB_CHAR (ch, cur_stat);
-#
-#       switch (ch)
-#         {
-#         case EOF:
-#         case '\n':
-#           return ch;
-#
-#         case '.':
-#         case ':':
-#         case '=':
-#           if (mb_char)
-#             continue;
-#
-#           if (state == 1)
-#             {
-#               delim = ch;
-#               state = 2;
-#             }
-#           else if (state == 2 && ch == delim)
-#             state = 3;
-#           else
-#             break;
-#
-#           continue;
-#
-#         case OPEN_BRACKET:
-#           if (mb_char)
-#             continue;
-#
-#           if (state == 0)
-#             state = 1;
-#           continue;
-#
-#         case CLOSE_BRACKET:
-#           if (mb_char)
-#             continue;
-#
-#           if (state == 0 || state == 1)
-#             return ch;
-#           else if (state == 3)
-#             state = 0;
-#
-#           break;
-#
-#         default:
-#           break;
-#         }
-#
-#       /* Getting a character different from .=: whilst in state 1
-#          goes back to state 0, getting a character different from ]
-#          whilst in state 3 goes back to state 2.  */
-#       state &= ~1;
-#     }
-# }
 
 
 def match_slash(slash, regex):  # char, bool
@@ -999,56 +635,6 @@ def match_slash(slash, regex):  # char, bool
         savchar(ch)  # for proper line number in error report
     free_buffer(b)
     return NULL
-#---------------------------------------------------------------------
-# static struct buffer *
-# match_slash (int slash, int regex)
-# {
-#   struct buffer *b;
-#   int ch;
-#   mbstate_t cur_stat = { 0, };
-#
-#   /* We allow only 1 byte characters for a slash.  */
-#   if (IS_MB_CHAR (slash, &cur_stat))
-#     bad_prog (BAD_DELIM);
-#
-#   memset (&cur_stat, 0, sizeof cur_stat);
-#
-#   b = init_buffer ();
-#   while ((ch = inchar ()) != EOF && ch != '\n')
-#     {
-#       const int mb_char = IS_MB_CHAR (ch, &cur_stat);
-#
-#       if (!mb_char)
-#         {
-#           if (ch == slash)
-#             return b;
-#           else if (ch == '\\')
-#             {
-#               ch = inchar ();
-#               if (ch == EOF)
-#                 break;
-#               else if (ch == 'n' && regex)
-#                 ch = '\n';
-#               else if (ch != '\n' && (ch != slash || (!regex && ch == '&')))
-#                 add1_buffer (b, '\\');
-#             }
-#           else if (ch == OPEN_BRACKET && regex)
-#             {
-#               add1_buffer (b, ch);
-#               ch = snarf_char_class (b, &cur_stat);
-#               if (ch != CLOSE_BRACKET)
-#                 break;
-#             }
-#         }
-#
-#       add1_buffer (b, ch);
-#     }
-#
-#   if (ch == '\n')
-#     savchar (ch);	/* for proper line number in error report */
-#   free_buffer (b);
-#   return NULL;
-# }
 
 
 def mark_subst_opts():
@@ -1113,85 +699,7 @@ def mark_subst_opts():
         else:
             bad_prog(UNKNOWN_S_OPT)
          #NOTREACHED
-#---------------------------------------------------------------------
-# mark_subst_opts (struct subst *cmd)
-# {
-#   int flags = 0;
-#   int ch;
-#
-#   cmd->global = false;
-#   cmd->print = false;
-#   cmd->eval = false;
-#   cmd->numb = 0;
-#   cmd->outf = NULL;
-#
-#   for (;;)
-#     switch ( (ch = in_nonblank ()) )
-#       {
-#       case 'i':	/* GNU extension */
-#       case 'I':	/* GNU extension */
-#         if (posixicity == POSIXLY_BASIC)
-#           bad_prog (_(UNKNOWN_S_OPT));
-#         flags |= REG_ICASE;
-#         break;
-#
-#       case 'm':	/* GNU extension */
-#       case 'M':	/* GNU extension */
-#         if (posixicity == POSIXLY_BASIC)
-#           bad_prog (_(UNKNOWN_S_OPT));
-#         flags |= REG_NEWLINE;
-#         break;
-#
-#       case 'e':
-#         if (posixicity == POSIXLY_BASIC)
-#           bad_prog (_(UNKNOWN_S_OPT));
-#         cmd->eval = true;
-#         break;
-#
-#       case 'p':
-#         if (cmd->print)
-#           bad_prog (_(EXCESS_P_OPT));
-#         cmd->print |= (1 << cmd->eval); /* 1=before eval, 2=after */
-#         break;
-#
-#       case 'g':
-#         if (cmd->global)
-#           bad_prog (_(EXCESS_G_OPT));
-#         cmd->global = true;
-#         break;
-#
-#       case 'w':
-#         cmd->outf = get_openfile (&file_write, write_mode, true);
-#         return flags;
-#
-#       case '0': case '1': case '2': case '3': case '4':
-#       case '5': case '6': case '7': case '8': case '9':
-#         if (cmd->numb)
-#           bad_prog (_(EXCESS_N_OPT));
-#         cmd->numb = in_integer (ch);
-#         if (!cmd->numb)
-#           bad_prog (_(ZERO_N_OPT));
-#         break;
-#
-#       case CLOSE_BRACE:
-#       case '#':
-#         savchar (ch);
-#         FALLTHROUGH;
-#       case EOF:
-#       case '\n':
-#       case ';':
-#         return flags;
-#
-#       case '\r':
-#         if (inchar () == '\n')
-#           return flags;
-#         FALLTHROUGH;
-#
-#       default:
-#         bad_prog (_(UNKNOWN_S_OPT));
-#         /*NOTREACHED*/
-#       }
-# }
+
 
 # read in a label for a `:', `b', or `t' command
 def read_label():
@@ -1209,23 +717,6 @@ def read_label():
     ret = ''.join(b)
     free_buffer(b)
     return ret
-#---------------------------------------------------------------------
-#   struct buffer *b;
-#   int ch;
-#   char *ret;
-#
-#   b = init_buffer ();
-#   ch = in_nonblank ();
-#
-#   while (ch != EOF && ch != '\n'
-#          && !ISBLANK (ch) && ch != ';' && ch != CLOSE_BRACE && ch != '#')
-#     ch = add_then_next (b, ch);
-#
-#   savchar (ch);
-#   add1_buffer (b, '\0');
-#   ret = xstrdup (get_buffer (b));
-#   free_buffer (b);
-#   return ret;
 
 
 def read_text(buf, leadin_ch):
@@ -1268,57 +759,6 @@ def read_text(buf, leadin_ch):
     buf.text = pending_text
     free_buffer(pending_text)
     pending_text = NULL
-#---------------------------------------------------------------------
-# read_text (struct text_buf *buf, int leadin_ch)
-# {
-#   int ch;
-#
-#   /* Should we start afresh (as opposed to continue a partial text)? */
-#   if (buf)
-#     {
-#       if (pending_text)
-#         free_buffer (pending_text);
-#       pending_text = init_buffer ();
-#       buf->text = NULL;
-#       buf->text_length = 0;
-#       old_text_buf = buf;
-#     }
-#   /* assert(old_text_buf != NULL); */
-#
-#   if (leadin_ch == EOF)
-#     return;
-#
-#   if (leadin_ch != '\n')
-#     add1_buffer (pending_text, leadin_ch);
-#
-#   ch = inchar ();
-#   while (ch != EOF && ch != '\n')
-#     {
-#       if (ch == '\\')
-#         {
-#           ch = inchar ();
-#           if (ch != EOF)
-#             add1_buffer (pending_text, '\\');
-#         }
-#
-#       if (ch == EOF)
-#         {
-#           add1_buffer (pending_text, '\n');
-#           return;
-#         }
-#
-#       ch = add_then_next (pending_text, ch);
-#     }
-#
-#   add1_buffer (pending_text, '\n');
-#   if (!buf)
-#     buf = old_text_buf;
-#   buf->text_length = normalize_text (get_buffer (pending_text),
-#                                      size_buffer (pending_text), TEXT_BUFFER);
-#   buf->text = MEMDUP (get_buffer (pending_text), buf->text_length, char);
-#   free_buffer (pending_text);
-#   pending_text = NULL;
-# }
 
 
 # Try to read an address for a sed command.  If it succeeds,
@@ -1390,87 +830,6 @@ def compile_address(addr, ch):  # struct_addr, str
     else:
         return False
     return True
-#---------------------------------------------------------------------
-# static bool
-# compile_address (struct addr *addr, int ch)
-# {
-#   addr->addr_type = ADDR_IS_NULL;
-#   addr->addr_step = 0;
-#   addr->addr_number = ~(countT)0;  /* extremely unlikely to ever match */
-#   addr->addr_regex = NULL;
-#
-#   if (ch == '/' || ch == '\\')
-#     {
-#       int flags = 0;
-#       struct buffer *b;
-#       addr->addr_type = ADDR_IS_REGEX;
-#       if (ch == '\\')
-#         ch = inchar ();
-#       if ( !(b = match_slash (ch, true)) )
-#         bad_prog (_(UNTERM_ADDR_RE));
-#
-#       for (;;)
-#         {
-#           ch = in_nonblank ();
-#           if (posixicity == POSIXLY_BASIC)
-#             goto posix_address_modifier;
-#           switch (ch)
-#             {
-#             case 'I':	/* GNU extension */
-#               flags |= REG_ICASE;
-#               break;
-#
-#             case 'M':	/* GNU extension */
-#               flags |= REG_NEWLINE;
-#               break;
-#
-#             default:
-#             posix_address_modifier:
-#               savchar (ch);
-#               addr->addr_regex = compile_regex (b, flags, 0);
-#               free_buffer (b);
-#               return true;
-#             }
-#         }
-#     }
-#   else if (ISDIGIT (ch))
-#     {
-#       addr->addr_number = in_integer (ch);
-#       addr->addr_type = ADDR_IS_NUM;
-#       ch = in_nonblank ();
-#       if (ch != '~' || posixicity == POSIXLY_BASIC)
-#         {
-#           savchar (ch);
-#         }
-#       else
-#         {
-#           countT step = in_integer (in_nonblank ());
-#           if (step > 0)
-#             {
-#               addr->addr_step = step;
-#               addr->addr_type = ADDR_IS_NUM_MOD;
-#             }
-#         }
-#     }
-#   else if ((ch == '+' || ch == '~') && posixicity != POSIXLY_BASIC)
-#     {
-#       addr->addr_step = in_integer (in_nonblank ());
-#       if (addr->addr_step==0)
-#         ; /* default to ADDR_IS_NULL; forces matching to stop on next line */
-#       else if (ch == '+')
-#         addr->addr_type = ADDR_IS_STEP;
-#       else
-#         addr->addr_type = ADDR_IS_STEP_MOD;
-#     }
-#   else if (ch == '$')
-#     {
-#       addr->addr_type = ADDR_IS_LAST;
-#     }
-#   else
-#     return false;
-#
-#   return true;
-# }
 
 
 # Read a program (or a subprogram within `{' `}' pairs) in and store
@@ -1700,388 +1059,6 @@ def compile_program(vector):
             bad_command(ch)
             # /*NOTREACHED*/
     # no return, vector edited in place
-#---------------------------------------------------------------------
-#   struct sed_cmd *cur_cmd;
-#   struct buffer *b;
-#   int ch;
-#
-#   if (!vector)
-#     {
-#       vector = XCALLOC (1, struct vector);
-#       vector->v = NULL;
-#       vector->v_allocated = 0;
-#       vector->v_length = 0;
-#
-#       obstack_init (&obs);
-#     }
-#   if (pending_text)
-#     read_text (NULL, '\n');
-#
-#   for (;;)
-#     {
-#       struct addr a;
-#
-#       while ((ch=inchar ()) == ';' || ISSPACE (ch))
-#         ;
-#       if (ch == EOF)
-#         break;
-#
-#       cur_cmd = next_cmd_entry (&vector);
-#       if (compile_address (&a, ch))
-#         {
-#           if (a.addr_type == ADDR_IS_STEP
-#               || a.addr_type == ADDR_IS_STEP_MOD)
-#             bad_prog (_(BAD_STEP));
-#
-#           cur_cmd->a1 = MEMDUP (&a, 1, struct addr);
-#           ch = in_nonblank ();
-#           if (ch == ',')
-#             {
-#               if (!compile_address (&a, in_nonblank ()))
-#                 bad_prog (_(BAD_COMMA));
-#
-#               cur_cmd->a2 = MEMDUP (&a, 1, struct addr);
-#               ch = in_nonblank ();
-#             }
-#
-#           if ((cur_cmd->a1->addr_type == ADDR_IS_NUM
-#               && cur_cmd->a1->addr_number == 0)
-#               && ((!cur_cmd->a2 || cur_cmd->a2->addr_type != ADDR_IS_REGEX)
-#                   || posixicity == POSIXLY_BASIC))
-#             bad_prog (_(INVALID_LINE_0));
-#         }
-#       if (ch == '!')
-#         {
-#           cur_cmd->addr_bang = true;
-#           ch = in_nonblank ();
-#           if (ch == '!')
-#             bad_prog (_(BAD_BANG));
-#         }
-#
-#       /* Do not accept extended commands in --posix mode.  Also,
-#          a few commands only accept one address in that mode.  */
-#       if (posixicity == POSIXLY_BASIC)
-#       switch (ch)
-#          {
-#           case 'e': case 'F': case 'v': case 'z': case 'L':
-#           case 'Q': case 'T': case 'R': case 'W':
-#              bad_command (ch);
-#              FALLTHROUGH;
-#
-#             case 'a': case 'i': case 'l':
-#             case '=': case 'r':
-#               if (cur_cmd->a2)
-#                 bad_prog (_(ONE_ADDR));
-#           }
-#
-#       cur_cmd->cmd = ch;
-#       switch (ch)
-#         {
-#         case '#':
-#           if (cur_cmd->a1)
-#             bad_prog (_(NO_SHARP_ADDR));
-#           ch = inchar ();
-#           if (ch=='n' && first_script && cur_input.line < 2)
-#             if (   (prog.base && prog.cur==2+prog.base)
-#                 || (prog.file && !prog.base && 2==ftell (prog.file)))
-#               no_default_output = true;
-#           while (ch != EOF && ch != '\n')
-#             ch = inchar ();
-#           continue;	/* restart the for (;;) loop */
-#
-#         case 'v':
-#           /* This is an extension.  Programs needing GNU sed might start
-#           * with a `v' command so that other seds will stop.
-#           * We compare the version and ignore POSIXLY_CORRECT.
-#           */
-#           {
-#             char *version = read_label ();
-#             char const *compared_version;
-#             compared_version = (*version == '\0') ? "4.0" : version;
-#             if (strverscmp (compared_version, PACKAGE_VERSION) > 0)
-#               bad_prog (_(ANCIENT_VERSION));
-#
-#             free (version);
-#             posixicity = POSIXLY_EXTENDED;
-#           }
-#           continue;
-#
-#         case '{':
-#           blocks = setup_label (blocks, vector->v_length, NULL, &cur_input);
-#           cur_cmd->addr_bang = !cur_cmd->addr_bang;
-#           break;
-#
-#         case '}':
-#           if (!blocks)
-#             bad_prog (_(EXCESS_CLOSE_BRACE));
-#           if (cur_cmd->a1)
-#             bad_prog (_(NO_CLOSE_BRACE_ADDR));
-#
-#           read_end_of_cmd ();
-#
-#           vector->v[blocks->v_index].x.jump_index = vector->v_length;
-#           blocks = release_label (blocks);	/* done with this entry */
-#           break;
-#
-#         case 'e':
-#           if (sandbox)
-#             bad_prog (_(DISALLOWED_CMD));
-#
-#           ch = in_nonblank ();
-#           if (ch == EOF || ch == '\n')
-#             {
-#               cur_cmd->x.cmd_txt.text_length = 0;
-#               break;
-#             }
-#           else
-#             goto read_text_to_slash;
-#
-#         case 'a':
-#         case 'i':
-#         case 'c':
-#           ch = in_nonblank ();
-#
-#         read_text_to_slash:
-#           if (ch == EOF)
-#             bad_prog (_(EXPECTED_SLASH));
-#
-#           if (ch == '\\')
-#             ch = inchar ();
-#           else
-#             {
-#               if (posixicity == POSIXLY_BASIC)
-#                 bad_prog (_(EXPECTED_SLASH));
-#               savchar (ch);
-#               ch = '\n';
-#             }
-#
-#           read_text (&cur_cmd->x.cmd_txt, ch);
-#           break;
-#
-#         case ':':
-#           if (cur_cmd->a1)
-#             bad_prog (_(NO_COLON_ADDR));
-#           {
-#             char *label = read_label ();
-#             if (!*label)
-#               bad_prog (_(COLON_LACKS_LABEL));
-#             labels = setup_label (labels, vector->v_length, label, NULL);
-#
-#             if (debug)
-#               cur_cmd->x.label_name = strdup (label);
-#           }
-#           break;
-#
-#         case 'T':
-#         case 'b':
-#         case 't':
-#           jumps = setup_label (jumps, vector->v_length, read_label (), NULL);
-#           break;
-#
-#         case 'Q':
-#         case 'q':
-#           if (cur_cmd->a2)
-#             bad_prog (_(ONE_ADDR));
-#           FALLTHROUGH;
-#
-#         case 'L':
-#         case 'l':
-#           ch = in_nonblank ();
-#           if (ISDIGIT (ch) && posixicity != POSIXLY_BASIC)
-#             {
-#               cur_cmd->x.int_arg = in_integer (ch);
-#             }
-#           else
-#             {
-#               cur_cmd->x.int_arg = -1;
-#               savchar (ch);
-#             }
-#
-#           read_end_of_cmd ();
-#           break;
-#
-#       case '=':
-#       case 'd':
-#       case 'D':
-#       case 'F':
-#       case 'g':
-#       case 'G':
-#       case 'h':
-#         case 'H':
-#         case 'n':
-#         case 'N':
-#         case 'p':
-#         case 'P':
-#         case 'z':
-#         case 'x':
-#           read_end_of_cmd ();
-#           break;
-#
-#         case 'r':
-#           b = read_filename ();
-#           if (strlen (get_buffer (b)) == 0)
-#             bad_prog (_(MISSING_FILENAME));
-#           cur_cmd->x.fname = xstrdup (get_buffer (b));
-#           free_buffer (b);
-#           break;
-#
-#         case 'R':
-#           cur_cmd->x.inf = get_openfile (&file_read, read_mode, false);
-#           break;
-#
-#         case 'W':
-#         case 'w':
-#           cur_cmd->x.outf = get_openfile (&file_write, write_mode, true);
-#           break;
-#
-#         case 's':
-#           {
-#             struct buffer *b2;
-#             int flags;
-#             int slash;
-#
-#             slash = inchar ();
-#             if ( !(b  = match_slash (slash, true)) )
-#               bad_prog (_(UNTERM_S_CMD));
-#             if ( !(b2 = match_slash (slash, false)) )
-#               bad_prog (_(UNTERM_S_CMD));
-#
-#             cur_cmd->x.cmd_subst = OB_MALLOC (&obs, 1, struct subst);
-#             setup_replacement (cur_cmd->x.cmd_subst,
-#                               get_buffer (b2), size_buffer (b2));
-#             free_buffer (b2);
-#
-#             flags = mark_subst_opts (cur_cmd->x.cmd_subst);
-#             cur_cmd->x.cmd_subst->regx =
-#               compile_regex (b, flags, cur_cmd->x.cmd_subst->max_id + 1);
-#             free_buffer (b);
-#
-#             if (cur_cmd->x.cmd_subst->eval && sandbox)
-#               bad_prog (_(DISALLOWED_CMD));
-#           }
-#           break;
-#
-#         case 'y':
-#           {
-#             size_t len, dest_len;
-#             int slash;
-#             struct buffer *b2;
-#             char *src_buf, *dest_buf;
-#
-#             slash = inchar ();
-#             if ( !(b = match_slash (slash, false)) )
-#               bad_prog (_(UNTERM_Y_CMD));
-#             src_buf = get_buffer (b);
-#             len = normalize_text (src_buf, size_buffer (b), TEXT_BUFFER);
-#
-#             if ( !(b2 = match_slash (slash, false)) )
-#               bad_prog (_(UNTERM_Y_CMD));
-#             dest_buf = get_buffer (b2);
-#             dest_len = normalize_text (dest_buf, size_buffer (b2), TEXT_BUFFER);
-#
-#             if (mb_cur_max > 1)
-#               {
-#                 size_t i, j, idx, src_char_num;
-#                 size_t *src_lens = XCALLOC (len, size_t);
-#                 char **trans_pairs;
-#                 size_t mbclen;
-#                 mbstate_t cur_stat = { 0, };
-#
-#                 /* Enumerate how many character the source buffer has.  */
-#                 for (i = 0, j = 0; i < len;)
-#                   {
-#                     mbclen = MBRLEN (src_buf + i, len - i, &cur_stat);
-#                     /* An invalid sequence, or a truncated multibyte character.
-#                       We treat it as a single-byte character.  */
-#                     if (mbclen == (size_t) -1 || mbclen == (size_t) -2
-#                         || mbclen == 0)
-#                       mbclen = 1;
-#                     src_lens[j++] = mbclen;
-#                     i += mbclen;
-#                   }
-#                 src_char_num = j;
-#
-#                 memset (&cur_stat, 0, sizeof cur_stat);
-#                 idx = 0;
-#
-#                 /* trans_pairs = {src(0), dest(0), src(1), dest(1), ..., NULL}
-#                      src(i) : pointer to i-th source character.
-#                      dest(i) : pointer to i-th destination character.
-#                      NULL : terminator */
-#                 trans_pairs = XCALLOC (2 * src_char_num + 1, char*);
-#                 cur_cmd->x.translatemb = trans_pairs;
-#                 for (i = 0; i < src_char_num; i++)
-#                   {
-#                     if (idx >= dest_len)
-#                       bad_prog (_(Y_CMD_LEN));
-#
-#                     /* Set the i-th source character.  */
-#                     trans_pairs[2 * i] = XCALLOC (src_lens[i] + 1, char);
-#                     memcpy (trans_pairs[2 * i], src_buf, src_lens[i]);
-#                     trans_pairs[2 * i][src_lens[i]] = '\0';
-#                     src_buf += src_lens[i]; /* Forward to next character.  */
-#
-#                     /* Fetch the i-th destination character.  */
-#                     mbclen = MBRLEN (dest_buf + idx, dest_len - idx, &cur_stat);
-#                     /* An invalid sequence, or a truncated multibyte character.
-#                       We treat it as a single-byte character.  */
-#                     if (mbclen == (size_t) -1 || mbclen == (size_t) -2
-#                         || mbclen == 0)
-#                       mbclen = 1;
-#
-#                     /* Set the i-th destination character.  */
-#                     trans_pairs[2 * i + 1] = XCALLOC (mbclen + 1, char);
-#                     memcpy (trans_pairs[2 * i + 1], dest_buf + idx, mbclen);
-#                     trans_pairs[2 * i + 1][mbclen] = '\0';
-#                     idx += mbclen; /* Forward to next character.  */
-#                   }
-#                 trans_pairs[2 * i] = NULL;
-#                 if (idx != dest_len)
-#                   bad_prog (_(Y_CMD_LEN));
-#
-#                 IF_LINT (free (src_lens));
-#               }
-#             else
-#               {
-#                 unsigned char *translate =
-#                   OB_MALLOC (&obs, YMAP_LENGTH, unsigned char);
-#                 unsigned char *ustring = (unsigned char *)src_buf;
-#
-#                 if (len != dest_len)
-#                   bad_prog (_(Y_CMD_LEN));
-#
-#                 for (len = 0; len < YMAP_LENGTH; len++)
-#                   translate[len] = len;
-#
-#                 while (dest_len--)
-#                   translate[*ustring++] = (unsigned char)*dest_buf++;
-#
-#                 cur_cmd->x.translate = translate;
-#               }
-#
-#             read_end_of_cmd ();
-#
-#             free_buffer (b);
-#             free_buffer (b2);
-#           }
-#         break;
-#
-#         case EOF:
-#           bad_prog (_(NO_COMMAND));
-#           /*NOTREACHED*/
-#
-#         default:
-#           bad_command (ch);
-#           /*NOTREACHED*/
-#         }
-#
-#       /* this is buried down here so that "continue" statements will miss it */
-#       ++vector->v_length;
-#     }
-#   if (posixicity == POSIXLY_BASIC && pending_text)
-#     bad_prog (_(INCOMPLETE_CMD));
-#   return vector;
-# }
 
 
 # /* `str' is a string (from the command line) that contains a sed command.
@@ -2113,30 +1090,6 @@ def compile_string(cur_program, string):
 
     first_script = False
     # no return, cur_program edited in place
-#---------------------------------------------------------------------
-# struct vector *
-# compile_string (struct vector *cur_program, char *str, size_t len)
-# {
-#   static countT string_expr_count = 0;
-#   struct vector *ret;
-#
-#   prog.file = NULL;
-#   prog.base = (unsigned char *)str;
-#   prog.cur = prog.base;
-#   prog.end = prog.cur + len;
-#
-#   cur_input.line = 0;
-#   cur_input.name = NULL;
-#   cur_input.string_expr_count = ++string_expr_count;
-#
-#   ret = compile_program (cur_program);
-#   prog.base = NULL;
-#   prog.cur = NULL;
-#   prog.end = NULL;
-#
-#   first_script = false;
-#   return ret;
-# }
 
 
 # `cmdfile' is the name of a file containing sed commands.
@@ -2163,33 +1116,6 @@ def compile_file(cur_program, cmdfile):
 
     first_script = False
     # no return, cur_program edited in place
-#---------------------------------------------------------------------
-# compile_file (struct vector *cur_program, const char *cmdfile)
-# {
-#   struct vector *ret;
-#
-#   prog.file = stdin;
-#   if (cmdfile[0] != '-' || cmdfile[1] != '\0')
-#     {
-# #ifdef HAVE_FOPEN_RT
-#       prog.file = ck_fopen (cmdfile, "rt", true);
-# #else
-#       prog.file = ck_fopen (cmdfile, "r", true);
-# #endif
-#     }
-#
-#   cur_input.line = 1;
-#   cur_input.name = cmdfile;
-#   cur_input.string_expr_count = 0;
-#
-#   ret = compile_program (cur_program);
-#   if (prog.file != stdin)
-#     ck_fclose (prog.file);
-#   prog.file = NULL;
-#
-#   first_script = false;
-#   return ret;
-# }
 
 
 # Make any checks which require the whole program to have been read.
@@ -2208,53 +1134,6 @@ def check_final_program():  #program):
         old_text_buf.text = pending_text
         free_buffer(pending_text)
         pending_text = NULL
-#---------------------------------------------------------------------
-# check_final_program (struct vector *program)
-# {
-#   struct sed_label *go;
-#   struct sed_label *lbl;
-#
-#   /* do all "{"s have a corresponding "}"? */
-#   if (blocks)
-#     {
-#       /* update info for error reporting: */
-#       memcpy (&cur_input, &blocks->err_info, sizeof (cur_input));
-#       bad_prog (_(EXCESS_OPEN_BRACE));
-#     }
-#
-#   /* was the final command an unterminated a/c/i command? */
-#   if (pending_text)
-#     {
-#       old_text_buf->text_length = size_buffer (pending_text);
-#       if (old_text_buf->text_length)
-#         old_text_buf->text = MEMDUP (get_buffer (pending_text),
-#                                      old_text_buf->text_length, char);
-#       free_buffer (pending_text);
-#       pending_text = NULL;
-#     }
-#
-#   for (go = jumps; go; go = release_label (go))
-#     {
-#       for (lbl = labels; lbl; lbl = lbl->next)
-#         if (strcmp (lbl->name, go->name) == 0)
-#           break;
-#       if (lbl)
-#         {
-#           program->v[go->v_index].x.jump_index = lbl->v_index;
-#         }
-#       else
-#         {
-#           if (*go->name)
-#             panic (_("can't find label for jump to `%s'"), go->name);
-#           program->v[go->v_index].x.jump_index = program->v_length;
-#         }
-#     }
-#   jumps = NULL;
-#
-#   for (lbl = labels; lbl; lbl = release_label (lbl))
-#     ;
-#   labels = NULL;
-# }
 
 
 def debug(ch):
