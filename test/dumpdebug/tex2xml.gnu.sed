@@ -119,7 +119,6 @@ s,\( *\)\([^|<>}{ ]*\){,\1\
 COMM:H
 #--------------------------------------------------
 H
-# append to holdspace
 		s/^/PATT:/
 		l
 		s/^PATT://
@@ -132,7 +131,6 @@ H
 COMM:s,\\n\\([^\\n]*\\)\\n,<\\1>,
 #--------------------------------------------------
 s,\n\([^\n]*\)\n,<\1>,
-# generate XML tag
 # Holdspace: ..\tagN \n text \n newtag \n text
 # We only want oldtags + newtag
 		s/^/PATT:/
@@ -255,7 +253,6 @@ x
 COMM:s,\\n[^\\n]*$,,
 #--------------------------------------------------
 s,\n[^\n]*$,,
-# delete tag from holdspace
 		s/^/PATT:/
 		l
 		s/^PATT://
@@ -280,12 +277,10 @@ x
 COMM:/^[^}]*{/ b open
 #--------------------------------------------------
 /^[^}]*{/ b open
-# if next bracket is an open one
 		i\
 COMM:/}/ b close
 #--------------------------------------------------
 /}/ b close
-# another one?
 		i\
 COMM:}
 #--------------------------------------------------
