@@ -138,12 +138,12 @@ class struct_subst:
     eval_ = False  # 'e' option given
     max_id = 0  # maximum backreference on the RHS
     replacement_buffer = ""  #ifdef lint
-    flags = ""  # aur
+    flags = []  # aur
     slash = ""  # aur
     def __str__(self):
         return self.slash + str(self.regx.pattern) + \
                self.slash + str(self.replacement.text) + \
-               self.slash + self.flags
+               self.slash + ''.join(self.flags)
 
 class struct_sed_cmd_x:
     "auxiliary data for various commands"
@@ -1019,8 +1019,8 @@ def compile_program(vector):
             free_buffer(b2)
 
             flags = mark_subst_opts()  #cur_cmd.x.cmd_subst)
-            cur_cmd.x.cmd_subst.flags = ''.join(flags)
-            debug("s flags: %r" % cur_cmd.x.cmd_subst.flags)
+            cur_cmd.x.cmd_subst.flags = flags
+            debug("s flags: %r" % ''.join(flags))
             # cur_cmd.x.cmd_subst.regx = compile_regex(b, flags, cur_cmd.x.cmd_subst.max_id + 1)
             free_buffer(b)
 
