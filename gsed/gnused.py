@@ -1136,9 +1136,11 @@ def check_final_program():  #program):
         pending_text = NULL
 
 
+PARSER_DEBUG = False
 def debug(ch):
-    print("exp=%s line=%s cur=%s end=%s text=%r ch=%r" % (
-        cur_input.string_expr_count, cur_input.line, prog.cur, prog.end, prog.text, ch))
+    if PARSER_DEBUG:
+        print("exp=%s line=%s cur=%s end=%s text=%r ch=%r" % (
+            cur_input.string_expr_count, cur_input.line, prog.cur, prog.end, prog.text, ch))
 
 if __name__ == '__main__':
 
