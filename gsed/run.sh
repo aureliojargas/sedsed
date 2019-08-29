@@ -23,6 +23,9 @@
 #      Old parser stopped at blanks.
 #      Old: r foo
 #      New: r foo bar baz
+#
+#   5. Empty b and t commands (no label) used to have an extra white space
+#      after them. No more.
 
 
 # remove space after b and t without labels
@@ -48,20 +51,20 @@ remove_broken_scripts() {
         -e sodelnum.sed$
 }
 
-# run errors tests
+echo "run errors tests..."
 python3 test.py
 
-# test sample
+echo "test sample.sed..."
 python3 compile_c.py sample.sed > sample.sed.out 2>&1
 git diff sample.sed.out
 
-# test sedsed 'parsing' test module
+echo "test sedsed 'parsing' and 'script' test modules..."
 cat ../test/{parsing,scripts}/*.sed > blob.sed
 ../sedsed.py -i -f blob.sed | fix_sedsed_b_t > blob-sedsed.sed
 python3 compile_c.py blob.sed | remove_debug > blob-gsed.sed
-diff -u blob-{sedsed,gsed}.sed | less
+diff -u blob-{sedsed,gsed}.sed | view -
 
-# all sed.sf.net scripts
+echo "Converting all sed.sf.net scripts..."
 find ../../sed.sf.net/ -name '*.sed' |
     remove_broken_scripts |
     while read file
@@ -71,4 +74,4 @@ find ../../sed.sf.net/ -name '*.sed' |
     done > blob2.sed
 ../sedsed.py -i -f blob2.sed | fix_sedsed_b_t > blob2-sedsed.sed
 python3 compile_c.py blob2.sed | remove_debug > blob2-gsed.sed
-diff -u blob2-{sedsed,gsed}.sed | less
+diff -u blob2-{sedsed,gsed}.sed | view -
