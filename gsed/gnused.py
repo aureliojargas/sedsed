@@ -115,10 +115,9 @@ class struct_addr:
         return "[type=%s number=%s step=%s regex=%s]" % (
             self.addr_type, self.addr_number, self.addr_step, self.addr_regex)
     def __str__(self):
-        #TODO use addr_type
-        if self.addr_regex:
+        if self.addr_type == ADDR_IS_REGEX:
             return str(self.addr_regex)
-        elif self.addr_number:
+        elif self.addr_type == ADDR_IS_NUM:
             return str(self.addr_number)
         else:
             return '$'
