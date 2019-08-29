@@ -8,7 +8,8 @@ sed='gsed'
 sedsed='python ../../sedsed.py'
 # sedsed='python2.6 ../../sedsed.py'
 # sedsed='python2.7 ../../sedsed.py'
-# sedsed='python3   ../../sedsed.py'
+# sedsed='python3 ../../sedsed12d.py'
+sedsed='python3 ../../sedsed.py'
 
 failed=0
 sed_output='sed-output.txt'

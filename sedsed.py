@@ -2,6 +2,8 @@
 # sedsed - Debugger and code formatter for sed scripts
 # Since 27 November 2001, by Aurelio Jargas
 
+# pylint: disable=redefined-outer-name
+
 __version__ = '1.2-dev'
 
 import sys
@@ -9,6 +11,8 @@ import re
 import os
 import getopt
 import tempfile
+
+import gsed.gnused as parser
 
 myname = 'sedsed'
 myhome = 'https://aurelio.net/projects/sedsed/'
@@ -20,7 +24,7 @@ myhome = 'https://aurelio.net/projects/sedsed/'
 
 
 # Default config - Changeable, but you won't need to do it
-sedbin = 'sed'                # name (or full path) of the sed program
+sedbin = 'gsed'                # name (or full path) of the sed program
 color = 1                     # colored output or not? (--color, --nocolor)
 dump_debug = 0                # dump debug script to screen? (--dump-debug)
 indent_prefix = ' '*4         # default indent prefix for blocks (--prefix)
@@ -1166,6 +1170,7 @@ def do_debug(datalist):
                     t_count = t_count + 1
 
             # null cmd to restore last addr: /addr/y/!/!/
+            # Bug: https://github.com/aureliojargas/sedsed/issues/15
             if data['lastaddr']:
                 showall = showall + debug_prefix + \
                     data['lastaddr'] + nullcomm + '\n'
@@ -1440,9 +1445,217 @@ ZZ[0]['has_t'] = has_t
 # how to handle it. Maybe we will indent, maybe debug? We'll see.
 #
 
+def dump_script_gsed(sedscript, indent_prefix):
+    indent_level = 0
+    indent_prefix = ' ' * 4
+    the_program = []
+
+    parser.compile_string(the_program, '\n'.join(sedscript))
+    for x in the_program:
+        if x.cmd == '}':
+            indent_level -= 1
+
+        if x.cmd == '\n':
+            print()
+        else:
+            print('%s%s' % ((indent_prefix * indent_level), x))
+
+        if x.cmd == '{':
+            indent_level += 1
+
+
+# Test if both old and new parsers produced the exact same ZZ object
+import unittest
+class TestFoo(unittest.TestCase):
+    def test_zz(self):
+        old = ZZ
+        new = ZZg.copy()
+
+        # Remove HTML addresses, since they are always populated in the new
+        # code, but conditionally populated in the old one.
+        for item in new[1:]:
+            for key in ('addr1html', 'addr2html'):
+                if key in item:
+                    item[key] = ''
+
+        # self.maxDiff = None
+        # self.assertListEqual(old, new)
+
+        for i in range(len(old)):
+            self.assertDictEqual(old[i], new[i])
+
+def gsed_parse(sedscript):
+    #TODO handle xx.x.int_arg for QqLl (new) cmddict['content'] = xx.x.int_arg
+    #TODO handle all new GNU sed commands
+
+    the_program = []
+    ret = []
+    ret.append({})  # for header
+
+    # Parse the sed script using the GNU sed ported parser
+    parser.compile_string(the_program, '\n'.join(sedscript)+'\n')
+
+    ### Translate GNU sed struct_sed_cmd objects into sedsed ZZ objects
+
+    # Flag to detect if there's at least one 't' command in the script.
+    # If so, some special treatment is required in the debugger.
+    has_t = 0
+
+    # Stores the lastest address. When an empty address command such as //p or
+    # s//foo/ is found, this value will be saved into `cmddict['lastaddr']`.
+    lastaddr = ''
+
+    # Save the index position (in `ret`) for the lastest s/// command found.
+    # This is later saved into `cmddict['extrainfo']`.
+    lastsubref = ''
+
+    # sedsed expects multiline text (aic text, s/// replacement) to have this
+    # odd string instead of inner '\n's in the string
+    linesep = '@#linesep#@'
+
+    def set_address(gsed_data, sedsed_data, prefix='addr1'):
+        if not gsed_data:
+            return
+
+        if gsed_data.addr_regex:
+            # set cmddict['addr1'] = /foo/
+            sedsed_data[prefix] = '%s%s%s%s' % (
+                gsed_data.addr_regex.escape(),
+                gsed_data.addr_regex.slash,
+                gsed_data.addr_regex.pattern,
+                gsed_data.addr_regex.slash)
+
+            # set cmddict['addr1html']
+            sedsed_data[prefix + 'html'] = '%s%s%s%s' % (
+                paint_html('escape', gsed_data.addr_regex.escape()),
+                paint_html('delimiter', gsed_data.addr_regex.slash),
+                paint_html('pattern', gsed_data.addr_regex.pattern),
+                paint_html('delimiter', gsed_data.addr_regex.slash))
+
+            # set cmddict['addr1flag'] = I
+            sedsed_data[prefix + 'flag'] = gsed_data.addr_regex.flags
+
+        else:
+            # set cmddict['addr1'] = 99 | $
+            sedsed_data[prefix] = str(gsed_data)
+            sedsed_data[prefix + 'html'] = paint_html('pattern', str(gsed_data))
+
+
+    for xx in the_program:
+
+        # Set empty dict with all the keys
+        cmddict = {}
+        for key in cmdfields:
+            cmddict[key] = ''
+
+        cmddict['id'] = xx.cmd
+        cmddict['linenr'] = xx.line
+
+        if xx.addr_bang:
+            cmddict['modifier'] = '!'
+
+        set_address(xx.a1, cmddict, 'addr1')
+        set_address(xx.a2, cmddict, 'addr2')
+
+        # Set cmddict['lastaddr'] when current address is //
+        # Otherwise just update lastaddr holder
+        #TODO sedsed bug: lastaddr must also include the flags
+        #TODO sedsed bug: only regex addresses should be saved as lastaddr, but currently numbers and $ are also saved
+        #TODO investigate bug in sedsed if both addresses are regexes, the 'reset' address command should involve both addresses again, and not only `lastaddr`
+        if xx.a1:
+            if xx.a1.addr_regex and not xx.a1.addr_regex.pattern:
+                cmddict['lastaddr'] = lastaddr
+            else:
+                lastaddr = cmddict['addr1']
+        if xx.a2:
+            if xx.a2.addr_regex and not xx.a2.addr_regex.pattern:
+                cmddict['lastaddr'] = lastaddr
+            else:
+                lastaddr = cmddict['addr2']
+
+        if xx.cmd == '\n':
+            blanklines.append(xx.line)
+            ret.append({'linenr': xx.line, 'id': ''})
+            continue
+            #TODO only blank lines have this 'diet' dictionary, remove that exception for consistency
+
+        elif xx.cmd == '#':
+            cmddict['comment'] = '#' + xx.x.comment
+            #TODO "d #foo" in sedsed is one command with 'comment' field filled, in my gsed parser it's two commands 'd' and '#'
+            #TODO "/foo/ { #comment" this is the only partial comment allowed in BSD sed without a previous ';' or line break.
+            #TODO I need to decide if gsed parser should support no partial comments (current state), only BSD-compatible partial commands, or real GNU sed (and current sedsed) partial commands.
+
+            # 1st line, try to find #!/...
+            if cmddict['linenr'] == 1:
+                m = re.match(patt['topopts'], cmddict['comment'])
+                if m:  # we have options!
+                    ret[0]['topopts'] = m.group(1)  # saved on list header
+                    del m
+
+        elif xx.cmd in sedcmds['solo'] + sedcmds['block']:
+            pass  # nothing else to collect
+
+        elif xx.cmd in sedcmds['text']:
+            cmddict['content'] = '\\%s%s' % (
+                linesep,
+                str(xx.x.cmd_txt).replace('\n', linesep))
+
+        elif xx.cmd in sedcmds['jump']:
+            cmddict['content'] = xx.x.label_name
+
+        elif xx.cmd in sedcmds['file']:
+            cmddict['content'] = xx.x.fname
+
+        elif xx.cmd in sedcmds['multi']:  # s/// & y///
+            cmddict['delimiter'] = xx.x.cmd_subst.slash
+            cmddict['pattern'] = str(xx.x.cmd_subst.regx.pattern)
+            cmddict['replace'] = str(xx.x.cmd_subst.replacement.text).replace('\n', linesep)
+            flags = xx.x.cmd_subst.flags
+            if flags and flags[-1].startswith('w'):
+                cmddict['flag'] = ''.join(flags[:-1]) + 'w'
+                cmddict['content'] = flags[-1][2:]  # filename
+            else:
+                cmddict['flag'] = ''.join(flags)
+
+        ## save sedsed specific data
+
+        # saving last address content
+        if cmddict['pattern']:  #TODO sedsed bug: y also have pattern defined, but it does not count as a real pattern for lastaddr. Here it must be s only.
+            lastaddr = cmddict['delimiter'] + cmddict['pattern'] + cmddict['delimiter']
+        elif cmddict['delimiter']:
+            cmddict['lastaddr'] = lastaddr
+
+        if xx.cmd == 's':
+            lastsubref = len(ret)  # save s/// position
+
+        if xx.cmd == 't':
+            # related s/// reference
+            cmddict['extrainfo'] = lastsubref
+            #TODO sedsed bug: lastsubref is an integer saved to a string field
+            #TODO sedsed bug: I'm not sure the previous s in the code is really the s that will relate to this t command in run time (see issue #15). Maybe just remove this property, it's useless.
+            has_t = 1
+
+        ret.append(cmddict)
+
+    # populating list header
+    ret[0]['blanklines'] = blanklines  #TODO remove? seems unused
+    ret[0]['fields'] = cmdfields
+    ret[0]['has_t'] = has_t
+
+    return ret
+
+# Test if the new parser is 100% compatible with the old one
+ZZg = gsed_parse(sedscript)
+
+# Test if ZZ and ZZg are exactly the same
+# unittest.main(argv=['foo'])
+
+ZZ = ZZg
+
 if __name__ == '__main__':
     if action == 'indent':
         dump_script(ZZ, indent_prefix)
+        # dump_script_gsed(sedscript, indent_prefix)
     elif action == 'html':
         dump_script(ZZ, indent_prefix)
     elif action == 'debug':
