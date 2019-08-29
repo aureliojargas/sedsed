@@ -711,8 +711,12 @@ def read_label():
     while ch != EOF and ch != '\n' and not ISBLANK(ch) and ch != ';' and ch != CLOSE_BRACE and ch != '#':
         ch = add_then_next(b, ch)
 
+    # sedsed: Save comment identifier for later detection (i.e.: b#foo)
+    if ch == '#':
+        savchar(ch)
+
     # sedsed: Ignore multiple trailing blanks and ; until EOC/EOL/EOF
-    if ch == ';' or ISBLANK(ch):
+    elif ch == ';' or ISBLANK(ch):
         ignore_trailing_fluff()
 
     # add1_buffer(b, '\0')  # not necessary in Python
