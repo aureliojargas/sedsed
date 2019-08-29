@@ -329,4 +329,3 @@ class struct_vector:
 # #  define FALLTHROUGH __attribute__ ((__fallthrough__))
 # # endif
 # #endif
-

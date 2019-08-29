@@ -1,109 +1,75 @@
-import os, atexit
-#  GNU SED, a batch stream editor.
-#    Copyright (C) 1989-2019 Free Software Foundation, Inc.
-#
-#    This program is free software; you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation; either version 3, or (at your option)
-#    any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program; If not, see <https://www.gnu.org/licenses/>. 
-
-
-#include "sed.h"
-
-
-#include <limits.h>
-import sys
-#include <sys/types.h>
-#include <unistd.h>
-#include "binary-io.h"
-#include "getopt.h"
-#include "progname.h"
-#include "version.h"
-#include "xalloc.h"
-#include <selinux/selinux.h>
-
-#include "version-etc.h"
-
-AUTHORS = \
-   _("Jay Fenlason"), \
-   _("Tom Lord"), \
-   _("Ken Pizzini"), \
-   _("Paolo Bonzini"), \
-   _("Jim Meyering"), \
-   _("Assaf Gordon")
+# AUTHORS = \
+#    _("Jay Fenlason"), \
+#    _("Tom Lord"), \
+#    _("Ken Pizzini"), \
+#    _("Paolo Bonzini"), \
+#    _("Jim Meyering"), \
+#    _("Assaf Gordon")
 
 extended_regexp_flags = 0
 
-# one-byte buffer delimiter 
+# one-byte buffer delimiter
 buffer_delimiter = '\n'
 
-# If set, fflush(stdout) on every line output. 
+# If set, fflush(stdout) on every line output.
 unbuffered = False
 
-# If set, don't write out the line unless explicitly told to 
+# If set, don't write out the line unless explicitly told to
 no_default_output = False
 
-# If set, reset line counts on every new file. 
+# If set, reset line counts on every new file.
 separate_files = False
 
-# If set, follow symlinks when processing in place 
+# If set, follow symlinks when processing in place
 follow_symlinks = False
 
-# If set, opearate in 'sandbox' mode 
+# If set, opearate in 'sandbox' mode
 sandbox = False
 
-# if set, print debugging information 
+# if set, print debugging information
 debug = False
 
-# How do we edit files in-place? (we don't if NULL) 
+# How do we edit files in-place? (we don't if NULL)
 in_place_extension = NULL
 
-# The mode to use to read/write files, either "r"/"w" or "rb"/"wb".  
+# The mode to use to read/write files, either "r"/"w" or "rb"/"wb".
 const *read_mode = "r"
 const *write_mode = "w"
 
 #if O_BINARY
-# Additional flag for binary mode on platforms with O_BINARY/O_TEXT.  
+# Additional flag for binary mode on platforms with O_BINARY/O_TEXT.
 binary_mode = False
 #endif
 
-# Do we need to be pedantically POSIX compliant? 
+# Do we need to be pedantically POSIX compliant?
 enum posixicity_types posixicity
 
-# How long should the `l' command's output line be? 
+# How long should the `l' command's output line be?
 countT lcmd_out_line_len = 70
 
-# The complete compiled SED program that we are going to run: 
+# The complete compiled SED program that we are going to run:
 static struct vector *the_program = NULL
 
 # When we've created a temporary for an in-place update,
 #   we may have to exit before the rename.  This is the name
 #   of the temporary that we'll have to unlink via an atexit-
-#   registered cleanup function.  
+#   registered cleanup function.
 static const *G_file_to_unlink
 
 struct localeinfo localeinfo
 
 # When exiting between temporary file creation and the rename
-   associated with a sed -i invocation, remove that file.  
+   associated with a sed -i invocation, remove that file.
 def cleanup():
     IF_LINT(free(in_place_extension))
     if G_file_to_unlink:
         os.unlink(G_file_to_unlink)
 
-# Note that FILE must be removed upon exit.  
+# Note that FILE must be removed upon exit.
 def register_cleanup_file(const *file):
     G_file_to_unlink = file
 
-# Clear the global file-to-unlink global.  
+# Clear the global file-to-unlink global.
 def cancel_cleanup():
     G_file_to_unlink = NULL
 
@@ -115,7 +81,7 @@ def contact(errmsg):
 General help using GNU software: <https://www.gnu.org/gethelp/>.\n"))
 
     # Only print the bug report address for `sed --help', otherwise we'll
-       get reports for other people's bugs.  
+       get reports for other people's bugs.
     if not errmsg:
         fprintf(out, _("E-mail bug reports to: <%s>.\n") % (PACKAGE_BUGREPORT))
 

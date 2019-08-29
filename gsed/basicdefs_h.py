@@ -9,8 +9,6 @@
 #include <gettext.h>
 # def N_(String):	return gettext_noop(String)
 # def _(String):	return gettext(String)
-def N_(String):	return String
-def _(String):	return String
 
 # type countT is used to keep track of line numbers, etc.
 # typedef unsigned countT
@@ -60,19 +58,23 @@ PATH_MAX	= 200
 #if defined isblank or defined HAVE_ISBLANK
 # def ISBLANK(c):	return (ISASCII (c) and isblank (c))
 #else
-def ISBLANK(c):	return c == ' ' or c == '\t'
+def ISBLANK(c):
+    return c == ' ' or c == '\t'
 #endif
 
 #undef ISPRINT
 # def ISPRINT(c):	return (ISASCII (c) and isprint (c))
 # def ISDIGIT(c):	return (ISASCII (c) and isdigit ((unsigned char) (c)))
+def ISDIGIT(ch):
+    return ch in '0123456789'
 # def ISALNUM(c):	return (ISASCII (c) and isalnum (c))
 # def ISALPHA(c):	return (ISASCII (c) and isalpha (c))
 # def ISCNTRL(c):	return (ISASCII (c) and iscntrl (c))
 # def ISLOWER(c):	return (ISASCII (c) and islower (c))
 # def ISPUNCT(c):	return (ISASCII (c) and ispunct (c))
 # def ISSPACE(c):	return (ISASCII (c) and isspace (c))
-def ISSPACE(c): return c in ' \t\n\v\f\r'
+def ISSPACE(c):
+    return c in ' \t\n\v\f\r'
 # def ISUPPER(c):	return (ISASCII (c) and isupper (c))
 # def ISXDIGIT(c):	return (ISASCII (c) and isxdigit (c))
 

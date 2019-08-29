@@ -251,19 +251,6 @@ MISSING_FILENAME = "missing filename in r/R/w/W commands"
 # static struct output *file_read = NULL;
 # static struct output *file_write = NULL;
 
-
-### From: utils.h
-# enum exit_codes {
-#                       /* EXIT_SUCCESS is already defined as 0 */
-#   EXIT_BAD_USAGE = 1, /* bad program syntax, invalid command-line options */
-#   EXIT_BAD_INPUT = 2, /* failed to open some of the input files */
-#   EXIT_PANIC     = 4  /* PANIC during program execution */
-# };
-EXIT_SUCCESS   = 0
-EXIT_BAD_USAGE = 1  #/* bad program syntax, invalid command-line options */
-EXIT_BAD_INPUT = 2  #/* failed to open some of the input files */
-EXIT_PANIC     = 4  #/* PANIC during program execution */
-
 # /* Complain about an unknown command and exit. */
 def bad_command(ch):
     bad_prog(UNKNOWN_CMD % ch)
@@ -380,10 +367,6 @@ def read_end_of_cmd():
 #     savchar (ch);
 #   else if (ch != EOF && ch != '\n' && ch != ';')
 #     bad_prog (_(EXCESS_JUNK));
-
-### from basicdefs.h
-def ISDIGIT(ch):
-    return ch in '0123456789'
 
 # /* Read an integer value from the program.  */
 def in_integer(ch):
