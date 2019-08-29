@@ -1,4 +1,5 @@
 #n
+# IMPORTANT: This file has significant trailing spaces, do not remove them!
 5!H
 1,5g
 /xxx/IG
@@ -37,12 +38,13 @@ v;v 4.2
 
 /labels/ {
 :abc1
-t abc2
-T ABC2
-b abc3 
+:ABC2 
+b abc1 
+t ABC2
+T abc1
+b 
 t
 T
-b 
 }
 
 /files/ {
