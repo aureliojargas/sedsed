@@ -59,8 +59,8 @@ echo "run errors tests..."
 python3 test.py
 
 echo "test sample..."
-python3 gnused.py -v sample.gnused.sed > sample.gnused.out 2>&1
-git diff sample.gnused.out
+python3 gnused.py -v sample.sed > sample.out 2>&1
+git diff sample.out
 
 echo "test sedsed 'parsing' and 'script' test modules..."
 cat ../test/{parsing,scripts}/*.sed > blob.sed
