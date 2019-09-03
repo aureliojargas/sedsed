@@ -1,0 +1,100 @@
+8bit.good                    data
+8bit.inp                     data
+8bit.sh
+8to7.sh                      ignore
+BOOST.tests
+Coreutils.pm
+CuSkip.pm
+CuTmpdir.pm
+PCRE.tests
+SPENCER.tests                ignore
+badenc.sh                    ignore
+binary.sed                   ignore
+binary.sh                    ignore
+binary2.sed                  ignore
+binary3.sed                  ignore
+bsd-wrapper.sh               ignore
+bsd.good                     data
+bsd.sh                       *** import some
+bug32082.sh                  ignore
+bug32271-1.sh                ignore
+bug32271-2.sh                ignore
+cmd-R.sh                     ignore
+cmd-l.sh                     ignore
+colon-with-no-label.sh       *** OK in test.py
+command-endings.sh           *** import
+comment-n.sh                 *** import to parser and sedsed
+compile-errors.sh            *** import to test.py
+compile-tests.sh             *** import
+convert-number.sh            ignore
+dc.sed                       ignore
+dc.sh                        ignore
+debug.pl                     *** import
+distrib.inp                  data
+distrib.sh                   ignore
+envvar-check                 ignore
+eval.sh                      *** import, create some e tests
+execute-tests.sh             *** import some
+follow-symlinks-stdin.sh     ignore
+follow-symlinks.sh           ignore
+get-mb-cur-max.c             ignore
+help-version.sh              ignore
+help.sh                      ignore
+in-place-hyphen.sh           *** import to sedsed
+in-place-suffix-backup.sh    ignore
+init.sh                      ignore
+inplace-hold.sh              ignore
+inplace-selinux.sh           ignore
+invalid-mb-seq-UMR.sh        ignore
+local.mk                     ignore
+mac-mf.good                  data
+mac-mf.inp                   data
+mac-mf.sed                   ignore
+mac-mf.sh                    ignore
+madding.good                 data
+madding.inp                  data
+madding.sed                  *** import
+madding.sh                   ignore
+mb-bad-delim.sh              *** import
+mb-charclass-non-utf8.sh     ignore
+mb-match-slash.sh            *** import
+mb-y-translate.sh            *** import. maybe i should disable same size check?
+misc.pl                      *** import some
+missing-filename.sh          *** import to test.py (r, s are ok)
+newjis.sh                    ignore
+newline-dfa-bug.sh           ignore
+normalize-text.sh            ignore
+nulldata.sh                  ignore
+obinary.sh                   ignore
+panic-tests.sh               ignore
+posix-char-class.sh          *** import some tricky regexes
+posix-mode-ERE.sh            ignore
+posix-mode-N.sh              ignore
+posix-mode-addr.sh           *** import to address tester
+posix-mode-bad-ref.sh        ignore
+posix-mode-s.sh              *** import some to s tester
+ptestcases.h                 ignore
+range-overlap.sh             ignore
+recursive-escape-c.sh        ignore
+regex-errors.sh              ignore
+regex-max-int.sh             ignore
+sandbox.sh                   ignore
+stdin-prog.sh                ignore
+stdin.sh                     ignore
+subst-mb-incomplete.sh       ignore
+subst-options.sh             *** import
+subst-replacement.sh         ignore
+temp-file-cleanup.sh         ignore
+test-mbrtowc.c               ignore
+testcases.h                  ignore
+title-case.sh                ignore
+unbuffered.sh                ignore
+uniq.good                    data
+uniq.inp                     data
+uniq.sed                     ignore
+uniq.sh                      ignore
+utf8-ru.sh                   ignore
+word-delim.sh                ignore
+xemacs.good                  data
+xemacs.inp                   data
+xemacs.sh                    ignore
