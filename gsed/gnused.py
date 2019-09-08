@@ -119,8 +119,16 @@ class struct_addr:
             return str(self.addr_regex)
         elif self.addr_type == ADDR_IS_NUM:
             return str(self.addr_number)
-        else:
+        elif self.addr_type == ADDR_IS_NUM_MOD:
+            return '%s~%s' % (self.addr_number, self.addr_step)
+        elif self.addr_type == ADDR_IS_STEP:
+            return '+%s' % self.addr_step
+        elif self.addr_type == ADDR_IS_STEP_MOD:
+            return '~%s' % self.addr_step
+        elif self.addr_type == ADDR_IS_LAST:
             return '$'
+        else:  # sedsed: this condition should not happen
+            return '<unknown address type "%s">' % self.addr_type
 
 class struct_replacement:
     prefix = ""
