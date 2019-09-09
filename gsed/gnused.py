@@ -176,7 +176,7 @@ class struct_sed_cmd_x:
     # This structure is used for a, i, and c commands.
     cmd_txt = struct_text_buf()
     # This is used for the l, q and Q commands.
-    int_arg = 0
+    int_arg = -1
     # This is used for the {}, b, and t commands.
     jump_index = 0
     # This is used for the r command. (sedsed: and R w W)
