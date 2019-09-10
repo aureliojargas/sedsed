@@ -30,7 +30,7 @@ def ISDIGIT(ch):
     return ch in '0123456789'
 
 def ISSPACE(c):
-    return c in ' \t\n\v\f\r'
+    return c in (' ', '\t', '\n', '\v', '\f', '\r')
 
 ######################################## ported from sed.c
 
@@ -210,7 +210,7 @@ class struct_sed_cmd:
             ret.append(self.x.comment)
         elif self.cmd == ':':
             ret.append(self.x.label_name)
-        elif self.cmd in 'sy':
+        elif self.cmd in ('s', 'y'):
             ret.append(str(self.x.cmd_subst))
         elif self.x.label_name:
             ret.append(' ' + self.x.label_name)
@@ -555,7 +555,7 @@ def snarf_char_class(b):  #, cur_stat):
         if ch in (EOF, '\n'):
             return ch
 
-        elif ch in '.:=':
+        elif ch in ('.', ':', '='):
             if mb_char:
                 continue
 
@@ -589,7 +589,7 @@ def snarf_char_class(b):  #, cur_stat):
         # Getting a character different from .=: whilst in state 1
         # goes back to state 0, getting a character different from ]
         # whilst in state 3 goes back to state 2.
-        if ch not in '.:=' and state == 1:
+        if ch not in ('.', ':', '=') and state == 1:
             state = 0
         elif ch != CLOSE_BRACKET and state == 3:
             state = 2
@@ -658,7 +658,7 @@ def mark_subst_opts(cmd_s):
         ch = in_nonblank()
         debug("s flag candidate: %r" % ch)
 
-        if ch in 'iImMe':  # GNU extensions
+        if ch in ('i', 'I', 'm', 'M', 'e'):  # GNU extensions
             flags.append(ch)
 
         elif ch == 'p':
@@ -836,7 +836,7 @@ def compile_address(addr, ch):  # struct_addr, str
                 addr.addr_step = step
                 addr.addr_type = ADDR_IS_NUM_MOD
 
-    elif ch in '+~':  #and posixicity != POSIXLY_BASIC:
+    elif ch in ('+', '~'):  #and posixicity != POSIXLY_BASIC:
         addr.addr_step = in_integer(in_nonblank())
         if addr.addr_step == 0:
             pass  # default to ADDR_IS_NULL; forces matching to stop on next line
@@ -970,12 +970,12 @@ def compile_program(vector):
             read_end_of_cmd()
             blocks -= 1  # done with this entry
 
-        elif ch in 'ev':
+        elif ch in ('e', 'v'):
             argument = read_label()
             cur_cmd.x.label_name = argument
             debug("argument: %s" % argument)
 
-        elif ch in 'aic':
+        elif ch in ('a', 'i', 'c'):
             ch = in_nonblank()
 
 #GOTO read_text_to_slash:
@@ -994,7 +994,7 @@ def compile_program(vector):
             debug("text: %r" % cur_cmd.x.cmd_txt)
 #ENDGOTO
 
-        elif ch in ':Tbt':
+        elif ch in (':', 'T', 'b', 't'):
 #           if (cur_cmd->a1)
 #             bad_prog (_(NO_COLON_ADDR));
             label = read_label()
@@ -1004,7 +1004,7 @@ def compile_program(vector):
                 bad_prog(COLON_LACKS_LABEL)
             # labels = setup_label (labels, vector->v_length, label, NULL);
 
-        elif ch in 'QqLl':
+        elif ch in ('Q', 'q', 'L', 'l'):
             ch = in_nonblank()
             if ISDIGIT(ch):
                 cur_cmd.x.int_arg = in_integer(ch)
@@ -1015,10 +1015,10 @@ def compile_program(vector):
                 savchar(ch)
             read_end_of_cmd()
 
-        elif ch in '=dDFgGhHnNpPzx':
+        elif ch in ('=', 'd', 'D', 'F', 'g', 'G', 'h', 'H', 'n', 'N', 'p', 'P', 'z', 'x'):
             read_end_of_cmd()
 
-        elif ch in 'rRwW':
+        elif ch in ('r', 'R', 'w', 'W'):
             b = read_filename()
             if not b:
                 bad_prog(MISSING_FILENAME)
