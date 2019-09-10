@@ -1598,12 +1598,9 @@ def gsed_parse(sedscript):
             cmddict['delimiter'] = xx.x.cmd_subst.slash
             cmddict['pattern'] = str(xx.x.cmd_subst.regx.pattern)
             cmddict['replace'] = str(xx.x.cmd_subst.replacement.text).replace('\n', linesep)
-            flags = xx.x.cmd_subst.flags
-            if flags and flags[-1].startswith('w'):
-                cmddict['flag'] = ''.join(flags[:-1]) + 'w'
-                cmddict['content'] = flags[-1][2:]  # filename
-            else:
-                cmddict['flag'] = ''.join(flags)
+            cmddict['flag'] = ''.join(xx.x.cmd_subst.flags)
+            if 'w' in cmddict['flag']:
+                cmddict['content'] = xx.x.cmd_subst.outf.name
 
         ## save sedsed specific data
 
