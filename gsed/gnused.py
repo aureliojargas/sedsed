@@ -953,6 +953,11 @@ def compile_program(vector):
             #     ch = inchar()
             # continue
 
+        elif ch == 'v':
+            argument = read_label()
+            cur_cmd.x.label_name = argument
+            debug("argument: %s" % argument)
+
         elif ch == '{':
             blocks += 1
 
@@ -970,15 +975,15 @@ def compile_program(vector):
             read_end_of_cmd()
             blocks -= 1  # done with this entry
 
-        elif ch in ('e', 'v'):
-            argument = read_label()
-            cur_cmd.x.label_name = argument
-            debug("argument: %s" % argument)
-
-        elif ch in ('a', 'i', 'c'):
+        # sedsed: 'e' handling was moved here (original code uses GOTO)
+        elif ch in ('a', 'i', 'c', 'e'):
             ch = in_nonblank()
 
 #GOTO read_text_to_slash:
+            # sedsed: Empty 'e' at EOF is allowed
+            if ch == EOF and cur_cmd.cmd == 'e':
+                break
+
             if ch == EOF:
                 bad_prog(EXPECTED_SLASH)
 

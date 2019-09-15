@@ -998,11 +998,13 @@ exp=0 line=101 cur=None end=None text=None ch='e'
 ----- Found command: 'e'
 exp=0 line=101 cur=None end=None text=None ch=' '
 exp=0 line=101 cur=None end=None text=None ch='d'
+exp=0 line=101 cur=None end=None text=None ch='savchar(d)'
+exp=0 line=101 cur=None end=None text=None ch='d'
 exp=0 line=101 cur=None end=None text=None ch='a'
 exp=0 line=101 cur=None end=None text=None ch='t'
 exp=0 line=101 cur=None end=None text=None ch='e'
 exp=0 line=102 cur=None end=None text=None ch='\n'
-argument: date
+text: 'date'
 exp=0 line=102 cur=None end=None text=None ch='s'
 ----- Found command: 's'
 exp=0 line=102 cur=None end=None text=None ch='/'
@@ -1212,7 +1214,8 @@ text_c3
     q 1
 }
 
-e date
+e\
+date
 s/foo/bar/gpw filesw
 s;\n\;\n;\n;3
 y/A/B/
