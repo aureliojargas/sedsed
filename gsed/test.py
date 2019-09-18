@@ -46,7 +46,8 @@ TEST_DATA['error'] = [
     ('r',         1, 1, 'MISSING_FILENAME', "missing filename in r/R/w/W commands"),
     ('{p;$}',     1, 5, 'NO_CLOSE_BRACE_ADDR', "`}' doesn't want any addresses"),
     #                    NO_COLON_ADDR  : doesn't want any addresses
-    ('/a/',       1, 3, 'NO_COMMAND', "missing command"),
+    ('1',         1, 1, 'NO_COMMAND', "missing command"),
+    ('1\n',       1, 2, 'NO_COMMAND', "missing command"),
     #                    NO_SHARP_ADDR  comments don't accept any addresses
     #                    ONE_ADDR  command only uses one address
     #                    RECURSIVE_ESCAPE_C  recursive escaping after \\c not allowed

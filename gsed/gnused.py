@@ -946,6 +946,10 @@ def compile_program(vector):
             # detected in the next line
             cur_cmd.line -= 1
 
+            # Detect cases like 1\n, an address with no "real" command
+            if cur_cmd.a1:
+                bad_prog(NO_COMMAND)
+
         elif ch == '#':
             # if (cur_cmd->a1)
             #     bad_prog (_(NO_SHARP_ADDR));
