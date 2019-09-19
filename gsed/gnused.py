@@ -736,8 +736,7 @@ def read_label():
     b = init_buffer()
     ch = in_nonblank()
 
-    #XXX use not in (...) here
-    while ch != EOF and ch != '\n' and not ISBLANK(ch) and ch != ';' and ch != CLOSE_BRACE and ch != '#':
+    while ch not in (EOF, '\n', ';', CLOSE_BRACE, '#') and not ISBLANK(ch):
         ch = add_then_next(b, ch)
 
     # sedsed: Save comment identifier for later detection (i.e.: b#foo)
