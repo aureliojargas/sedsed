@@ -857,9 +857,11 @@ def compile_address(addr, ch):  # struct_addr, str
 
     elif ch in ('+', '~'):  #and posixicity != POSIXLY_BASIC:
         addr.addr_step = in_integer(in_nonblank())
-        if addr.addr_step == 0:
-            pass  # default to ADDR_IS_NULL; forces matching to stop on next line
-        elif ch == '+':
+        # sedsed: skipping this to match and save 1,~0p and 1,+0p
+        # if addr.addr_step == 0:
+        #     pass  # default to ADDR_IS_NULL; forces matching to stop on next line
+        # elif ch == '+':
+        if ch == '+':
             addr.addr_type = ADDR_IS_STEP
         else:
             addr.addr_type = ADDR_IS_STEP_MOD

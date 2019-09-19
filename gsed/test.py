@@ -115,11 +115,8 @@ TEST_DATA['address'] = [
     ('5~0p',           False,  '5',          None),  # source change
     ('1,~2p',          False,  '1',          '~2'),
     ('1,+2p',          False,  '1',          '+2'),
-    # XXX unsupported in my parser, since in that case it sets addr_type = ADDR_IS_NULL and then I
-    # cannot detect the address type in __str__(). Either I do not set ADDR_IS_NULL or add some
-    # extra var so I can do the proper printing.
-    #('1,~0p',          False,  '1',          '~0'),
-    #('1,+0p',          False,  '1',          '+0'),
+    ('1,~0p',          False,  '1',          '~0'),
+    ('1,+0p',          False,  '1',          '+0'),
 
     # regex with /
     ('/x/p',           False,  '/x/',        None),
