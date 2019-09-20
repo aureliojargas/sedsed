@@ -20,6 +20,8 @@
 # Check if command is a GNU extension
 # if (posixicity == POSIXLY_EXTENDED)
 
+# pylint: disable=global-statement
+
 import argparse
 import sys
 
@@ -36,7 +38,7 @@ NULL = None
 ######################################## ported from basicdefs.h
 
 def ISBLANK(c):
-    return c == ' ' or c == '\t'
+    return c in (' ', '\t')
 
 def ISDIGIT(ch):
     return ch in '0123456789'
@@ -127,20 +129,22 @@ class struct_addr:
         return "[type=%s number=%s step=%s regex=%s]" % (
             self.addr_type, self.addr_number, self.addr_step, self.addr_regex)
     def __str__(self):
+        ret = ''
         if self.addr_type == ADDR_IS_REGEX:
-            return str(self.addr_regex)
+            ret = str(self.addr_regex)
         elif self.addr_type == ADDR_IS_NUM:
-            return str(self.addr_number)
+            ret = str(self.addr_number)
         elif self.addr_type == ADDR_IS_NUM_MOD:
-            return '%s~%s' % (self.addr_number, self.addr_step)
+            ret = '%s~%s' % (self.addr_number, self.addr_step)
         elif self.addr_type == ADDR_IS_STEP:
-            return '+%s' % self.addr_step
+            ret = '+%s' % self.addr_step
         elif self.addr_type == ADDR_IS_STEP_MOD:
-            return '~%s' % self.addr_step
+            ret = '~%s' % self.addr_step
         elif self.addr_type == ADDR_IS_LAST:
-            return '$'
+            ret = '$'
         else:  # sedsed: this condition should not happen
-            return '<unknown address type "%s">' % self.addr_type
+            ret = '<unknown address type "%s">' % self.addr_type
+        return ret
 
 class struct_replacement:
     prefix = ""
@@ -567,7 +571,7 @@ def snarf_char_class(b):  #, cur_stat):
         if ch in (EOF, '\n'):
             return ch
 
-        elif ch in ('.', ':', '='):
+        if ch in ('.', ':', '='):
             if mb_char:
                 continue
 
@@ -595,7 +599,8 @@ def snarf_char_class(b):  #, cur_stat):
 
             if state in (0, 1):
                 return ch
-            elif state == 3:
+
+            if state == 3:
                 state = 0
 
         # Getting a character different from .=: whilst in state 1
@@ -632,7 +637,8 @@ def match_slash(slash, regex):  # char, bool
         if not IS_MB_CHAR(ch):
             if ch == slash:
                 return b
-            elif ch == '\\':
+
+            if ch == '\\':
                 ch = inchar()
                 if ch == EOF:
                     break

@@ -15,10 +15,7 @@ disable=
     too-many-locals,
     too-many-statements,
     useless-object-inheritance,  # required while supporting python2
-    wildcard-import,  # gnu-sed PoC
-    unused-wildcard-import,  # gnu-sed PoC
     line-too-long,  # gnu-sed PoC
-    global-statement,  # gnu-sed PoC
 
 # No reports, please
 
