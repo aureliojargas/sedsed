@@ -9,8 +9,9 @@ install:
   - if test $TRAVIS_PYTHON_VERSION = 3.6; then pip install -q pylint; fi
   - ln -s /bin/sed ~/bin/gsed
 script:
-  - if test $TRAVIS_PYTHON_VERSION = 3.6; then pylint sedsed.py; fi
+  - if test $TRAVIS_PYTHON_VERSION = 3.6; then pylint sedsed.py gsed/; fi
   - ./ci/shellcheck
+  - python gsed/test.py
   - ./test/run
 
 ### Environment

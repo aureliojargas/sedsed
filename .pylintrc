@@ -6,8 +6,9 @@ disable=
     bad-whitespace,
     fixme,
     invalid-name,
+    locally-disabled,
     missing-docstring,
-    #redefined-outer-name,  # gnu-sed PoC
+    suppressed-message,
     too-few-public-methods,
     too-many-branches,
     too-many-instance-attributes,
