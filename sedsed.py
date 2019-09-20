@@ -1541,8 +1541,10 @@ def gsed_parse(sedscript):
         # Set cmddict['lastaddr'] when current address is //
         # Otherwise just update lastaddr holder
         #TODO sedsed bug: lastaddr must also include the flags
-        #TODO sedsed bug: only regex addresses should be saved as lastaddr, but currently numbers and $ are also saved
-        #TODO investigate bug in sedsed if both addresses are regexes, the 'reset' address command should involve both addresses again, and not only `lastaddr`
+        #TODO sedsed bug: only regex addresses should be saved as lastaddr, but currently numbers
+        #     and $ are also saved
+        #TODO investigate bug in sedsed if both addresses are regexes, the 'reset' address command
+        #     should involve both addresses again, and not only `lastaddr`
         if xx.a1:
             if xx.a1.addr_regex and not xx.a1.addr_regex.pattern:
                 cmddict['lastaddr'] = lastaddr
@@ -1558,13 +1560,18 @@ def gsed_parse(sedscript):
             blanklines.append(xx.line)
             ret.append({'linenr': xx.line, 'id': ''})
             continue
-            #TODO only blank lines have this 'diet' dictionary, remove that exception for consistency
+            #TODO only blank lines have this 'diet' dictionary, remove that exception for
+            #     consistency
 
         elif xx.cmd == '#':
             cmddict['comment'] = '#' + xx.x.comment
-            #TODO "d #foo" in sedsed is one command with 'comment' field filled, in my gsed parser it's two commands 'd' and '#'
-            #TODO "/foo/ { #comment" this is the only partial comment allowed in BSD sed without a previous ';' or line break.
-            #TODO I need to decide if gsed parser should support no partial comments (current state), only BSD-compatible partial commands, or real GNU sed (and current sedsed) partial commands.
+            #TODO "d #foo" in sedsed is one command with 'comment' field filled, in my gsed parser
+            #     it's two commands 'd' and '#'
+            #TODO "/foo/ { #comment" this is the only partial comment allowed in BSD sed without a
+            #     previous ';' or line break.
+            #TODO I need to decide if gsed parser should support no partial comments (current
+            #     state), only BSD-compatible partial commands, or real GNU sed (and current sedsed)
+            #     partial commands.
 
             # 1st line, try to find #!/...
             if cmddict['linenr'] == 1:
@@ -1598,7 +1605,9 @@ def gsed_parse(sedscript):
         ## save sedsed specific data
 
         # saving last address content
-        if cmddict['pattern']:  #TODO sedsed bug: y also have pattern defined, but it does not count as a real pattern for lastaddr. Here it must be s only.
+        if cmddict['pattern']:
+            #TODO sedsed bug: y also have pattern defined, but it does not count as a real pattern
+            #     for lastaddr. Here it must be s only.
             lastaddr = cmddict['delimiter'] + cmddict['pattern'] + cmddict['delimiter']
         elif cmddict['delimiter']:
             cmddict['lastaddr'] = lastaddr
@@ -1610,7 +1619,9 @@ def gsed_parse(sedscript):
             # related s/// reference
             cmddict['extrainfo'] = lastsubref
             #TODO sedsed bug: lastsubref is an integer saved to a string field
-            #TODO sedsed bug: I'm not sure the previous s in the code is really the s that will relate to this t command in run time (see issue #15). Maybe just remove this property, it's useless.
+            #TODO sedsed bug: I'm not sure the previous s in the code is really the s that will
+            #     relate to this t command in run time (see issue #15). Maybe just remove this
+            #     property, it's useless.
             has_t = 1
 
         ret.append(cmddict)
