@@ -16,6 +16,11 @@ disable=
     too-many-statements,
     useless-object-inheritance,  # required while supporting python2
 
+# Wide screen monitors are nice
+
+[FORMAT]
+max-line-length=120
+
 # No reports, please
 
 [MASTER]
