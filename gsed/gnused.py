@@ -1190,7 +1190,23 @@ def check_final_program():  #program):
         free_buffer(pending_text)
         pending_text = NULL
 
+# sedsed
+def print_program(compiled_program):
+    indent_level = 0
+    indent_prefix = ' ' * 4
+    for x in compiled_program:
+        if x.cmd == '}':
+            indent_level -= 1
 
+        if x.cmd == '\n':
+            print()
+        else:
+            print('%s%s' % ((indent_prefix * indent_level), x))
+
+        if x.cmd == '{':
+            indent_level += 1
+
+# sedsed
 PARSER_DEBUG = False
 def debug(msg, stats=False):
     if PARSER_DEBUG:
@@ -1215,19 +1231,7 @@ if __name__ == '__main__':
     if args.files:
         debug("Will parse file: %s" % args.files[0])
         compile_file(the_program, args.files[0])
-        indent_level = 0
-        indent_prefix = ' ' * 4
-        for x in the_program:
-            if x.cmd == '}':
-                indent_level -= 1
-
-            if x.cmd == '\n':
-                print()
-            else:
-                print('%s%s' % ((indent_prefix * indent_level), x))
-
-            if x.cmd == '{':
-                indent_level += 1
+        print_program(the_program)
         sys.exit(0)
 
     PARSER_DEBUG = True
