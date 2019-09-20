@@ -1,0 +1,26 @@
+move gsed/gnused.py -> sedparse.py
+move gsed/test.py -> test/test_sedparse.py (do not overwrite already existent file, it's already fixed)
+what to do with gsed/* that remains?
+
+-----------------------------------------------------
+
+Release this as sedparse module
+Use it as submodule for sedsed
+pythonsed could use it as the parser
+
+Só falta decidir mesmo o lance dos cometários parciais.
+É que o tá bugado nos testes.
+
+-----------------------------------------------------
+
+diff -u test/parsing/all.sed gsed/sample.gnused.sed | vi -
+
+A diff são os comandos exclusivos do gsed, e os bugs do meu parser atual:
+
+- https://github.com/aureliojargas/sedsed/issues/13 - '; ' no fim da linha
+- s;;; delimitador não suportado
+
+Depois que virar o parser novo, tem que adicionar no all.sed os testes relativos aos bugs, assim no final a diff será somente os comandos exclusivos do gsed.
+
+-----------------------------------------------------
+
