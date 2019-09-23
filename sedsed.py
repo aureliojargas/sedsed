@@ -2,6 +2,18 @@
 # sedsed - Debugger and code formatter for sed scripts
 # Since 27 November 2001, by Aurelio Jargas
 
+# pylint: disable=bad-whitespace
+# pylint: disable=invalid-name
+# pylint: disable=redefined-outer-name
+# pylint: disable=too-few-public-methods
+# pylint: disable=too-many-branches
+# pylint: disable=too-many-instance-attributes
+# pylint: disable=too-many-lines
+# pylint: disable=too-many-locals
+# pylint: disable=too-many-statements
+# pylint: disable=useless-object-inheritance
+#                 ^required while supporting python2
+
 __version__ = '1.2-dev'
 
 import sys

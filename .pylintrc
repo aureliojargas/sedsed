@@ -3,18 +3,10 @@
 [MESSAGES CONTROL]
 enable=all
 disable=
-    bad-whitespace,
+    locally-disabled,
+    suppressed-message,
     fixme,
-    invalid-name,
     missing-docstring,
-    redefined-outer-name,
-    too-few-public-methods,
-    too-many-branches,
-    too-many-instance-attributes,
-    too-many-lines,
-    too-many-locals,
-    too-many-statements,
-    useless-object-inheritance,  # required while supporting python2
 
 # Wide screen monitors are nice
 
