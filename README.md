@@ -9,7 +9,7 @@ Website: https://aurelio.net/projects/sedsed/
 Sedsed is a single file Python application. Just download [sedsed.py](https://raw.githubusercontent.com/aureliojargas/sedsed/master/sedsed.py) and run it.
 
 - Compatible with Python 2.7 and Python 3.x
-- License: MIT
+- License: GPLv3
 - [Official released versions](https://github.com/aureliojargas/sedsed/releases)
 - [CHANGELOG.md](https://github.com/aureliojargas/sedsed/blob/master/CHANGELOG.md) for the list of changes in each version
 
