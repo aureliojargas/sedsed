@@ -6,10 +6,10 @@ import os
 
 # Make ../sedsed.py importable
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-import sedsed
+import sedsed  # pylint: disable=wrong-import-position
 
 # Mock to avoid the print() call from the original
-sedsed.fatal_error = lambda msg: sys.exit(msg)
+sedsed.fatal_error = sys.exit
 
 class TestSedsed(unittest.TestCase):
 
