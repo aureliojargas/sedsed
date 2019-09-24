@@ -999,10 +999,7 @@ def parse(sedscript):
                 lastaddr = cmddict['addr2']
 
         if xx.cmd == '\n':
-            ret.append({'linenr': xx.line, 'id': ''})
-            continue
-            #TODO only blank lines have this 'diet' dictionary, remove that
-            #     exception for consistency
+            cmddict['id'] = ''
 
         elif xx.cmd == '#':
             cmddict['comment'] = '#' + xx.x.comment
