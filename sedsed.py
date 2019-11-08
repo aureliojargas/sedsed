@@ -1178,6 +1178,7 @@ def do_debug(datalist):
                     t_count = t_count + 1
 
             # null cmd to restore last addr: /addr/y/!/!/
+            # Bug: https://github.com/aureliojargas/sedsed/issues/15
             if data['lastaddr']:
                 showall = showall + debug_prefix + \
                     data['lastaddr'] + nullcomm + '\n'
