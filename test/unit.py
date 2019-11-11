@@ -11,7 +11,7 @@ import sedsed  # pylint: disable=wrong-import-position
 # Mock to avoid the print() call from the original
 sedsed.fatal_error = sys.exit
 
-class TestSedsed(unittest.TestCase):
+class TestSedsed(unittest.TestCase):  # pylint: disable=unused-variable
 
     def test_read_file_not_found(self):
         with self.assertRaises(SystemExit):

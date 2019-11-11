@@ -9,8 +9,6 @@
 # pylint: disable=too-many-lines
 # pylint: disable=too-many-locals
 # pylint: disable=too-many-statements
-# pylint: disable=useless-object-inheritance
-#                 ^required while supporting python2
 
 __version__ = '1.2-dev'
 
@@ -123,11 +121,11 @@ def fatal_error(msg):
     sys.exit(1)
 
 
-def echo(msg):
+def echo(msg):  # pylint: disable=unused-variable
     print("\033[33;1m%s\033[m" % msg)
 
 
-def devdebug(msg, level=1):
+def devdebug(msg, level=1):  # pylint: disable=unused-variable
     if DEBUG and DEBUG >= level:
         print('+++ DEBUG%d: %s' % (level, msg))
 
@@ -697,7 +695,7 @@ def dump_key_value_pair(datalist):
 
 
 # Format: line:ad1:ad1f:ad2:ad2f:mod:cmd:content:delim:patt:rplc:flag:comment
-def dump_oneliner(datalist, fancy=0):
+def dump_oneliner(datalist, fancy=0):  # pylint: disable=unused-variable
     "Shows a command per line, elements separated by : (looooong lines)"
     r = n = ''
     if fancy:
