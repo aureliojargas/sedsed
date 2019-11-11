@@ -1,14 +1,25 @@
 language: python
+
+# Supported Python versions
 python:
   - "2.7"
   - "3.4"
   - "3.5"
   - "3.6"
   - "3.7"
+
 install:
-  - if test $TRAVIS_PYTHON_VERSION = 3.6; then pip install -q pylint; fi
+  # The test suite needs a gsed command
   - ln -s /bin/sed ~/bin/gsed
+
+  # Install sedparse
   - pip install --quiet -r requirements.txt
+
+  # Only run pylint/black in newer Python versions
+  - case $TRAVIS_PYTHON_VERSION in 3.6)
+    pip install --quiet -r requirements-dev.txt;;
+    esac
+
 script:
   - if test $TRAVIS_PYTHON_VERSION = 3.6; then pylint sedsed.py test/unit.py; fi
   - ./ci/shellcheck
