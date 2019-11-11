@@ -180,3 +180,21 @@ Releasing:
 - Commit the change to the version number back to the dev state.
 - Push everything (commits and tags) to GitHub.
 - Update the website, download section.
+
+## Development environment
+
+To create (and update in the future):
+
+    python3 -m venv env
+    source env/bin/activate
+    pip install -r requirements-dev.txt
+
+To use it while developing:
+
+    source env/bin/activate
+
+To leave it when done developing:
+
+    deactivate
+
+More info at https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/
