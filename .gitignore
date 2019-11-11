@@ -1,5 +1,12 @@
-*.pyc
-*.pyo
+# Text editor
+.vscode/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# Environments
+env/
 
 # Vim temporary files
 *.swp
