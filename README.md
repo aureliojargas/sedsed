@@ -162,7 +162,7 @@ In those examples the sed script was informed as an argument using the `-e` opti
 
     $ ./test/run
 
-**Automation:** For every new pushed commit, Travis CI runs the code linter and all the tests. The tests are checked in multiple Python versions, from 2.7 to 3.7. See [.travis.yml](.travis.yml).
+**Automation:** For every new pushed commit, Travis CI runs the code linter and all the tests. The tests are checked in multiple Python versions, from 2.7 to 3.8. See [.travis.yml](.travis.yml).
 
 ## New version release checklist
 
