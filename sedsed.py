@@ -958,7 +958,7 @@ def do_debug(datalist):
 ###############################################################################
 #
 # Here we used to have a custom brute force buggy parser.
-# Now using sedparse, a direct port of the GNU sed C code.
+# Now using sedparse, a direct translation of the GNU sed C code.
 
 
 def parse(sedscript):
