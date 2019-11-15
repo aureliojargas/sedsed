@@ -6,12 +6,13 @@ disable=
     suppressed-message,
     fixme,
     missing-docstring,
+    bad-continuation,  # incompatible with black
 
 [VARIABLES]
 allow-global-unused-variables=no
 
 [FORMAT]
-max-line-length=120  # wide screen monitors are nice
+max-line-length=88  # black compatible
 expected-line-ending-format=LF  # enforce Unix \n
 
 # No reports, please

@@ -21,7 +21,12 @@ install:
     esac
 
 script:
-  - if test $TRAVIS_PYTHON_VERSION = 3.6; then pylint sedsed.py test/unit.py; fi
+  - case $TRAVIS_PYTHON_VERSION in 3.6)
+    pylint *.py test/*.py;;
+    esac
+  - case $TRAVIS_PYTHON_VERSION in 3.6)
+    black --check -S *.py test/*.py;;
+    esac
   - ./ci/shellcheck
   - ./test/run
 

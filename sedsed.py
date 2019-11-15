@@ -32,6 +32,7 @@ myhome = 'https://aurelio.net/projects/sedsed/'
 
 
 # Default config - Changeable, but you won't need to do it
+# fmt: off
 sedbin = 'sed'                # name (or full path) of the sed program
 color = 1                     # colored output or not? (--color, --nocolor)
 dump_debug = 0                # dump debug script to screen? (--dump-debug)
@@ -39,10 +40,12 @@ indent_prefix = ' '*4         # default indent prefix for blocks (--prefix)
 debug_prefix = '\t\t'         # default prefix for debug commands
 action = 'indent'             # default action if none specified (-d,-i,-t,-H)
 DEBUG = 0                     # set developer's debug level [0-3]
+# fmt: on
 
 # HTML colors for --htmlize
 # You may edit here to change the default colors
 html_colors = {
+    # fmt: off
     'addr1':     '#8080ff',
     'addr1flag': '#ff6060',
     'addr2':     '#8080ff',
@@ -84,7 +87,8 @@ else:
 
 
 def print_usage(exitcode=1):
-    print("""
+    print(
+        """
 Usage: sedsed OPTION [-e sedscript] [-f sedscriptfile] [inputfile]
 
 OPTIONS:
@@ -110,7 +114,8 @@ OPTIONS:
 
      -V, --version       prints the program version and exit
      -h, --help          prints this help message and exit
-""")
+"""
+    )
     print("Website: %s\n" % myhome)
     sys.exit(exitcode)
 
@@ -189,11 +194,30 @@ def system_command(cmd):
 # Here's all the valid command line options
 short_options = 'he:f:ditVHn'
 long_options = [
-    'debug', 'tokenize', 'htmlize', 'indent',                       # actions
-    'version', 'help', 'file=', 'expression=', 'silent', 'quiet',   # sed-like
-    'nocolor', 'color', 'hide=', 'prefix=',                         # misc
-    'dump-debug',                                                   # other
-    '_debuglevel=', '_stdout-only', 'dumpcute']  # admin
+    # actions
+    'debug',
+    'tokenize',
+    'htmlize',
+    'indent',
+    # sed-like
+    'version',
+    'help',
+    'file=',
+    'expression=',
+    'silent',
+    'quiet',
+    # misc
+    'nocolor',
+    'color',
+    'hide=',
+    'prefix=',
+    # other
+    'dump-debug',
+    # admin
+    '_debuglevel=',
+    '_stdout-only',
+    'dumpcute',
+]
 
 # Check it!
 try:
@@ -211,10 +235,12 @@ if os.name == 'nt':
     color = 0
 
 # Command Line is OK, now let's parse its values
-action_modifiers = []             # --hide contents and others
-sedscript = []                    # join all scripts found here
-script_file = ''                  # old sedscript filename for --htmlize
-quiet_flag = 0                    # tell if the #n is needed or not
+# fmt: off
+action_modifiers = []  # --hide contents and others
+sedscript = []         # join all scripts found here
+script_file = ''       # old sedscript filename for --htmlize
+quiet_flag = 0         # tell if the #n is needed or not
+# fmt: on
 
 for o in opt:
     if o[0] in ('-d', '--debug'):
@@ -306,8 +332,7 @@ def validate_script_syntax(script_text):
     # Note that even when running against an empty file, there could be
     # consequences on the system, such as a 'w' command writing files.
     # sed -f sed_script empty_file
-    ret, _ = system_command("%s -f '%s' '%s'" % (
-        sedbin, tmpfile1, tmpfile2))
+    ret, _ = system_command("%s -f '%s' '%s'" % (sedbin, tmpfile1, tmpfile2))
     os.remove(tmpfile1)
     os.remove(tmpfile2)
 
@@ -321,8 +346,8 @@ def validate_script_syntax(script_text):
         # explaining the reason for the failure. So now we abort giving some
         # context of what we were trying to do.
         fatal_error(
-            "%d: Failed validating your script using system's sed: %s" % (
-                ret, sedbin))
+            "%d: Failed validating your script using system's sed: %s" % (ret, sedbin)
+        )
 
 
 # There's a SED script?
@@ -361,7 +386,7 @@ if color:
     color_YLW = '\033[33;1m'
     color_RED = '\033[31;1m'
     color_REV = '\033[7m'
-    color_NO  = '\033[m'
+    color_NO = '\033[m'
 else:
     color_YLW = color_RED = color_REV = color_NO = ''
 
@@ -447,21 +472,24 @@ newlineshow = '%s\\N%s' % (color_RED, color_NO)
 
 # show pattern space, show hold space, show sed command
 # null sed command to restore last address, 't' status trick
+# fmt: off
 showpatt = [     's/^/PATT:/', 'l', 's/^PATT://'     ]
 showhold = ['x', 's/^/HOLD:/', 'l', 's/^HOLD://', 'x']
 showcomm = ['i\\', 'COMM:%s\a%s' % (color_YLW, color_NO)]
 nullcomm = ['y/!/!/']
 save_t   = ['t zzset\a\n#DEBUG#', 't zzclr\a',
-            ':zzset\a\n#DEBUG#', ':zzclr\a']
+             ':zzset\a\n#DEBUG#', ':zzclr\a']
+# fmt: on
 
 
 def format_debugcmds(cmds):
     "One per line, with prefix (spaces)"
     return debug_prefix + ('\n' + debug_prefix).join(cmds) + '\n'
 
+
 showpatt = format_debugcmds(showpatt)
 showhold = format_debugcmds(showhold)
-save_t   = format_debugcmds(save_t)
+save_t = format_debugcmds(save_t)
 showcomm = debug_prefix + '\n'.join(showcomm) + '\n'
 nullcomm = nullcomm[0]
 
@@ -488,14 +516,15 @@ html_data = {
 <body bgcolor="%(BGCOLOR)s" text="%(TEXT)s"
       link="%(LINK)s" alink="%(ALINK)s" vlink="%(VLINK)s">
 <pre>\
-""" % html_colors,
-
+"""
+    % html_colors,
     'footer': """
 <font color="%s"><b>### colorized by <a \
 href="%s">sedsed</a>, a debugger and code formatter \
 for sed scripts</b></font>\n
 </pre></body></html>\
-""" % (html_colors['comment'], myhome)
+"""
+    % (html_colors['comment'], myhome),
 }
 del html_colors['SCRIPTNAME']
 
@@ -507,30 +536,41 @@ del html_colors['SCRIPTNAME']
 
 # All SED commands grouped by kind
 sedcmds = {
-    'file':  'rw',
-    'addr':  '/$0123456789\\',
+    'file': 'rw',
+    'addr': '/$0123456789\\',
     'multi': 'sy',
-    'solo':  'nNdDgGhHxpPlq=',
-    'text':  'aci',
-    'jump':  ':bt',
+    'solo': 'nNdDgGhHxpPlq=',
+    'text': 'aci',
+    'jump': ':bt',
     'block': '{}',
-    'flag':  'gp0123456789w' + 'IiMme'  # default + GNU
+    'flag': 'gp0123456789w' + 'IiMme',  # default + GNU
 }
 
 # Regex patterns to identify special entities
 patt = {
     'jump_label': r'[^\s;}#]*',  # any char except those, or None
-    'filename':   r'[^\s]+',  # any not blank
-    'flag':       r'[%s]+' % sedcmds['flag'],  # flags list
-    'topopts':    r'#!\s*/[^\s]+\s+-([nf]+)'  # shebang, group options
+    'filename': r'[^\s]+',  # any not blank
+    'flag': r'[%s]+' % sedcmds['flag'],  # flags list
+    'topopts': r'#!\s*/[^\s]+\s+-([nf]+)',  # shebang, group options
 }
 
 # All fields used by the internal SED command dictionary
 cmdfields = [
     'linenr',
-    'addr1', 'addr1flag', 'addr2', 'addr2flag', 'lastaddr', 'modifier',
-    'id', 'content', 'delimiter', 'pattern', 'replace', 'flag',
-    'extrainfo', 'comment'
+    'addr1',
+    'addr1flag',
+    'addr2',
+    'addr2flag',
+    'lastaddr',
+    'modifier',
+    'id',
+    'content',
+    'delimiter',
+    'pattern',
+    'replace',
+    'flag',
+    'extrainfo',
+    'comment',
 ]
 
 
@@ -568,10 +608,7 @@ def paint_html(element, txt=''):
 
     elif element == 'pattern':
         # highlight ( and |
-        txt = re.sub(
-            '(\\\\)([(|])',
-            '\\1' + paint_html('pattmeta', '\\2'),
-            txt)
+        txt = re.sub('(\\\\)([(|])', '\\1' + paint_html('pattmeta', '\\2'), txt)
 
     elif element == 'plaintext':
         # highlight \$
@@ -607,10 +644,12 @@ def compose_sed_address(data):
     if action == 'html':
         address1 = '%s%s' % (
             data['addr1html'],
-            paint_html('addr1flag', data.get('addr1flag')))
+            paint_html('addr1flag', data.get('addr1flag')),
+        )
         address2 = '%s%s' % (
             data.get('addr2html'),
-            paint_html('addr2flag', data.get('addr2flag')))
+            paint_html('addr2flag', data.get('addr2flag')),
+        )
     else:
         address1 = '%s%s' % (data.get('addr1'), data.get('addr1flag'))
         address2 = '%s%s' % (data.get('addr2'), data.get('addr2flag'))
@@ -627,14 +666,20 @@ def compose_sed_command(data):
     if data['delimiter']:  # s///
         if action != 'html':
             cmd = '%s%s%s%s%s%s%s%s' % (
-                data['modifier'],  data['id'],
-                data['delimiter'], data['pattern'],
-                data['delimiter'], data['replace'],
-                data['delimiter'], data['flag'])
+                data['modifier'],
+                data['id'],
+                data['delimiter'],
+                data['pattern'],
+                data['delimiter'],
+                data['replace'],
+                data['delimiter'],
+                data['flag'],
+            )
             if data['content']:  # s///w filename
                 cmd = cmd + ' ' + data['content']
         else:
             cmd = """%s%s%s%s%s%s%s%s""" % (
+                # fmt: off
                 paint_html('modifier',  data['modifier']),
                 paint_html('id',        data['id']),
                 paint_html('delimiter', data['delimiter']),
@@ -642,7 +687,8 @@ def compose_sed_command(data):
                 paint_html('delimiter', data['delimiter']),
                 paint_html('replace',   data['replace']),
                 paint_html('delimiter', data['delimiter']),
-                paint_html('flag',      data['flag']))
+                paint_html('flag',      data['flag']),
+            )
             if data['content']:  # s///w filename
                 painted = paint_html('content', data['content'])
                 cmd = '%s %s' % (cmd, painted)
@@ -653,11 +699,7 @@ def compose_sed_command(data):
         spaceme = spaceme.replace(':', '')  # : label (no space!)
         if data['id'] in spaceme:
             idsep = ' '
-        cmd = '%s%s%s%s' % (
-            data['modifier'],
-            data['id'],
-            idsep,
-            data['content'])
+        cmd = '%s%s%s%s' % (data['modifier'], data['id'], idsep, data['content'])
         if action == 'html':
             if data['id'] in sedcmds['text']:
                 content_type = 'plaintext'
@@ -672,7 +714,8 @@ def compose_sed_command(data):
                 paint_html('modifier', data['modifier']),
                 paint_html('id', data['id']),
                 idsep,
-                paint_html(content_type, data['content']))
+                paint_html(content_type, data['content']),
+            )
     cmd = cmd.replace(linesep, '\n')
     return cmd
 
@@ -722,22 +765,32 @@ def dump_cute(datalist):
             idsep = ''
             if data['id'] in 'bt':
                 idsep = ' '
-            cmd = '%s%s%s%s' % (
-                data['modifier'],
-                data['id'],
-                idsep,
-                data['content'])
+            cmd = '%s%s%s%s' % (data['modifier'], data['id'], idsep, data['content'])
             if data['delimiter']:
                 cmd = '%s%s%s%s%s%s%s' % (
                     cmd,
-                    data['delimiter'], data['pattern'],
-                    data['delimiter'], data['replace'],
-                    data['delimiter'], data['flag'])
+                    data['delimiter'],
+                    data['pattern'],
+                    data['delimiter'],
+                    data['replace'],
+                    data['delimiter'],
+                    data['flag'],
+                )
             cmd = cmd.replace(linesep, n + newlineshow + r)
-            print('%s' % '-'*40)
-            print('adr: %s%s%s%s  :::  %s%s%s%s' % (
-                r, data['addr1'], data['addr1flag'], n,
-                r, data['addr2'], data['addr2flag'], n))
+            print('%s' % '-' * 40)
+            print(
+                'adr: %s%s%s%s  :::  %s%s%s%s'
+                % (
+                    r,
+                    data['addr1'],
+                    data['addr1flag'],
+                    n,
+                    r,
+                    data['addr2'],
+                    data['addr2flag'],
+                    n,
+                )
+            )
             print('cmd: %s%s%s   [%s]' % (r, cmd, n, data['comment']))
 
 
@@ -748,9 +801,7 @@ def dump_cute(datalist):
 #
 def dump_script(datalist, indent_prefix):
     "Shows the indented script in plain text or HTML!"
-    indfmt = {
-        'string': indent_prefix,
-        'initlevel': 0}
+    indfmt = {'string': indent_prefix, 'initlevel': 0}
     outlist = []
     indent = indfmt['initlevel']
 
@@ -762,12 +813,11 @@ def dump_script(datalist, indent_prefix):
             outlist.append('')
             continue
         if data['id'] == '#':
-            indentstr = indfmt['string']*indent
+            indentstr = indfmt['string'] * indent
             if action != 'html':
                 outlist.append(indentstr + data['comment'])
             else:
-                outlist.append(indentstr +
-                               paint_html('comment', data['comment']))
+                outlist.append(indentstr + paint_html('comment', data['comment']))
         else:
             if data['id'] == '}':
                 indent = indent - 1
@@ -861,8 +911,7 @@ def do_debug(datalist):
             # null cmd to restore last addr: /addr/y/!/!/
             # Bug: https://github.com/aureliojargas/sedsed/issues/15
             if data['lastaddr']:
-                showall = showall + debug_prefix + \
-                    data['lastaddr'] + nullcomm + '\n'
+                showall = showall + debug_prefix + data['lastaddr'] + nullcomm + '\n'
 
             # after jump or block commands don't show
             # registers, because they're not affected.
@@ -874,7 +923,7 @@ def do_debug(datalist):
             elif data['id'] in sedcmds['block']:
                 hideregisters = 1
 
-            outlist.append("%s#%s\n%s\n" % (showall, '-'*50, addr + cmd))
+            outlist.append("%s#%s\n%s\n" % (showall, '-' * 50, addr + cmd))
 
     outlist.append(showpatt + showhold)  # last line status
 
@@ -887,13 +936,16 @@ def do_debug(datalist):
     if dump_debug:
         for line in [re.sub('\n$', '', x) for x in outlist]:
             print(line)
-        print("\n# Debugged SED script generated by %s-%s (%s)" % (
-            myname, __version__, myhome))
+        print(
+            "\n# Debugged SED script generated by %s-%s (%s)"
+            % (myname, __version__, myhome)
+        )
     else:
         tmpfile = tempfile.mktemp()
         write_file(tmpfile, outlist)
-        os.system("%s -%s %s %s %s" % (
-            sedbin, cmdlineopts, tmpfile, inputfiles, cmdextra))
+        os.system(
+            "%s -%s %s %s %s" % (sedbin, cmdlineopts, tmpfile, inputfiles, cmdextra)
+        )
         os.remove(tmpfile)
 
 
@@ -908,16 +960,17 @@ def do_debug(datalist):
 # Here we used to have a custom brute force buggy parser.
 # Now using sedparse, a direct port of the GNU sed C code.
 
+
 def parse(sedscript):
-    #TODO handle xx.x.int_arg for QqLl (new) cmddict['content'] = xx.x.int_arg
-    #TODO handle all new GNU sed commands
+    # TODO handle xx.x.int_arg for QqLl (new) cmddict['content'] = xx.x.int_arg
+    # TODO handle all new GNU sed commands
 
     the_program = []
     ret = []
     ret.append({})  # for header
 
     # Parse the sed script and save the output to `the_program`
-    sedparse.compile_string(the_program, '\n'.join(sedscript)+'\n')
+    sedparse.compile_string(the_program, '\n'.join(sedscript) + '\n')
 
     ### Translate from GNU sed struct_sed_cmd objects to sedsed ZZ objects
 
@@ -943,14 +996,16 @@ def parse(sedscript):
                 gsed_data.addr_regex.escape(),
                 gsed_data.addr_regex.slash,
                 gsed_data.addr_regex.pattern,
-                gsed_data.addr_regex.slash)
+                gsed_data.addr_regex.slash,
+            )
 
             # set cmddict['addr1html']
             sedsed_data[prefix + 'html'] = '%s%s%s%s' % (
                 paint_html('escape', gsed_data.addr_regex.escape()),
                 paint_html('delimiter', gsed_data.addr_regex.slash),
                 paint_html('pattern', gsed_data.addr_regex.pattern),
-                paint_html('delimiter', gsed_data.addr_regex.slash))
+                paint_html('delimiter', gsed_data.addr_regex.slash),
+            )
 
             # set cmddict['addr1flag'] = I
             sedsed_data[prefix + 'flag'] = gsed_data.addr_regex.flags
@@ -979,10 +1034,10 @@ def parse(sedscript):
 
         # Set cmddict['lastaddr'] when current address is //
         # Otherwise just update lastaddr holder
-        #TODO sedsed bug: lastaddr must also include the flags
-        #TODO sedsed bug: only regex addresses should be saved as lastaddr, but
+        # TODO sedsed bug: lastaddr must also include the flags
+        # TODO sedsed bug: only regex addresses should be saved as lastaddr, but
         #     currently numbers and $ are also saved
-        #TODO investigate bug in sedsed if both addresses are regexes, the
+        # TODO investigate bug in sedsed if both addresses are regexes, the
         #     'reset' address command should involve both addresses again, and
         #     not only `lastaddr`
         if xx.a1:
@@ -1015,7 +1070,8 @@ def parse(sedscript):
         elif xx.cmd in sedcmds['text']:
             cmddict['content'] = '\\%s%s' % (
                 linesep,
-                str(xx.x.cmd_txt).replace('\n', linesep))
+                str(xx.x.cmd_txt).replace('\n', linesep),
+            )
 
         elif xx.cmd in sedcmds['jump']:
             cmddict['content'] = xx.x.label_name
@@ -1026,7 +1082,9 @@ def parse(sedscript):
         elif xx.cmd in sedcmds['multi']:  # s/// & y///
             cmddict['delimiter'] = xx.x.cmd_subst.regx.slash
             cmddict['pattern'] = str(xx.x.cmd_subst.regx.pattern)
-            cmddict['replace'] = str(xx.x.cmd_subst.replacement.text).replace('\n', linesep)
+            cmddict['replace'] = str(xx.x.cmd_subst.replacement.text).replace(
+                '\n', linesep
+            )
             cmddict['flag'] = ''.join(xx.x.cmd_subst.regx.flags)
             if 'w' in cmddict['flag']:
                 cmddict['content'] = xx.x.cmd_subst.outf.name
@@ -1035,7 +1093,7 @@ def parse(sedscript):
 
         # saving last address content
         if cmddict['pattern']:
-            #TODO sedsed bug: y also have pattern defined, but it does not count
+            # TODO sedsed bug: y also have pattern defined, but it does not count
             #     as a real pattern for lastaddr. Here it must be s only.
             lastaddr = cmddict['delimiter'] + cmddict['pattern'] + cmddict['delimiter']
         elif cmddict['delimiter']:
@@ -1047,8 +1105,8 @@ def parse(sedscript):
         if xx.cmd == 't':
             # related s/// reference
             cmddict['extrainfo'] = lastsubref
-            #TODO sedsed bug: lastsubref is an integer saved to a string field
-            #TODO sedsed bug: I'm not sure the previous s in the code is really
+            # TODO sedsed bug: lastsubref is an integer saved to a string field
+            # TODO sedsed bug: I'm not sure the previous s in the code is really
             #     the s that will relate to this t command in run time (see
             #     issue #15). Maybe just remove this property, it seems useless.
             has_t = 1
@@ -1060,6 +1118,7 @@ def parse(sedscript):
     ret[0]['has_t'] = has_t
 
     return ret
+
 
 def fix_partial_comments(commands):
     """
@@ -1081,11 +1140,13 @@ def fix_partial_comments(commands):
     headers = commands[0]
     data = commands[1:]
 
-    accept_comment = sedcmds['solo'] + sedcmds['block'] + sedcmds['jump'] + sedcmds['multi']
+    accept_comment = (
+        sedcmds['solo'] + sedcmds['block'] + sedcmds['jump'] + sedcmds['multi']
+    )
 
-    fake = { 'linenr': 0 }
+    fake = {'linenr': 0}
     data.insert(0, fake)  # because of i-2
-    data.append(fake)     # because of i+1
+    data.append(fake)  # because of i+1
 
     # i==0  skip: it's the fake
     # i==1  skip: first command (nothing previous to append)
@@ -1094,14 +1155,15 @@ def fix_partial_comments(commands):
     i = 2
     while i < len(data) - 1:
         # Move solo comment into previous command as partial comment when...
-        if (data[i]['id'] == '#'
-                # ...previous command accepts comments
-                and data[i - 1]['id'] in accept_comment
-
-                # ...there's only *one* previous command in the same source line
-                and data[i]['linenr'] != data[i - 2]['linenr']
-                and data[i]['linenr'] == data[i - 1]['linenr']
-                and data[i]['linenr'] != data[i + 1]['linenr']):
+        if (
+            data[i]['id'] == '#'
+            # ...previous command accepts comments
+            and data[i - 1]['id'] in accept_comment
+            # ...there's only *one* previous command in the same source line
+            and data[i]['linenr'] != data[i - 2]['linenr']
+            and data[i]['linenr'] == data[i - 1]['linenr']
+            and data[i]['linenr'] != data[i + 1]['linenr']
+        ):
 
             # Move solo comment to previous command
             data[i - 1]['comment'] = data[i]['comment']
@@ -1111,6 +1173,7 @@ def fix_partial_comments(commands):
             i += 1
 
     return [headers] + data[1:-1]  # remove fakes
+
 
 # Parse the script and process/fix the resulting data.
 # ZZ is sedsed's internal data structure for a sed script.
@@ -1124,7 +1187,6 @@ ZZ = fix_partial_comments(parse(sedscript))
 # prepare yourself for an ASCII nightmare ;)
 #
 # import pprint; pprint.pprint(ZZ, indent=4); sys.exit(0)
-
 
 
 # -----------------------------------------------------------------------------
