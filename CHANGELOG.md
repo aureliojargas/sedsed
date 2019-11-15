@@ -12,6 +12,43 @@
 [Version 0.1]: https://github.com/aureliojargas/sedsed/releases/tag/v0.1
 
 
+## Unreleased changes
+
+- The old "home made" buggy parser for sed scripts was replaced by
+  [sedparse](https://github.com/aureliojargas/sedparse), a Python clone
+  of the battle-tested GNU sed parser. The previous parsings bugs are
+  now vanished and as a bonus, all the GNU sed extensions are now
+  supported.
+  [961624b](https://github.com/aureliojargas/sedsed/commit/961624b)
+  [82c5d19](https://github.com/aureliojargas/sedsed/commit/82c5d19)
+
+- Sedsed license has changed from MIT to GPLv3. This was necessary
+  because `sedparse` is a derivative work from GNU sed GPL'd code.
+  [f5775be](https://github.com/aureliojargas/sedsed/commit/f5775be)
+
+- Dropped support for Python 2.6. Now sedsed runs in Python versions 2.7
+  and >=3.4.
+  [#37](https://github.com/aureliojargas/sedsed/issues/37)
+  [4c6ec38](https://github.com/aureliojargas/sedsed/commit/4c6ec38)
+
+- The sed emulator was removed. It was incomplete and buggy. Gone are
+  the `--emu` and `--emudebug` command line options.
+  [#35](https://github.com/aureliojargas/sedsed/issues/35)
+
+- Sedsed can now be imported as a Python module.
+  [#9](https://github.com/aureliojargas/sedsed/issues/9)
+
+- Added many new tests to ensure it works as expected.
+  [9624d03](https://github.com/aureliojargas/sedsed/commit/9624d03)
+  [3665234](https://github.com/aureliojargas/sedsed/commit/3665234)
+  [4b07d73](https://github.com/aureliojargas/sedsed/commit/4b07d73)
+  [21f6723](https://github.com/aureliojargas/sedsed/commit/21f6723)
+  [cc48068](https://github.com/aureliojargas/sedsed/commit/cc48068)
+
+- Source code is now autoformatted by black.
+  [13bd67f](https://github.com/aureliojargas/sedsed/commit/13bd67f)
+
+
 ## [Version 1.1][] released in 2019-05-25
 
 - Added Python 3 support. Now sedsed runs in Python versions 2.6, 2.7
@@ -22,31 +59,31 @@
 
 - Source code reformatted (PEP-8) and improved (pylint).
 
-- Add support for GNU sed `s///` flags: `M`, `m`, `e`
+- Add support for GNU sed `s///` flags: `M`, `m`, `e`.
   [45f6dea](https://github.com/aureliojargas/sedsed/commit/45f6dea)
 
-- Add support for multiline script in `-e` option
+- Add support for multiline script in `-e` option.
   [#10](https://github.com/aureliojargas/sedsed/issues/10)
 
-- Bugfix: Improved STDIN handling for BSD sed and Termux
+- Bugfix: Improved STDIN handling for BSD sed and Termux.
   [a49703d](https://github.com/aureliojargas/sedsed/commit/a49703d)
 
-- Bugfix: Now correctly parsing `s///w` flag
+- Bugfix: Now correctly parsing `s///w` flag.
   [#4](https://github.com/aureliojargas/sedsed/issues/4)
 
-- Bugfix: Address ranges with spaces before the comma
+- Bugfix: Address ranges with spaces before the comma.
   [#2](https://github.com/aureliojargas/sedsed/issues/2)
 
-- Bugfix: `I` char removed in some cases
+- Bugfix: `I` char removed in some cases.
   [#1](https://github.com/aureliojargas/sedsed/issues/1)
 
-- Bugfix: htmlize: address `I` flag not removed anymore
+- Bugfix: htmlize: address `I` flag not removed anymore.
   [#6](https://github.com/aureliojargas/sedsed/issues/6)
 
-- Bugfix: indent: no more trailing spaces
+- Bugfix: indent: no more trailing spaces.
   [#5](https://github.com/aureliojargas/sedsed/issues/5)
 
-- Bugfix: emulator: fixed command `D`
+- Bugfix: emulator: fixed command `D`.
   [#7](https://github.com/aureliojargas/sedsed/issues/7)
 
 
