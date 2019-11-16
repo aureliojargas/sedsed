@@ -82,10 +82,6 @@ do
             # ERROR: Cannot read file: wrtout1.sed
             continue
         ;;
-        y-bracket.good)
-            # Bug: sedsed parser breaks on [ inside y (issue #16)
-            continue
-        ;;
     esac
 
     test_message "Testing $script_file"
