@@ -258,13 +258,27 @@ HOLD:37s$
 COMM:[33;1m}[m
 COMM:[33;1m/three/,/FIVE/I {[m
 COMM:[33;1m/SIX/I,// {[m
+COMM:[33;1m1~2 {[m
+COMM:[33;1mx[m
+PATT:37s$
+HOLD:one$
+COMM:[33;1ms/.*/40/p[m
+40
+PATT:40$
+HOLD:one$
+COMM:[33;1mx[m
+PATT:one$
+HOLD:40$
+COMM:[33;1m}[m
+COMM:[33;1m3,~3 {[m
+COMM:[33;1m4,+2 {[m
 COMM:[33;1md[m
 PATT:two$
-HOLD:37s$
+HOLD:40$
 COMM:[33;1m1 {[m
 COMM:[33;1m2,3 {[m
 COMM:[33;1mx[m
-PATT:37s$
+PATT:40$
 HOLD:two$
 COMM:[33;1ms/.*/11/p[m
 11
@@ -519,6 +533,9 @@ HOLD:37s$
 COMM:[33;1m}[m
 COMM:[33;1m/three/,/FIVE/I {[m
 COMM:[33;1m/SIX/I,// {[m
+COMM:[33;1m1~2 {[m
+COMM:[33;1m3,~3 {[m
+COMM:[33;1m4,+2 {[m
 COMM:[33;1md[m
 PATT:three$
 HOLD:37s$
@@ -780,14 +797,39 @@ PATT:three$
 HOLD:38s$
 COMM:[33;1m}[m
 COMM:[33;1m/SIX/I,// {[m
+COMM:[33;1m1~2 {[m
+COMM:[33;1mx[m
+PATT:38s$
+HOLD:three$
+COMM:[33;1ms/.*/40/p[m
+40
+PATT:40$
+HOLD:three$
+COMM:[33;1mx[m
+PATT:three$
+HOLD:40$
+COMM:[33;1m}[m
+COMM:[33;1m3,~3 {[m
+COMM:[33;1mx[m
+PATT:40$
+HOLD:three$
+COMM:[33;1ms/.*/41/p[m
+41
+PATT:41$
+HOLD:three$
+COMM:[33;1mx[m
+PATT:three$
+HOLD:41$
+COMM:[33;1m}[m
+COMM:[33;1m4,+2 {[m
 COMM:[33;1md[m
 PATT:four$
-HOLD:38s$
+HOLD:41$
 COMM:[33;1m1 {[m
 COMM:[33;1m2,3 {[m
 COMM:[33;1m4,4 {[m
 COMM:[33;1mx[m
-PATT:38s$
+PATT:41$
 HOLD:four$
 COMM:[33;1ms/.*/12/p[m
 12
@@ -1041,15 +1083,40 @@ PATT:four$
 HOLD:38s$
 COMM:[33;1m}[m
 COMM:[33;1m/SIX/I,// {[m
+COMM:[33;1m1~2 {[m
+COMM:[33;1m3,~3 {[m
+COMM:[33;1mx[m
+PATT:38s$
+HOLD:four$
+COMM:[33;1ms/.*/41/p[m
+41
+PATT:41$
+HOLD:four$
+COMM:[33;1mx[m
+PATT:four$
+HOLD:41$
+COMM:[33;1m}[m
+COMM:[33;1m4,+2 {[m
+COMM:[33;1mx[m
+PATT:41$
+HOLD:four$
+COMM:[33;1ms/.*/42/p[m
+42
+PATT:42$
+HOLD:four$
+COMM:[33;1mx[m
+PATT:four$
+HOLD:42$
+COMM:[33;1m}[m
 COMM:[33;1md[m
 PATT:five$
-HOLD:38s$
+HOLD:42$
 COMM:[33;1m1 {[m
 COMM:[33;1m2,3 {[m
 COMM:[33;1m4,4 {[m
 COMM:[33;1m5,$ {[m
 COMM:[33;1mx[m
-PATT:38s$
+PATT:42$
 HOLD:five$
 COMM:[33;1ms/.*/13/p[m
 13
@@ -1368,15 +1435,51 @@ PATT:five$
 HOLD:38s$
 COMM:[33;1m}[m
 COMM:[33;1m/SIX/I,// {[m
+COMM:[33;1m1~2 {[m
+COMM:[33;1mx[m
+PATT:38s$
+HOLD:five$
+COMM:[33;1ms/.*/40/p[m
+40
+PATT:40$
+HOLD:five$
+COMM:[33;1mx[m
+PATT:five$
+HOLD:40$
+COMM:[33;1m}[m
+COMM:[33;1m3,~3 {[m
+COMM:[33;1mx[m
+PATT:40$
+HOLD:five$
+COMM:[33;1ms/.*/41/p[m
+41
+PATT:41$
+HOLD:five$
+COMM:[33;1mx[m
+PATT:five$
+HOLD:41$
+COMM:[33;1m}[m
+COMM:[33;1m4,+2 {[m
+COMM:[33;1mx[m
+PATT:41$
+HOLD:five$
+COMM:[33;1ms/.*/42/p[m
+42
+PATT:42$
+HOLD:five$
+COMM:[33;1mx[m
+PATT:five$
+HOLD:42$
+COMM:[33;1m}[m
 COMM:[33;1md[m
 PATT:six$
-HOLD:38s$
+HOLD:42$
 COMM:[33;1m1 {[m
 COMM:[33;1m2,3 {[m
 COMM:[33;1m4,4 {[m
 COMM:[33;1m5,$ {[m
 COMM:[33;1mx[m
-PATT:38s$
+PATT:42$
 HOLD:six$
 COMM:[33;1ms/.*/13/p[m
 13
@@ -1716,5 +1819,30 @@ HOLD:six$
 COMM:[33;1mx[m
 PATT:six$
 HOLD:39s$
+COMM:[33;1m}[m
+COMM:[33;1m1~2 {[m
+COMM:[33;1m3,~3 {[m
+COMM:[33;1mx[m
+PATT:39s$
+HOLD:six$
+COMM:[33;1ms/.*/41/p[m
+41
+PATT:41$
+HOLD:six$
+COMM:[33;1mx[m
+PATT:six$
+HOLD:41$
+COMM:[33;1m}[m
+COMM:[33;1m4,+2 {[m
+COMM:[33;1mx[m
+PATT:41$
+HOLD:six$
+COMM:[33;1ms/.*/42/p[m
+42
+PATT:42$
+HOLD:six$
+COMM:[33;1mx[m
+PATT:six$
+HOLD:42$
 COMM:[33;1m}[m
 COMM:[33;1md[m

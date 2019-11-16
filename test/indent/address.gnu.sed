@@ -312,6 +312,22 @@
     x
 }
 
+# Address with ~ and + (GNU extension)
+1~2 {
+    x
+    s/.*/40/p
+    x
+}
+3,~3 {
+    x
+    s/.*/41/p
+    x
+}
+4,+2 {
+    x
+    s/.*/42/p
+    x
+}
 
 # Remove the original line
 d
