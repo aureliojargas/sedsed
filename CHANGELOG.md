@@ -48,6 +48,33 @@
 - Source code is now autoformatted by black.
   [13bd67f](https://github.com/aureliojargas/sedsed/commit/13bd67f)
 
+- GNU sed extension: Now supporting `~` and `+` in addresses.
+  [#53](https://github.com/aureliojargas/sedsed/issues/53)
+
+- Bugfix: comment after `{` gets repeated.
+  [#50](https://github.com/aureliojargas/sedsed/issues/50)
+
+- Bugfix: `;` char should not be special inside comments.
+  [#49](https://github.com/aureliojargas/sedsed/issues/49)
+
+- Bugfix: empty block `{}` gets double `{{`.
+  [#51](https://github.com/aureliojargas/sedsed/issues/51)
+
+- Bugfix: Properly parse filenames for `r` and `w`.
+  [#29](https://github.com/aureliojargas/sedsed/issues/29)
+
+- Bugfix: `[` inside `y` command breaks the parser.
+  [#16](https://github.com/aureliojargas/sedsed/issues/16)
+
+- Bugfix: Error when line ends with `;` and a space.
+  [#13](https://github.com/aureliojargas/sedsed/issues/13)
+
+- Bugfix: Error when using `;` as delimiter in `s` command.
+  [#12](https://github.com/aureliojargas/sedsed/issues/12)
+
+- Bugfix: Add support for escaped chars in `y` command.
+  [#11](https://github.com/aureliojargas/sedsed/issues/11)
+
 
 ## [Version 1.1][] released in 2019-05-25
 
