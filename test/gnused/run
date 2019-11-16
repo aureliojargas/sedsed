@@ -40,10 +40,6 @@ do
             # sedsed doesn't support GNU sed 'e' command
             continue
         ;;
-        inclib.good)
-            # Bug: sedsed can't handle s;foo;bar; (issue #12)
-            continue
-        ;;
         insert.good)
             # Bug: sedsed can't handle i\ at EOF
             continue
