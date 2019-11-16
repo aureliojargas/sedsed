@@ -49,10 +49,6 @@ do
             # sed: file mac-mf.sed line 152: unterminated `s' command
             continue
         ;;
-        modulo.good)
-            # sedsed doesn't support GNU sed '~' address operator
-            continue
-        ;;
         recall.good)
             # Bug: sedsed can't maintain // state in this example (issue #15)
             continue
