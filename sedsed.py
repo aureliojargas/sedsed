@@ -726,20 +726,23 @@ def compose_sed_command(data):
 
 
 def dump_key_value_pair(datalist):
-    "Shows field:value command data line by line (lots of lines!)"
+    "Returns field:value command data line by line (lots of lines!)"
+    outlist = []
     for data in datalist[1:]:  # skip headers at 0
         if not data["id"]:  # blank line
             continue
         for key in datalist[0]["fields"]:
             if key == "replace":
                 data[key] = data[key].replace(linesep, newlineshow)
-            print("%10s:%s" % (key, data[key]))
-        print("")
+            outlist.append("%10s:%s" % (key, data[key]))
+        outlist.append("")
+    return outlist
 
 
 # Format: line:ad1:ad1f:ad2:ad2f:mod:cmd:content:delim:patt:rplc:flag:comment
 def dump_oneliner(datalist, fancy=0):  # pylint: disable=unused-variable
-    "Shows a command per line, elements separated by : (looooong lines)"
+    "Returns a command per line, elements separated by : (looooong lines)"
+    outlist = []
     r = n = ""
     if fancy:
         r = "\033[7m"
@@ -749,18 +752,20 @@ def dump_oneliner(datalist, fancy=0):  # pylint: disable=unused-variable
         if data["id"]:
             for key in datalist[0]["fields"][1:]:  # skip linenr
                 outline = "%s:%s%s%s" % (outline, r, data[key], n)
-        print(outline)
+        outlist.append(outline)
+    return outlist
 
 
 def dump_cute(datalist):
-    "Shows a strange representation of SED commands. Use --dumpcute."
+    "Returns a strange representation of SED commands. Use --dumpcute."
+    outlist = []
     r = color_REV
     n = color_NO
     for data in datalist[1:]:  # skip headers at 0
         if not data["id"]:
-            print("%40s" % "[blank]")
+            outlist.append("%40s" % "[blank]")
         elif data["id"] == "#":
-            print(data["comment"])
+            outlist.append(data["comment"])
         else:
             idsep = ""
             if data["id"] in "bt":
@@ -777,8 +782,8 @@ def dump_cute(datalist):
                     data["flag"],
                 )
             cmd = cmd.replace(linesep, n + newlineshow + r)
-            print("%s" % "-" * 40)
-            print(
+            outlist.append("%s" % "-" * 40)
+            outlist.append(
                 "adr: %s%s%s%s  :::  %s%s%s%s"
                 % (
                     r,
@@ -791,7 +796,8 @@ def dump_cute(datalist):
                     n,
                 )
             )
-            print("cmd: %s%s%s   [%s]" % (r, cmd, n, data["comment"]))
+            outlist.append("cmd: %s%s%s   [%s]" % (r, cmd, n, data["comment"]))
+    return outlist
 
 
 # dump_script: This is a handy function, used by --indent AND --htmlize
@@ -800,7 +806,7 @@ def dump_cute(datalist):
 # also adds the HTML code to the script.
 #
 def dump_script(datalist, indent_prefix):
-    "Shows the indented script in plain text or HTML!"
+    "Returns the indented script in plain text or HTML"
     indfmt = {"string": indent_prefix, "initlevel": 0}
     outlist = []
     indent = indfmt["initlevel"]
@@ -842,7 +848,7 @@ def dump_script(datalist, indent_prefix):
     if action == "html":
         outlist.append(html_data["footer"])
 
-    print("\n".join(outlist))
+    return outlist
 
 
 # -----------------------------------------------------------------------------
@@ -1191,15 +1197,15 @@ if __name__ == "__main__":
     AST = fix_partial_comments(parse(sedscript))
 
     if action == "indent":
-        dump_script(AST, indent_prefix)
+        print("\n".join(dump_script(AST, indent_prefix)))
     elif action == "html":
-        dump_script(AST, indent_prefix)
+        print("\n".join(dump_script(AST, indent_prefix)))
     elif action == "debug":
         do_debug(AST)
     elif action == "token":
-        dump_key_value_pair(AST)
+        print("\n".join(dump_key_value_pair(AST)))
     elif action == "dumpcute":
-        dump_cute(AST)
+        print("\n".join(dump_cute(AST)))
 
 # -----------------------------------------------------------------------------
 #                               - THE END -

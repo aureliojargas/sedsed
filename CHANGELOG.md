@@ -38,6 +38,7 @@
 - Sedsed can now be imported and used as a Python module.
   [#9](https://github.com/aureliojargas/sedsed/issues/9)
   [#47](https://github.com/aureliojargas/sedsed/issues/47)
+  [#55](https://github.com/aureliojargas/sedsed/issues/55)
 
 - Added many new tests to ensure it works as expected.
   [9624d03](https://github.com/aureliojargas/sedsed/commit/9624d03)
