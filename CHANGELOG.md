@@ -35,8 +35,9 @@
   the `--emu` and `--emudebug` command line options.
   [#35](https://github.com/aureliojargas/sedsed/issues/35)
 
-- Sedsed can now be imported as a Python module.
+- Sedsed can now be imported and used as a Python module.
   [#9](https://github.com/aureliojargas/sedsed/issues/9)
+  [#47](https://github.com/aureliojargas/sedsed/issues/47)
 
 - Added many new tests to ensure it works as expected.
   [9624d03](https://github.com/aureliojargas/sedsed/commit/9624d03)
@@ -47,6 +48,8 @@
 
 - Source code is now autoformatted by black.
   [13bd67f](https://github.com/aureliojargas/sedsed/commit/13bd67f)
+  [be7d394](https://github.com/aureliojargas/sedsed/commit/be7d394)
+  [ed2b881](https://github.com/aureliojargas/sedsed/commit/ed2b881)
 
 - GNU sed extension: Now supporting `~` and `+` in addresses.
   [#53](https://github.com/aureliojargas/sedsed/issues/53)
