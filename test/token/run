@@ -4,9 +4,11 @@
 cd "$(dirname "$0")" || exit 1
 
 # Read default configuration
+# shellcheck source=test/_include.sh
 source ../_include.sh
 
 # Test files user supplied files ($@) otherwise test everything
+# shellcheck disable=SC2068
 for file_path in ${@:-../parsing/*.sed}
 do
 

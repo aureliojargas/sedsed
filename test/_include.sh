@@ -1,10 +1,13 @@
+#!/bin/bash
 # Include file used by all the sedsed tests.
 
 # Turn strict mode on for all scripts
 set -o errexit -o nounset -o pipefail
 
+# shellcheck disable=SC2034
 sed='gsed'
 
+# shellcheck disable=SC2034
 sedsed='python ../../sedsed.py'
 # sedsed='python2.6 ../../sedsed.py'
 # sedsed='python2.7 ../../sedsed.py'
@@ -14,6 +17,7 @@ failed=0
 sed_output='sed-output.txt'
 sedsed_output='sedsed-output.txt'
 
+# shellcheck disable=SC2034
 text=$(echo one two three four five six | tr ' ' '\n')
 
 test_message() {

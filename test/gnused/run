@@ -4,6 +4,7 @@
 cd "$(dirname "$0")" || exit 1
 
 # Read default configuration
+# shellcheck source=test/_include.sh
 source ../_include.sh
 
 # Multiple tests from the BSD sed, adapted for GNU sed
