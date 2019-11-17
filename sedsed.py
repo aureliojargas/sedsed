@@ -1192,9 +1192,12 @@ def fix_partial_comments(commands):
 
 
 if __name__ == "__main__":
-    # Parse the script and process/fix the resulting data.
-    # AST is sedsed's internal data structure to represent a sed script.
-    AST = fix_partial_comments(parse(sedscript))
+    try:
+        # Parse the script and process/fix the resulting data.
+        # AST is sedsed's internal data structure to represent a sed script.
+        AST = fix_partial_comments(parse(sedscript))
+    except sedparse.ParseError as err:
+        fatal_error(err.message)
 
     if action == "indent":
         print("\n".join(dump_script(AST, indent_prefix)))
