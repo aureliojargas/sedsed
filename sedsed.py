@@ -122,7 +122,7 @@ OPTIONS:
 
 def fatal_error(msg):
     "All error messages are handled by me"
-    print("ERROR: %s" % msg)
+    print("ERROR: %s: %s" % (myname, msg))
     sys.exit(1)
 
 
