@@ -963,6 +963,8 @@ def do_debug(datalist):
 # To avoid having to adapt the whole sedsed code to the sedparse AST, the
 # following `parse()` function will convert the sedparse AST into the same AST
 # used by the old parser: a list having a flat dictionary for each command.
+#
+# TODO properly document sedsed and sedparse AST's
 
 
 def parse(sedscript):
@@ -1183,42 +1185,21 @@ def fix_partial_comments(commands):
     return [headers] + data[1:-1]  # remove fakes
 
 
-# Parse the script and process/fix the resulting data.
-# ZZ is sedsed's internal data structure for a sed script.
-ZZ = fix_partial_comments(parse(sedscript))
-
-
-# Now the ZZ list is full.
-# It has every info that sedsed can extract from a SED script.
-# From now on, all functions and classes will manage this list.
-# If you are curious about it, just uncomment the line below and
-# prepare yourself for an ASCII nightmare ;)
-#
-# import pprint; pprint.pprint(ZZ, indent=4); sys.exit(0)
-
-
-# -----------------------------------------------------------------------------
-#          Script Already Parsed, Now It's Time To Make Decisions
-# -----------------------------------------------------------------------------
-#
-# This is the crucial point where the program will perform the action
-# that you choose on the command line.
-#
-# The ZZ list is full of data, and all the following functions know
-# how to handle it. Maybe we will indent, maybe debug? We'll see.
-#
-
 if __name__ == "__main__":
+    # Parse the script and process/fix the resulting data.
+    # AST is sedsed's internal data structure to represent a sed script.
+    AST = fix_partial_comments(parse(sedscript))
+
     if action == "indent":
-        dump_script(ZZ, indent_prefix)
+        dump_script(AST, indent_prefix)
     elif action == "html":
-        dump_script(ZZ, indent_prefix)
+        dump_script(AST, indent_prefix)
     elif action == "debug":
-        do_debug(ZZ)
+        do_debug(AST)
     elif action == "token":
-        dump_key_value_pair(ZZ)
+        dump_key_value_pair(AST)
     elif action == "dumpcute":
-        dump_cute(ZZ)
+        dump_cute(AST)
 
 # -----------------------------------------------------------------------------
 #                               - THE END -
