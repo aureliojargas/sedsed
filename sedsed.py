@@ -33,12 +33,12 @@ myhome = "https://aurelio.net/projects/sedsed/"
 
 # Default config - Changeable, but you won't need to do it
 # fmt: off
-sedbin = 'sed'                # name (or full path) of the sed program
+sedbin = "sed"                # name (or full path) of the sed program
 color = 1                     # colored output or not? (--color, --nocolor)
 dump_debug = 0                # dump debug script to screen? (--dump-debug)
-indent_prefix = ' '*4         # default indent prefix for blocks (--prefix)
-debug_prefix = '\t\t'         # default prefix for debug commands
-action = 'indent'             # default action if none specified (-d,-i,-t,-H)
+indent_prefix = " "*4         # default indent prefix for blocks (--prefix)
+debug_prefix = "\t\t"         # default prefix for debug commands
+action = "indent"             # default action if none specified (-d,-i,-t,-H)
 DEBUG = 0                     # set developer's debug level [0-3]
 # fmt: on
 
@@ -46,30 +46,30 @@ DEBUG = 0                     # set developer's debug level [0-3]
 # You may edit here to change the default colors
 html_colors = {
     # fmt: off
-    'addr1':     '#8080ff',
-    'addr1flag': '#ff6060',
-    'addr2':     '#8080ff',
-    'addr2flag': '#ff6060',
-    'lastaddr':  '',
-    'modifier':  '#ff6060',
-    'id':        '#ffff00',
-    'content':   '#ff00ff',
-    'delimiter': '#ff6060',
-    'pattern':   '#8080ff',
-    'replace':   '',
-    'flag':      '#00ff00',
-    'extrainfo': '',
-    'comment':   '#00ffff',
-    'escape':    '#ff6060',
-    'special':   '#00ff00',
-    'pattmeta':  '#ff00ff',
-    'plaintext': '',
-    'branch':    '',
-    'BGCOLOR':   '#000000',
-    'TEXT':      '#ffffff',
-    'LINK':      '#ff00ff',
-    'ALINK':     '#ff00ff',
-    'VLINK':     '#ff00ff'
+    "addr1":     "#8080ff",
+    "addr1flag": "#ff6060",
+    "addr2":     "#8080ff",
+    "addr2flag": "#ff6060",
+    "lastaddr":  "",
+    "modifier":  "#ff6060",
+    "id":        "#ffff00",
+    "content":   "#ff00ff",
+    "delimiter": "#ff6060",
+    "pattern":   "#8080ff",
+    "replace":   "",
+    "flag":      "#00ff00",
+    "extrainfo": "",
+    "comment":   "#00ffff",
+    "escape":    "#ff6060",
+    "special":   "#00ff00",
+    "pattmeta":  "#ff00ff",
+    "plaintext": "",
+    "branch":    "",
+    "BGCOLOR":   "#000000",
+    "TEXT":      "#ffffff",
+    "LINK":      "#ff00ff",
+    "ALINK":     "#ff00ff",
+    "VLINK":     "#ff00ff"
 }
 
 # The identifier recognized by sed as STDIN
@@ -238,7 +238,7 @@ if os.name == "nt":
 # fmt: off
 action_modifiers = []  # --hide contents and others
 sedscript = []         # join all scripts found here
-script_file = ''       # old sedscript filename for --htmlize
+script_file = ""       # old sedscript filename for --htmlize
 quiet_flag = 0         # tell if the #n is needed or not
 # fmt: on
 
@@ -473,12 +473,12 @@ newlineshow = "%s\\N%s" % (color_RED, color_NO)
 # show pattern space, show hold space, show sed command
 # null sed command to restore last address, 't' status trick
 # fmt: off
-showpatt = [     's/^/PATT:/', 'l', 's/^PATT://'     ]
-showhold = ['x', 's/^/HOLD:/', 'l', 's/^HOLD://', 'x']
-showcomm = ['i\\', 'COMM:%s\a%s' % (color_YLW, color_NO)]
-nullcomm = ['y/!/!/']
-save_t   = ['t zzset\a\n#DEBUG#', 't zzclr\a',
-             ':zzset\a\n#DEBUG#', ':zzclr\a']
+showpatt = [     "s/^/PATT:/", "l", "s/^PATT://"     ]
+showhold = ["x", "s/^/HOLD:/", "l", "s/^HOLD://", "x"]
+showcomm = ["i\\", "COMM:%s\a%s" % (color_YLW, color_NO)]
+nullcomm = ["y/!/!/"]
+save_t   = ["t zzset\a\n#DEBUG#", "t zzclr\a",
+             ":zzset\a\n#DEBUG#", ":zzclr\a"]
 # fmt: on
 
 
@@ -680,14 +680,14 @@ def compose_sed_command(data):
         else:
             cmd = """%s%s%s%s%s%s%s%s""" % (
                 # fmt: off
-                paint_html('modifier',  data['modifier']),
-                paint_html('id',        data['id']),
-                paint_html('delimiter', data['delimiter']),
-                paint_html('pattern',   data['pattern']),
-                paint_html('delimiter', data['delimiter']),
-                paint_html('replace',   data['replace']),
-                paint_html('delimiter', data['delimiter']),
-                paint_html('flag',      data['flag']),
+                paint_html("modifier",  data["modifier"]),
+                paint_html("id",        data["id"]),
+                paint_html("delimiter", data["delimiter"]),
+                paint_html("pattern",   data["pattern"]),
+                paint_html("delimiter", data["delimiter"]),
+                paint_html("replace",   data["replace"]),
+                paint_html("delimiter", data["delimiter"]),
+                paint_html("flag",      data["flag"]),
             )
             if data["content"]:  # s///w filename
                 painted = paint_html("content", data["content"])
