@@ -9,7 +9,6 @@ sed='gsed'
 
 # shellcheck disable=SC2034
 sedsed='python ../../sedsed.py'
-# sedsed='python2.6 ../../sedsed.py'
 # sedsed='python2.7 ../../sedsed.py'
 # sedsed='python3   ../../sedsed.py'
 
