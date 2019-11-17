@@ -958,10 +958,18 @@ def do_debug(datalist):
 ###############################################################################
 #
 # Here we used to have a custom brute force buggy parser.
-# Now using sedparse, a direct translation of the GNU sed C code.
+# Now we are using sedparse, a direct translation of the GNU sed C code.
+#
+# To avoid having to adapt the whole sedsed code to the sedparse AST, the
+# following `parse()` function will convert the sedparse AST into the same AST
+# used by the old parser: a list having a flat dictionary for each command.
 
 
 def parse(sedscript):
+    """
+    Parse the sedscript (a list of strings) and return a sedsed AST (a flat list
+    of dictionaries).
+    """
     # TODO handle xx.x.int_arg for QqLl (new) cmddict['content'] = xx.x.int_arg
     # TODO handle all new GNU sed commands
 
