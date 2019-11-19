@@ -18,8 +18,9 @@ do
     test_message "Testing ${file%.sed}"
 
     # Run the same sed script in sed and sedsed -d, results must be equal
-    echo "$text" | $sed -f "$file" > "$sed_output" || failed=1
-    echo "$text" | $sedsed -d --_stdout-only -f "$file" > "$sedsed_output" || failed=1
+    # Using explicit - as input file to avoid having "F" command showing /dev/stdin
+    echo "$text" | $sed -f "$file" - > "$sed_output" || failed=1
+    echo "$text" | $sedsed -d --_stdout-only -f "$file" - > "$sedsed_output" || failed=1
     diff -U1 "$sed_output" "$sedsed_output" || failed=1
 done
 

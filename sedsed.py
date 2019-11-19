@@ -539,11 +539,11 @@ sedcmds = {
     "file": "rw",
     "addr": "/$0123456789\\",
     "multi": "sy",
-    "solo": "nNdDgGhHxpPlq=",
+    "solo": "nNdDgGhHxpPlq=" + "F",  # standard + GNU sed
     "text": "aci",
     "jump": ":bt",
     "block": "{}",
-    "flag": "gp0123456789w" + "IiMme",  # default + GNU
+    "flag": "gp0123456789w" + "IiMme",  # standard + GNU sed
 }
 
 # Regex patterns to identify special entities
