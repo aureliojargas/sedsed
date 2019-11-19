@@ -46,6 +46,7 @@
   [4b07d73](https://github.com/aureliojargas/sedsed/commit/4b07d73)
   [21f6723](https://github.com/aureliojargas/sedsed/commit/21f6723)
   [cc48068](https://github.com/aureliojargas/sedsed/commit/cc48068)
+  [dc04d78](https://github.com/aureliojargas/sedsed/commit/dc04d78)
 
 - Source code is now autoformatted by black.
   [13bd67f](https://github.com/aureliojargas/sedsed/commit/13bd67f)
