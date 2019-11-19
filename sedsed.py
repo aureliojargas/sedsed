@@ -460,6 +460,11 @@ newlineshow = "%s\\N%s" % (color_RED, color_NO)
 #    The 001 count is incremented on each command to have unique
 #    labels.
 #
+#    For the GNU sed 'T' command, the behaviour is the opposite: it only
+#    branches when there was *no* successful substitution. Luckly, the
+#    trick used for 't' applies to 'T' with no changes, because we can
+#    save and restore the correct last 's///' status.
+#
 #
 #                   --- THANK YOU VERY MUCH ---
 #
@@ -471,7 +476,7 @@ newlineshow = "%s\\N%s" % (color_RED, color_NO)
 #
 
 # show pattern space, show hold space, show sed command
-# null sed command to restore last address, 't' status trick
+# null sed command to restore last address, 't' and 'T' status trick
 # fmt: off
 showpatt = [     "s/^/PATT:/", "l", "s/^PATT://"     ]
 showhold = ["x", "s/^/HOLD:/", "l", "s/^HOLD://", "x"]
@@ -541,7 +546,7 @@ sedcmds = {
     "multi": "sy",
     "solo": "nNdDgGhHxpPlq=" + "Fz",  # standard + GNU sed
     "text": "aci",
-    "jump": ":bt",
+    "jump": ":bt" + "T",  # standard + GNU sed
     "block": "{}",
     "flag": "gp0123456789w" + "IiMme",  # standard + GNU sed
 }
@@ -703,7 +708,7 @@ def compose_sed_command(data):
         if action == "html":
             if data["id"] in sedcmds["text"]:
                 content_type = "plaintext"
-            elif data["id"] in "bt":
+            elif data["id"] in ("b", "t", "T"):
                 content_type = "branch"
             elif data["id"] == ":":
                 content_type = "target"
@@ -768,7 +773,7 @@ def dump_cute(datalist):
             outlist.append(data["comment"])
         else:
             idsep = ""
-            if data["id"] in "bt":
+            if data["id"] in ("b", "t", "T"):
                 idsep = " "
             cmd = "%s%s%s%s" % (data["modifier"], data["id"], idsep, data["content"])
             if data["delimiter"]:
@@ -874,8 +879,8 @@ def do_debug(datalist):
     if "topopts" in datalist[0]:
         cmdlineopts = datalist[0]["topopts"]
 
-    # If we have one or more t commands on the script, we need to save
-    # the t command status between debug commands. As they perform
+    # If we have at least one 't' or 'T' command on the script, we need
+    # to save the t command status between debug commands. As they perform
     # s/// commands, the t status of the "last substitution" is lost.
     # So, we save the status doing a nice loop trick before *every*
     # command (necessary overhead). This loops uses the :zzsetNNN and
@@ -909,7 +914,7 @@ def do_debug(datalist):
             # Exception: read-next-line commands (n,d,q)
             # Exception: no PATT/HOLD registers to show (no s///)
             if t_count and showall:
-                if data["id"] not in "ndq" and registers:
+                if data["id"] not in ("n", "d", "q") and registers:
                     tmp = save_t.replace("\a", "%03d" % t_count)
                     showall = tmp.replace("#DEBUG#", showall)
                     t_count = t_count + 1
@@ -990,7 +995,7 @@ def parse(sedscript):
 
     ### Translate from GNU sed struct_sed_cmd objects to sedsed ZZ objects
 
-    # Flag to detect if there's at least one 't' command in the script.
+    # Flag to detect if there's at least one 't' or 'T' command in the script.
     # If so, some special treatment is required in the debugger.
     has_t = 0
 
@@ -1118,7 +1123,7 @@ def parse(sedscript):
         if xx.cmd == "s":
             lastsubref = len(ret)  # save s/// position
 
-        if xx.cmd == "t":
+        if xx.cmd in ("t", "T"):
             # related s/// reference
             cmddict["extrainfo"] = lastsubref
             # TODO sedsed bug: lastsubref is an integer saved to a string field
