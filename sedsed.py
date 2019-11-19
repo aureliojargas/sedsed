@@ -539,7 +539,7 @@ sedcmds = {
     "file": "rw",
     "addr": "/$0123456789\\",
     "multi": "sy",
-    "solo": "nNdDgGhHxpPlq=" + "F",  # standard + GNU sed
+    "solo": "nNdDgGhHxpPlq=" + "Fz",  # standard + GNU sed
     "text": "aci",
     "jump": ":bt",
     "block": "{}",
