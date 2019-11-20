@@ -551,13 +551,8 @@ sedcmds = {
     "flag": "gp0123456789w" + "IiMme",  # standard + GNU sed
 }
 
-# Regex patterns to identify special entities
-patt = {
-    "jump_label": r"[^\s;}#]*",  # any char except those, or None
-    "filename": r"[^\s]+",  # any not blank
-    "flag": r"[%s]+" % sedcmds["flag"],  # flags list
-    "topopts": r"#!\s*/[^\s]+\s+-([nf]+)",  # shebang, group options
-}
+# Regex to match the shebang, grouping the sed options
+topopts_regex = r"#!\s*/[^\s]+\s+-([nf]+)"
 
 # All fields used by the internal SED command dictionary
 cmdfields = [
@@ -1080,7 +1075,7 @@ def parse(sedscript):
 
             # 1st line, try to find #!/...
             if cmddict["linenr"] == 1:
-                m = re.match(patt["topopts"], cmddict["comment"])
+                m = re.match(topopts_regex, cmddict["comment"])
                 if m:  # we have options!
                     ret[0]["topopts"] = m.group(1)  # saved on list header
                     del m
