@@ -542,13 +542,11 @@ del html_colors["SCRIPTNAME"]
 # All SED commands grouped by kind
 sedcmds = {
     "file": "rw",
-    "addr": "/$0123456789\\",
     "multi": "sy",
     "solo": "nNdDgGhHxpPlq=" + "Fz",  # standard + GNU sed
     "text": "aci",
     "jump": ":bt" + "T",  # standard + GNU sed
     "block": "{}",
-    "flag": "gp0123456789w" + "IiMme",  # standard + GNU sed
 }
 
 # Regex to match the shebang, grouping the sed options
