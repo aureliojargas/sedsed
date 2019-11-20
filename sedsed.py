@@ -461,7 +461,7 @@ newlineshow = "%s\\N%s" % (color_RED, color_NO)
 #    labels.
 #
 #    For the GNU sed 'T' command, the behaviour is the opposite: it only
-#    branches when there was *no* successful substitution. Luckly, the
+#    branches when there was *no* successful substitution. Luckily, the
 #    trick used for 't' applies to 'T' with no changes, because we can
 #    save and restore the correct last 's///' status.
 #
@@ -547,6 +547,7 @@ sedcmds = {
     "text": "aci",
     "jump": ":bt" + "T",  # standard + GNU sed
     "block": "{}",
+    "misc": "v",  # GNU sed
 }
 
 # Regex to match the shebang, grouping the sed options
@@ -692,8 +693,8 @@ def compose_sed_command(data):
                 cmd = "%s %s" % (cmd, painted)
     else:
         idsep = ""
-        # spacer on r,w,b,t commands only
-        spaceme = sedcmds["file"] + sedcmds["jump"]
+        # spacer on r,w,b,t,v commands only
+        spaceme = sedcmds["file"] + sedcmds["jump"] + "v"
         spaceme = spaceme.replace(":", "")  # : label (no space!)
         if data["id"] in spaceme:
             idsep = " "
@@ -917,7 +918,7 @@ def do_debug(datalist):
             if data["lastaddr"]:
                 showall = showall + debug_prefix + data["lastaddr"] + nullcomm + "\n"
 
-            # after jump or block commands don't show
+            # after jump, block or void commands don't show
             # registers, because they're not affected.
             # exception: after b or t without target
             # (read next line)
@@ -925,6 +926,8 @@ def do_debug(datalist):
             if data["id"] in sedcmds["jump"] and data["content"]:
                 hideregisters = 1
             elif data["id"] in sedcmds["block"]:
+                hideregisters = 1
+            elif data["id"] == "v":
                 hideregisters = 1
 
             outlist.append("%s#%s\n%s\n" % (showall, "-" * 50, addr + cmd))
@@ -1087,7 +1090,7 @@ def parse(sedscript):
                 str(xx.x.cmd_txt).replace("\n", linesep),
             )
 
-        elif xx.cmd in sedcmds["jump"]:
+        elif xx.cmd in sedcmds["jump"] + "v":
             cmddict["content"] = xx.x.label_name
 
         elif xx.cmd in sedcmds["file"]:
@@ -1155,7 +1158,7 @@ def fix_partial_comments(commands):
     data = commands[1:]
 
     accept_comment = (
-        sedcmds["solo"] + sedcmds["block"] + sedcmds["jump"] + sedcmds["multi"]
+        sedcmds["solo"] + sedcmds["block"] + sedcmds["jump"] + sedcmds["multi"] + "v"
     )
 
     fake = {"linenr": 0}
