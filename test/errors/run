@@ -12,7 +12,8 @@ source ../_include.sh
 while read -r line
 do
     test_message "Testing $line"
-    output=$($sedsed -e "$line" || true)
+    # Make sure output only contains text sent to stderr
+    output=$($sedsed -e "$line" 2>&1 >/dev/null || true)
     if ! echo "$output" | grep -q '^ERROR:'
     then
         failed=1

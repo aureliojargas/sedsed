@@ -10,8 +10,7 @@
 # pylint: disable=too-many-locals
 # pylint: disable=too-many-statements
 
-__version__ = "1.2-dev"
-
+from __future__ import print_function  # pylint: disable=unused-variable
 import sys
 import re
 import os
@@ -22,6 +21,7 @@ import tempfile
 # https://github.com/aureliojargas/sedparse
 import sedparse
 
+__version__ = "1.2-dev"
 myname = "sedsed"
 myhome = "https://aurelio.net/projects/sedsed/"
 
@@ -122,7 +122,7 @@ OPTIONS:
 
 def fatal_error(msg):
     "All error messages are handled by me"
-    print("ERROR: %s: %s" % (myname, msg))
+    print("ERROR: %s: %s" % (myname, msg), file=sys.stderr)
     sys.exit(1)
 
 
