@@ -258,7 +258,7 @@ for o in opt:
         action = "html"
         color = 0
 
-    elif o[0] in ("-n", "--quiet"):
+    elif o[0] in ("-n", "--quiet", "--silent"):
         quiet_flag = 1
 
     elif o[0] in ("-e", "--expression"):
