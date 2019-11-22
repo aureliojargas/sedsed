@@ -26,12 +26,7 @@ myname = "sedsed"
 myhome = "https://aurelio.net/projects/sedsed/"
 
 
-# -----------------------------------------------------------------------------
-#                              User Configuration
-# -----------------------------------------------------------------------------
-
-
-# Default config - Changeable, but you won't need to do it
+# Default config
 # fmt: off
 sedbin = "sed"                # name (or full path) of the sed program
 color = 1                     # colored output or not? (--color, --nocolor)
@@ -42,8 +37,8 @@ action = "indent"             # default action if none specified (-d,-i,-t,-H)
 DEBUG = 0                     # set developer's debug level [0-3]
 # fmt: on
 
-# HTML colors for --htmlize
-# You may edit here to change the default colors
+# HTML data for --htmlize
+# You may edit here to change the defaults
 html_colors = {
     # fmt: off
     "addr1":     "#8080ff",
@@ -72,6 +67,95 @@ html_colors = {
     "VLINK":     "#ff00ff"
 }
 
+# Note that the %s will be expanded later
+html_header = """\
+<html>
+<head><meta name="Generator" content="sedsed --htmlize">
+<title>Colorized %s</title></head>
+<body bgcolor="{BGCOLOR}" text="{TEXT}"
+      link="{LINK}" alink="{ALINK}" vlink="{VLINK}">
+<pre>\
+""".format(
+    **html_colors
+)
+
+html_footer = """
+<font color="{}"><b>### colorized by <a href="{}">sedsed</a>, \
+a debugger and code formatter for sed scripts</b></font>
+
+</pre></body></html>\
+""".format(
+    html_colors["comment"], myhome
+)
+
+# sedsed expects multiline text (aic text, s/// replacement) to have this
+# odd string instead of inner \n's in the string
+linesep = "@#linesep#@"
+
+# Data holders that will be set by command line options
+# fmt: off
+action_modifiers = []  # --hide contents and others
+sedscript = []         # join all scripts found here
+script_file = ""       # last sedscript filename for --htmlize
+quiet_flag = 0         # tell if the #n is needed or not
+textfiles = []
+# fmt: on
+
+# Color-related variables, will be set in set_colors()
+color_YLW = ""
+color_RED = ""
+color_REV = ""
+color_NO = ""
+
+# Color-dependent variable, will be set after the command line parsing
+newlineshow = ""
+
+# Debug-related variables, will be set by set_debug_commands()
+showpatt = ""
+showhold = ""
+save_t = ""
+showcomm = ""
+nullcomm = ""
+
+# Regex to match the shebang, grouping the sed options
+topopts_regex = r"#!\s*/[^\s]+\s+-([nf]+)"
+
+# All sed commands grouped by kind
+sedcmds = {
+    "file": "rw",
+    "multi": "sy",
+    "solo": "nNdDgGhHxpPlq=" + "Fz",  # standard + GNU sed
+    "text": "aci",
+    "jump": ":bt" + "T",  # standard + GNU sed
+    "block": "{}",
+    "misc": "v",  # GNU sed
+}
+
+# All fields used by the sedsed AST dictionary
+cmdfields = [
+    "linenr",
+    "addr1",
+    "addr1flag",
+    "addr2",
+    "addr2flag",
+    "lastaddr",
+    "modifier",
+    "id",
+    "content",
+    "delimiter",
+    "pattern",
+    "replace",
+    "flag",
+    "extrainfo",
+    "comment",
+]
+
+
+# -----------------------------------------------------------------------------
+#                              Special adjustments
+# -----------------------------------------------------------------------------
+
+
 # The identifier recognized by sed as STDIN
 # - BSD sed does not support '-'
 # - Windows, Termux and others do not have /dev/stdin
@@ -79,6 +163,15 @@ if os.path.exists("/dev/stdin"):
     stdin_id = "/dev/stdin"
 else:
     stdin_id = "-"
+
+# Turn color OFF on Windows because ANSI.SYS is not installed by default.
+# Windows users who have ANSI.SYS configured, can use the --color option
+# or comment the following line.
+# ANSI.SYS resources:
+#   http://www.evergreen.edu/biophysics/technotes/program/ansi_esc.htm#notes
+#   http://www3.sympatico.ca/rhwatson/dos7/v-ansi-escseq.html
+if os.name == "nt":
+    color = 0
 
 
 # -----------------------------------------------------------------------------
@@ -186,140 +279,6 @@ def system_command(cmd):
     return ret, output
 
 
-# -----------------------------------------------------------------------------
-#                           Command line & Config
-# -----------------------------------------------------------------------------
-
-
-# Here's all the valid command line options
-short_options = "he:f:ditVHn"
-long_options = [
-    # actions
-    "debug",
-    "tokenize",
-    "htmlize",
-    "indent",
-    # sed-like
-    "version",
-    "help",
-    "file=",
-    "expression=",
-    "silent",
-    "quiet",
-    # misc
-    "nocolor",
-    "color",
-    "hide=",
-    "prefix=",
-    # other
-    "dump-debug",
-    # admin
-    "_debuglevel=",
-    "_stdout-only",
-    "dumpcute",
-]
-
-# Check it!
-try:
-    opt, args = getopt.getopt(sys.argv[1:], short_options, long_options)
-except getopt.error as errmsg:
-    fatal_error("%s (try --help)" % errmsg)
-
-# Turn color OFF on Windows because ANSI.SYS is not installed by default.
-# Windows users who have ANSI.SYS configured, can use the --color option
-# or comment the following line.
-# ANSI.SYS resources:
-#   http://www.evergreen.edu/biophysics/technotes/program/ansi_esc.htm#notes
-#   http://www3.sympatico.ca/rhwatson/dos7/v-ansi-escseq.html
-if os.name == "nt":
-    color = 0
-
-# Command Line is OK, now let's parse its values
-# fmt: off
-action_modifiers = []  # --hide contents and others
-sedscript = []         # join all scripts found here
-script_file = ""       # old sedscript filename for --htmlize
-quiet_flag = 0         # tell if the #n is needed or not
-# fmt: on
-
-for o in opt:
-    if o[0] in ("-d", "--debug"):
-        action = "debug"
-
-    elif o[0] in ("-i", "--indent"):
-        action = "indent"
-        color = 0
-
-    elif o[0] in ("-t", "--tokenize"):
-        action = "token"
-        color = 0
-
-    elif o[0] in ("-H", "--htmlize"):
-        action = "html"
-        color = 0
-
-    elif o[0] in ("-n", "--quiet", "--silent"):
-        quiet_flag = 1
-
-    elif o[0] in ("-e", "--expression"):
-        sedscript.extend(o[1].split("\n"))
-
-    elif o[0] in ("-f", "--file"):
-        sedscript.extend(read_file(o[1]))
-        script_file = o[1]
-
-    elif o[0] in ("-h", "--help"):
-        print_usage(0)
-
-    elif o[0] in ("-V", "--version"):
-        print("%s v%s" % (myname, __version__))
-        sys.exit(0)
-
-    elif o[0] == "--dump-debug":
-        action = "debug"
-        dump_debug = 1
-        color = 0
-
-    elif o[0] == "--nocolor":
-        color = 0
-
-    elif o[0] == "--color":
-        color = 1
-
-    elif o[0] == "--hide":
-        # --hide=comm,hold  ==>  action_modifiers = ['nocomm', 'nohold']
-        for hide in o[1].split(","):
-            hide_me = hide.strip().lower()
-            action_modifiers.append("no" + hide_me)
-
-    elif o[0] == "--prefix":
-        # Is the prefix valid?
-        if re.sub(r"\s", "", o[1]):
-            fatal_error("--prefix: must be spaces and/or TABs")
-        indent_prefix = o[1]
-
-    # Undocumented admin options
-
-    elif o[0] == "--_debuglevel":
-        DEBUG = int(o[1])
-
-    elif o[0] == "--_stdout-only":
-        action = "debug"
-        action_modifiers.append(o[0][2:])
-
-    elif o[0] == "--dumpcute":
-        action = "dumpcute"
-        DEBUG = 0
-        color = 1
-
-# Now all Command Line options were successfully parsed
-
-
-# -----------------------------------------------------------------------------
-#                              Sanity Checks
-# -----------------------------------------------------------------------------
-
-
 def validate_script_syntax(script_text):
     """Validate a sed script using system's sed."""
 
@@ -350,52 +309,173 @@ def validate_script_syntax(script_text):
         )
 
 
-# There's a SED script?
-if not sedscript:
-    if args:
-        # the script is the only argument (echo | sed 's///')
-        sedscript.append(args.pop(0))
-    elif __name__ != "__main__":
-        # being used as a module (import sedsed), empty script is expected
-        pass
+def set_colors():
+    # pylint: disable=global-statement
+    global color_YLW
+    global color_RED
+    global color_REV
+    global color_NO
+
+    # Add the terminal escapes for color (or not):
+    # yellow text, red text, reverse video, back to default
+    if color:
+        color_YLW = "\033[33;1m"
+        color_RED = "\033[31;1m"
+        color_REV = "\033[7m"
+        color_NO = "\033[m"
     else:
-        fatal_error("there's no SED script to parse! (try --help)")
-
-# Get all text files, if none, use STDIN
-textfiles = args or [stdin_id]
-
-# When debugging, the system's sed will be used to run the modified script.
-# So it's mandatory that the original script is runnable in that specific sed
-# version (i.e., no syntax errors and no unknown commands or flags).
-if action == "debug":
-    validate_script_syntax(sedscript)
+        color_YLW = color_RED = color_REV = color_NO = ""
 
 
 # -----------------------------------------------------------------------------
-#                    Internal Config Adjustments and Magic
+#                                 Command line
 # -----------------------------------------------------------------------------
 
 
-# Add the leading #n to the sed script, when using -n
-if quiet_flag:
-    sedscript.insert(0, "#n")
+def parse_command_line(arguments=None):
+    # pylint: disable=global-statement
+    global action
+    global action_modifiers
+    global color
+    global DEBUG
+    global dump_debug
+    global indent_prefix
+    global newlineshow
+    global quiet_flag
+    global script_file
+    global sedscript
+    global textfiles
 
-# Add the terminal escapes for color (or not):
-# yellow text, red text, reverse video, back to default
-if color:
-    color_YLW = "\033[33;1m"
-    color_RED = "\033[31;1m"
-    color_REV = "\033[7m"
-    color_NO = "\033[m"
-else:
-    color_YLW = color_RED = color_REV = color_NO = ""
+    arguments = arguments or sys.argv[1:]
 
-# sedsed expects multiline text (aic text, s/// replacement) to have this
-# odd string instead of inner \n's in the string
-linesep = "@#linesep#@"
+    # Here's all the valid command line options
+    short_options = "he:f:ditVHn"
+    long_options = [
+        # actions
+        "debug",
+        "tokenize",
+        "htmlize",
+        "indent",
+        # sed-like
+        "version",
+        "help",
+        "file=",
+        "expression=",
+        "silent",
+        "quiet",
+        # misc
+        "nocolor",
+        "color",
+        "hide=",
+        "prefix=",
+        # other
+        "dump-debug",
+        # admin
+        "_debuglevel=",
+        "_stdout-only",
+        "dumpcute",
+    ]
 
-# When showing the inner \n's to the user use this red \N
-newlineshow = "%s\\N%s" % (color_RED, color_NO)
+    # Check it!
+    try:
+        opt, args = getopt.getopt(arguments, short_options, long_options)
+    except getopt.error as errmsg:
+        fatal_error("%s (try --help)" % errmsg)
+
+    # Command Line is OK, now let's parse its values
+    for o in opt:
+        if o[0] in ("-d", "--debug"):
+            action = "debug"
+
+        elif o[0] in ("-i", "--indent"):
+            action = "indent"
+            color = 0
+
+        elif o[0] in ("-t", "--tokenize"):
+            action = "token"
+            color = 0
+
+        elif o[0] in ("-H", "--htmlize"):
+            action = "html"
+            color = 0
+
+        elif o[0] in ("-n", "--quiet", "--silent"):
+            quiet_flag = 1
+
+        elif o[0] in ("-e", "--expression"):
+            sedscript.extend(o[1].split("\n"))
+
+        elif o[0] in ("-f", "--file"):
+            sedscript.extend(read_file(o[1]))
+            script_file = o[1]
+
+        elif o[0] in ("-h", "--help"):
+            print_usage(0)
+
+        elif o[0] in ("-V", "--version"):
+            print("%s v%s" % (myname, __version__))
+            sys.exit(0)
+
+        elif o[0] == "--dump-debug":
+            action = "debug"
+            dump_debug = 1
+            color = 0
+
+        elif o[0] == "--nocolor":
+            color = 0
+
+        elif o[0] == "--color":
+            color = 1
+
+        elif o[0] == "--hide":
+            # --hide=comm,hold  ==>  action_modifiers = ['nocomm', 'nohold']
+            for hide in o[1].split(","):
+                hide_me = hide.strip().lower()
+                action_modifiers.append("no" + hide_me)
+
+        elif o[0] == "--prefix":
+            # Is the prefix valid?
+            if re.sub(r"\s", "", o[1]):
+                fatal_error("--prefix: must be spaces and/or TABs")
+            indent_prefix = o[1]
+
+        # Undocumented admin options
+
+        elif o[0] == "--_debuglevel":
+            DEBUG = int(o[1])
+
+        elif o[0] == "--_stdout-only":
+            action = "debug"
+            action_modifiers.append(o[0][2:])
+
+        elif o[0] == "--dumpcute":
+            action = "dumpcute"
+            DEBUG = 0
+            color = 1
+
+    # There's a SED script?
+    if not sedscript:
+        if args:
+            # the script is the only argument (echo | sed 's///')
+            sedscript.append(args.pop(0))
+        else:
+            fatal_error("there's no SED script to parse! (try --help)")
+
+    # Get all text files, if none, use STDIN
+    textfiles = args or [stdin_id]
+
+    # All command line arguments were read and parsed. Now we need to do some
+    # adjustments in the data, based on the current config state.
+
+    # Add the leading #n to the sed script, when using -n
+    if quiet_flag:
+        sedscript.insert(0, "#n")
+
+    # At this point we know if colors are configured or not
+    set_colors()
+
+    # When showing the inner \n's to the user use this red \N
+    newlineshow = "%s\\N%s" % (color_RED, color_NO)
 
 
 # The SED debugger magic lines
@@ -474,103 +554,42 @@ newlineshow = "%s\\N%s" % (color_RED, color_NO)
 # - Thobias Salazar Trevisan for the idea of using the 'i'
 #   command for the COMM: lines.
 #
+def set_debug_commands():
+    # pylint: disable=global-statement
+    global showpatt
+    global showhold
+    global save_t
+    global showcomm
+    global nullcomm
 
-# show pattern space, show hold space, show sed command
-# null sed command to restore last address, 't' and 'T' status trick
-# fmt: off
-showpatt = [     "s/^/PATT:/", "l", "s/^PATT://"     ]
-showhold = ["x", "s/^/HOLD:/", "l", "s/^HOLD://", "x"]
-showcomm = ["i\\", "COMM:%s\a%s" % (color_YLW, color_NO)]
-nullcomm = ["y/!/!/"]
-save_t   = ["t zzset\a\n#DEBUG#", "t zzclr\a",
-             ":zzset\a\n#DEBUG#", ":zzclr\a"]
-# fmt: on
+    # show pattern space, show hold space, show sed command
+    # null sed command to restore last address, 't' and 'T' status trick
+    # fmt: off
+    showpatt = [     "s/^/PATT:/", "l", "s/^PATT://"     ]
+    showhold = ["x", "s/^/HOLD:/", "l", "s/^HOLD://", "x"]
+    showcomm = ["i\\", "COMM:%s\a%s" % (color_YLW, color_NO)]
+    nullcomm = ["y/!/!/"]
+    save_t   = ["t zzset\a\n#DEBUG#", "t zzclr\a",
+                ":zzset\a\n#DEBUG#", ":zzclr\a"]
+    # fmt: on
 
+    def format_debugcmds(cmds):
+        "One per line, with prefix (spaces)"
+        return debug_prefix + ("\n" + debug_prefix).join(cmds) + "\n"
 
-def format_debugcmds(cmds):
-    "One per line, with prefix (spaces)"
-    return debug_prefix + ("\n" + debug_prefix).join(cmds) + "\n"
+    showpatt = format_debugcmds(showpatt)
+    showhold = format_debugcmds(showhold)
+    save_t = format_debugcmds(save_t)
+    showcomm = debug_prefix + "\n".join(showcomm) + "\n"
+    nullcomm = nullcomm[0]
 
-
-showpatt = format_debugcmds(showpatt)
-showhold = format_debugcmds(showhold)
-save_t = format_debugcmds(save_t)
-showcomm = debug_prefix + "\n".join(showcomm) + "\n"
-nullcomm = nullcomm[0]
-
-
-# If user specified --hide, unset DEBUG commands for them
-if "nopatt" in action_modifiers:
-    showpatt = ""
-if "nohold" in action_modifiers:
-    showhold = ""
-if "nocomm" in action_modifiers:
-    showcomm = ""
-
-
-# Compose HTML page header and footer info for --htmlize.
-# The SCRIPTNAME is added then removed from html_colors for
-# code convenience only.
-#
-html_colors["SCRIPTNAME"] = os.path.basename(script_file)
-html_data = {
-    "header": """\
-<html>
-<head><meta name="Generator" content="sedsed --htmlize">
-<title>Colorized %(SCRIPTNAME)s</title></head>
-<body bgcolor="%(BGCOLOR)s" text="%(TEXT)s"
-      link="%(LINK)s" alink="%(ALINK)s" vlink="%(VLINK)s">
-<pre>\
-"""
-    % html_colors,
-    "footer": """
-<font color="%s"><b>### colorized by <a \
-href="%s">sedsed</a>, a debugger and code formatter \
-for sed scripts</b></font>\n
-</pre></body></html>\
-"""
-    % (html_colors["comment"], myhome),
-}
-del html_colors["SCRIPTNAME"]
-
-
-# -----------------------------------------------------------------------------
-#                              SED Machine Data
-# -----------------------------------------------------------------------------
-
-
-# All SED commands grouped by kind
-sedcmds = {
-    "file": "rw",
-    "multi": "sy",
-    "solo": "nNdDgGhHxpPlq=" + "Fz",  # standard + GNU sed
-    "text": "aci",
-    "jump": ":bt" + "T",  # standard + GNU sed
-    "block": "{}",
-    "misc": "v",  # GNU sed
-}
-
-# Regex to match the shebang, grouping the sed options
-topopts_regex = r"#!\s*/[^\s]+\s+-([nf]+)"
-
-# All fields used by the internal SED command dictionary
-cmdfields = [
-    "linenr",
-    "addr1",
-    "addr1flag",
-    "addr2",
-    "addr2flag",
-    "lastaddr",
-    "modifier",
-    "id",
-    "content",
-    "delimiter",
-    "pattern",
-    "replace",
-    "flag",
-    "extrainfo",
-    "comment",
-]
+    # If user specified --hide, unset DEBUG commands for them
+    if "nopatt" in action_modifiers:
+        showpatt = ""
+    if "nohold" in action_modifiers:
+        showhold = ""
+    if "nocomm" in action_modifiers:
+        showcomm = ""
 
 
 # -----------------------------------------------------------------------------
@@ -811,7 +830,7 @@ def dump_script(datalist, indent_prefix):
     indent = indfmt["initlevel"]
 
     if action == "html":
-        outlist.append(html_data["header"])
+        outlist.append(html_header % os.path.basename(script_file))
 
     for data in datalist[1:]:  # skip headers at 0
         if not data["id"]:  # blank line
@@ -845,7 +864,7 @@ def dump_script(datalist, indent_prefix):
                 outlist.append(cmd)
 
     if action == "html":
-        outlist.append(html_data["footer"])
+        outlist.append(html_footer)
 
     return outlist
 
@@ -869,6 +888,8 @@ def do_debug(datalist):
     cmdlineopts = "f"
     t_count = 0
     hideregisters = 0
+
+    set_debug_commands()
 
     if "topopts" in datalist[0]:
         cmdlineopts = datalist[0]["topopts"]
@@ -1193,9 +1214,17 @@ def fix_partial_comments(commands):
 
 
 if __name__ == "__main__":
+    parse_command_line()
+
+    # When debugging, the system's sed will be used to run the modified script.
+    # So it's mandatory that the original script is runnable in that specific
+    # sed version (i.e., no syntax errors and no unknown commands or flags).
+    if action == "debug":
+        validate_script_syntax(sedscript)
+
+    # Parse the script and process/fix the resulting data.
+    # AST is sedsed's internal data structure to represent a sed script.
     try:
-        # Parse the script and process/fix the resulting data.
-        # AST is sedsed's internal data structure to represent a sed script.
         AST = fix_partial_comments(parse(sedscript))
     except sedparse.ParseError as err:
         fatal_error(err.message)
