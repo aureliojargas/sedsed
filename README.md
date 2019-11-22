@@ -4,6 +4,7 @@ Debugger and code formatter for sed scripts, by Aurelio Jargas.
 
 Website: https://aurelio.net/projects/sedsed/
 
+
 ## Download
 
 Sedsed requires the `sedparse` module to be able to parse sed scripts. Install it first:
@@ -16,6 +17,7 @@ Sedsed itself is a single file Python application. Just download [sedsed.py](htt
 - License: GPLv3
 - [Official released versions](https://github.com/aureliojargas/sedsed/releases)
 - [CHANGELOG.md](https://github.com/aureliojargas/sedsed/blob/master/CHANGELOG.md) for the list of changes in each version
+
 
 ## Code formatting for sed scripts
 
@@ -38,6 +40,7 @@ $ sedsed --htmlize -f myscript.sed > myscript.html
 ```
 
 See many examples of HTML-converted scripts in http://sed.sourceforge.net/local/scripts/
+
 
 ## Debugging sed scripts
 
@@ -154,47 +157,4 @@ CBA
 
 In those examples the sed script was informed as an argument using the `-e` option. Sedsed also supports the `-f` option to inform a sed script file, and the traditional `-n` option to run in quiet mode.
 
-## QA
-
-**Code linter:** sedsed code is checked by pylint. Configuration is in [.pylintrc](.pylintrc).
-
-**Tests:** sedsed has a homemade custom testing solution, comprised of multiple shell scripts and test files. You can read more about it at [test/README.md](test/README.md). To run all the tests, just do:
-
-    $ ./test/run
-
-**Automation:** For every new pushed commit, Travis CI runs the code linter and all the tests. The tests are checked in multiple Python versions. See [.travis.yml](.travis.yml).
-
-## New version release checklist
-
-Preparing:
-
-- Make sure the tests are 100% ok.
-- Check the list of commits since the last version.
-- Check the full diff against the last version.
-- Update and commit the Changelog.
-
-Releasing:
-
-- Commit the increased version number in `__version__`.
-- Tag this commit with the new version.
-- Commit the change to the version number back to the dev state.
-- Push everything (commits and tags) to GitHub.
-- Update the website, download section.
-
-## Development environment
-
-To create (and update in the future):
-
-    python3 -m venv env
-    source env/bin/activate
-    pip install -r requirements-dev.txt
-
-To use it while developing:
-
-    source env/bin/activate
-
-To leave it when done developing:
-
-    deactivate
-
-More info at https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/
+Enjoy!
