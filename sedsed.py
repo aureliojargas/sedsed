@@ -1208,7 +1208,7 @@ def fix_partial_comments(commands):
     return [headers] + data[1:-1]  # remove fakes
 
 
-if __name__ == "__main__":
+def entrypoint():
     parse_command_line()
 
     # When debugging, the system's sed will be used to run the modified script.
@@ -1235,6 +1235,6 @@ if __name__ == "__main__":
     elif action == "dumpcute":
         print("\n".join(dump_cute(AST)))
 
-# -----------------------------------------------------------------------------
-#                               - THE END -
-# -----------------------------------------------------------------------------
+
+if __name__ == "__main__":
+    entrypoint()

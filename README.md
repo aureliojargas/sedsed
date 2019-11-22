@@ -5,18 +5,18 @@ Debugger and code formatter for sed scripts, by Aurelio Jargas.
 Website: https://aurelio.net/projects/sedsed/
 
 
-## Download
+## Download / Install
 
-Sedsed requires the `sedparse` module to be able to parse sed scripts. Install it first:
+Sedsed is available as a pip package, just install it:
 
-    pip install --user sedparse
-
-Sedsed itself is a single file Python application. Just download [sedsed.py](https://raw.githubusercontent.com/aureliojargas/sedsed/master/sedsed.py) and run it.
+    pip install --user sedsed
 
 - Compatible with Python 2.7 and Python 3.x
 - License: GPLv3
-- [Official released versions](https://github.com/aureliojargas/sedsed/releases)
+- [Released versions](https://github.com/aureliojargas/sedsed/releases)
 - [CHANGELOG.md](https://github.com/aureliojargas/sedsed/blob/master/CHANGELOG.md) for the list of changes in each version
+
+> Alternative: sedsed is a single file application, so you can also just download and run [sedsed.py](https://raw.githubusercontent.com/aureliojargas/sedsed/master/sedsed.py). Note that you'll also need to download its only external requirement, [sedparse.py](https://raw.githubusercontent.com/aureliojargas/sedparse/master/sedparse.py).
 
 
 ## Code formatting for sed scripts

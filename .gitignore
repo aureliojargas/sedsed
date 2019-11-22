@@ -1,5 +1,6 @@
 # Text editor
 .vscode/
+*.swp
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -8,8 +9,10 @@ __pycache__/
 # Environments
 env/
 
-# Vim temporary files
-*.swp
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
 
 # Tester temporary files
 /test/*/sed-output.txt

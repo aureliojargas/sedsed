@@ -85,3 +85,28 @@ Releasing:
 - Commit the change to the version number back to the dev state.
 - Push everything (commits and tags) to GitHub.
 - Update the website, download section.
+
+
+## Packaging
+
+To locally install (and uninstall) the package directly from this repository into the virtual env and test the `sedsed` executable:
+
+    pip install -e .
+    pip uninstall sedsed
+
+To install the required software for the packaging:
+
+    pip install -r requirements-pkg.txt
+
+To build and upload the packages:
+
+    python3 setup.py sdist bdist_wheel
+
+To upload the package to TestPyPI index (good for testing) and install it locally:
+
+    twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+    pip install -i https://test.pypi.org/simple/ sedsed
+
+To upload the package to the offical PyPI index:
+
+    twine upload dist/*

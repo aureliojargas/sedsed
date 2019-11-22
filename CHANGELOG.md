@@ -62,6 +62,9 @@ The format is based on [Keep a Changelog].
   [cc48068](https://github.com/aureliojargas/sedsed/commit/cc48068)
   [dc04d78](https://github.com/aureliojargas/sedsed/commit/dc04d78)
 
+- Sedsed is now distributed as a PyPI package.
+  [#58](https://github.com/aureliojargas/sedsed/issues/58)
+
 ### Changed
 
 - Sedsed license has changed from MIT to GPLv3. This was necessary
