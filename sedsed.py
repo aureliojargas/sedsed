@@ -125,7 +125,7 @@ sedcmds = {
     "file": "rw" + "RW",  # standard + GNU sed
     "multi": "sy",
     "solo": "nNdDgGhHxpPlq=" + "Fz",  # standard + GNU sed
-    "text": "aci",
+    "text": "aci" + "e",  # standard + GNU sed
     "jump": ":bt" + "T",  # standard + GNU sed
     "block": "{}",
     "misc": "v",  # GNU sed
@@ -1106,10 +1106,11 @@ def parse(sedscript):
             pass  # nothing else to collect
 
         elif xx.cmd in sedcmds["text"]:
-            cmddict["content"] = "\\%s%s" % (
-                linesep,
-                str(xx.x.cmd_txt).replace("\n", linesep),
-            )
+            if str(xx.x.cmd_txt):  # command "e" is allowed to be empty
+                cmddict["content"] = "\\%s%s" % (
+                    linesep,
+                    str(xx.x.cmd_txt).replace("\n", linesep),
+                )
 
         elif xx.cmd in sedcmds["jump"] + "v":
             cmddict["content"] = xx.x.label_name

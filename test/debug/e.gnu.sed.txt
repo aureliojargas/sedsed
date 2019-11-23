@@ -1,0 +1,102 @@
+PATT:one$
+HOLD:$
+COMM:[33;1ms/.*/echo foo/[m
+PATT:echo foo$
+HOLD:$
+COMM:[33;1me[m
+PATT:foo$
+HOLD:$
+COMM:[33;1me\[31;1m\N[m[33;1mecho bar[m
+bar
+PATT:foo$
+HOLD:$
+COMM:[33;1me\[31;1m\N[m[33;1mecho baz[m
+baz
+PATT:foo$
+HOLD:$
+foo
+PATT:two$
+HOLD:$
+COMM:[33;1ms/.*/echo foo/[m
+PATT:echo foo$
+HOLD:$
+COMM:[33;1me[m
+PATT:foo$
+HOLD:$
+COMM:[33;1me\[31;1m\N[m[33;1mecho bar[m
+bar
+PATT:foo$
+HOLD:$
+COMM:[33;1me\[31;1m\N[m[33;1mecho baz[m
+baz
+PATT:foo$
+HOLD:$
+foo
+PATT:three$
+HOLD:$
+COMM:[33;1ms/.*/echo foo/[m
+PATT:echo foo$
+HOLD:$
+COMM:[33;1me[m
+PATT:foo$
+HOLD:$
+COMM:[33;1me\[31;1m\N[m[33;1mecho bar[m
+bar
+PATT:foo$
+HOLD:$
+COMM:[33;1me\[31;1m\N[m[33;1mecho baz[m
+baz
+PATT:foo$
+HOLD:$
+foo
+PATT:four$
+HOLD:$
+COMM:[33;1ms/.*/echo foo/[m
+PATT:echo foo$
+HOLD:$
+COMM:[33;1me[m
+PATT:foo$
+HOLD:$
+COMM:[33;1me\[31;1m\N[m[33;1mecho bar[m
+bar
+PATT:foo$
+HOLD:$
+COMM:[33;1me\[31;1m\N[m[33;1mecho baz[m
+baz
+PATT:foo$
+HOLD:$
+foo
+PATT:five$
+HOLD:$
+COMM:[33;1ms/.*/echo foo/[m
+PATT:echo foo$
+HOLD:$
+COMM:[33;1me[m
+PATT:foo$
+HOLD:$
+COMM:[33;1me\[31;1m\N[m[33;1mecho bar[m
+bar
+PATT:foo$
+HOLD:$
+COMM:[33;1me\[31;1m\N[m[33;1mecho baz[m
+baz
+PATT:foo$
+HOLD:$
+foo
+PATT:six$
+HOLD:$
+COMM:[33;1ms/.*/echo foo/[m
+PATT:echo foo$
+HOLD:$
+COMM:[33;1me[m
+PATT:foo$
+HOLD:$
+COMM:[33;1me\[31;1m\N[m[33;1mecho bar[m
+bar
+PATT:foo$
+HOLD:$
+COMM:[33;1me\[31;1m\N[m[33;1mecho baz[m
+baz
+PATT:foo$
+HOLD:$
+foo

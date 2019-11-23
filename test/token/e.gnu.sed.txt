@@ -1,0 +1,64 @@
+    linenr:1
+     addr1:
+ addr1flag:
+     addr2:
+ addr2flag:
+  lastaddr:
+  modifier:
+        id:s
+   content:
+ delimiter:/
+   pattern:.*
+   replace:echo foo
+      flag:
+ extrainfo:
+   comment:
+
+    linenr:2
+     addr1:
+ addr1flag:
+     addr2:
+ addr2flag:
+  lastaddr:
+  modifier:
+        id:e
+   content:
+ delimiter:
+   pattern:
+   replace:
+      flag:
+ extrainfo:
+   comment:
+
+    linenr:3
+     addr1:
+ addr1flag:
+     addr2:
+ addr2flag:
+  lastaddr:
+  modifier:
+        id:e
+   content:\@#linesep#@echo bar
+ delimiter:
+   pattern:
+   replace:
+      flag:
+ extrainfo:
+   comment:
+
+    linenr:4
+     addr1:
+ addr1flag:
+     addr2:
+ addr2flag:
+  lastaddr:
+  modifier:
+        id:e
+   content:\@#linesep#@echo baz
+ delimiter:
+   pattern:
+   replace:
+      flag:
+ extrainfo:
+   comment:
+
