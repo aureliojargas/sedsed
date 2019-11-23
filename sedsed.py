@@ -122,7 +122,7 @@ topopts_regex = r"#!\s*/[^\s]+\s+-([nf]+)"
 
 # All sed commands grouped by kind
 sedcmds = {
-    "file": "rw",
+    "file": "rw" + "R",  # standard + GNU sed
     "multi": "sy",
     "solo": "nNdDgGhHxpPlq=" + "Fz",  # standard + GNU sed
     "text": "aci",
