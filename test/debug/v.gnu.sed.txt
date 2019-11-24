@@ -1,41 +1,41 @@
 PATT:one$
 HOLD:$
-COMM:[33;1mv [m
+COMM:[33;1mv[m
 COMM:[33;1mv 4.0[m
 PATT:one$
 HOLD:$
 one
 PATT:two$
 HOLD:$
-COMM:[33;1mv [m
+COMM:[33;1mv[m
 COMM:[33;1mv 4.0[m
 PATT:two$
 HOLD:$
 two
 PATT:three$
 HOLD:$
-COMM:[33;1mv [m
+COMM:[33;1mv[m
 COMM:[33;1mv 4.0[m
 PATT:three$
 HOLD:$
 three
 PATT:four$
 HOLD:$
-COMM:[33;1mv [m
+COMM:[33;1mv[m
 COMM:[33;1mv 4.0[m
 PATT:four$
 HOLD:$
 four
 PATT:five$
 HOLD:$
-COMM:[33;1mv [m
+COMM:[33;1mv[m
 COMM:[33;1mv 4.0[m
 PATT:five$
 HOLD:$
 five
 PATT:six$
 HOLD:$
-COMM:[33;1mv [m
+COMM:[33;1mv[m
 COMM:[33;1mv 4.0[m
 PATT:six$
 HOLD:$

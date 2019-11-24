@@ -103,9 +103,9 @@ G
 		s/^HOLD://
 		x
 		i\
-COMM:/^.*\\/\\(.*\\)\\n\\1/ b 
+COMM:/^.*\\/\\(.*\\)\\n\\1/ b
 #--------------------------------------------------
-/^.*\/\(.*\)\n\1/ b 
+/^.*\/\(.*\)\n\1/ b
 # now, transform path/fromfile\ntofile, into mv path/fromfile path/tofile
 # and print it
 		s/^/PATT:/

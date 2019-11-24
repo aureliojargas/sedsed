@@ -25,7 +25,7 @@ G
 
 # check if converted file name is equal to original file name, if it is, do
 # not print nothing
-/^.*\/\(.*\)\n\1/ b 
+/^.*\/\(.*\)\n\1/ b
 
 # now, transform path/fromfile\ntofile, into mv path/fromfile path/tofile
 # and print it

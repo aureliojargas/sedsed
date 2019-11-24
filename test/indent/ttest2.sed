@@ -8,7 +8,7 @@ q
 #s/reset T status/T resetted/
 s/.*/bla/
 t t_ok_2
-b 
+b
 
 :t_ok_2
 s/.*/reached t2!/

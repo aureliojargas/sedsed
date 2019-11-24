@@ -3,5 +3,5 @@ t foo
 d
 :foo
 s/e/3/
-t 
+t
 d

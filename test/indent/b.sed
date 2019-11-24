@@ -1,5 +1,5 @@
 b foo
 d
 :foo
-b 
+b
 d

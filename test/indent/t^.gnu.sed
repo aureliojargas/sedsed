@@ -3,5 +3,5 @@ T foo
 d
 :foo
 s/404//
-T 
+T
 d

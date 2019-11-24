@@ -100,7 +100,7 @@ s/404//
 		s/^HOLD://
 		x
 		i\
-COMM:T 
+COMM:T
 
 		t zzclr004
 		:zzset004
@@ -113,11 +113,11 @@ COMM:T
 		s/^HOLD://
 		x
 		i\
-COMM:T 
+COMM:T
 
 		:zzclr004
 #--------------------------------------------------
-T 
+T
 		s/^/PATT:/
 		l
 		s/^PATT://

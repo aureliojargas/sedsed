@@ -1,7 +1,7 @@
 #!/bin/sed -f
 #  @(#)14apr89/31aug01 expand.sed by Greg Ubben
 
-/	/ !b 
+/	/ !b
 
 # Change the text before a tab to
 #   text<MARKER>text<TAB><8 blanks><TAB>

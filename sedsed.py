@@ -715,7 +715,7 @@ def compose_sed_command(data):
         # spacer on r,w,b,t,v commands only
         spaceme = sedcmds["file"] + sedcmds["jump"] + "v"
         spaceme = spaceme.replace(":", "")  # : label (no space!)
-        if data["id"] in spaceme:
+        if data["id"] in spaceme and data["content"]:
             idsep = " "
         cmd = "%s%s%s%s" % (data["modifier"], data["id"], idsep, data["content"])
         if action == "html":

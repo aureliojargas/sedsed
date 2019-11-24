@@ -42,8 +42,8 @@ $ h
     :ABC2
     b abc1
     t ABC2
-    b 
-    t 
+    b
+    t
 }
 
 /files/ {
@@ -76,8 +76,8 @@ text_c3
     :foo
     b foo
     b foo
-    b 
-    b 
+    b
+    b
 }
 
 s/foo/bar/gpw filesw

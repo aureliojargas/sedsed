@@ -10,7 +10,7 @@
 		s/^HOLD://
 		x
 		i\
-COMM:/	/ !b 
+COMM:/	/ !b
 
 		t zzclr001
 		:zzset001
@@ -23,11 +23,11 @@ COMM:/	/ !b
 		s/^HOLD://
 		x
 		i\
-COMM:/	/ !b 
+COMM:/	/ !b
 
 		:zzclr001
 #--------------------------------------------------
-/	/ !b 
+/	/ !b
 # Change the text before a tab to
 #   text<MARKER>text<TAB><8 blanks><TAB>
 #
