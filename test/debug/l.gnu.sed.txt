@@ -1,0 +1,51 @@
+PATT:one$
+HOLD:$
+COMM:[33;1m3 s/.*/&&&/[m
+PATT:one$
+HOLD:$
+COMM:[33;1m3 l 6[m
+PATT:one$
+HOLD:$
+PATT:two$
+HOLD:$
+COMM:[33;1m3 s/.*/&&&/[m
+PATT:two$
+HOLD:$
+COMM:[33;1m3 l 6[m
+PATT:two$
+HOLD:$
+PATT:three$
+HOLD:$
+COMM:[33;1m3 s/.*/&&&/[m
+PATT:threethreethree$
+HOLD:$
+COMM:[33;1m3 l 6[m
+three\
+three\
+three$
+PATT:threethreethree$
+HOLD:$
+PATT:four$
+HOLD:$
+COMM:[33;1m3 s/.*/&&&/[m
+PATT:four$
+HOLD:$
+COMM:[33;1m3 l 6[m
+PATT:four$
+HOLD:$
+PATT:five$
+HOLD:$
+COMM:[33;1m3 s/.*/&&&/[m
+PATT:five$
+HOLD:$
+COMM:[33;1m3 l 6[m
+PATT:five$
+HOLD:$
+PATT:six$
+HOLD:$
+COMM:[33;1m3 s/.*/&&&/[m
+PATT:six$
+HOLD:$
+COMM:[33;1m3 l 6[m
+PATT:six$
+HOLD:$
