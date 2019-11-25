@@ -18,6 +18,9 @@ do
     # Only test *.gnu.sed files when using GNU sed
     test "${file%.gnu.sed}" != "$file" && test "$sed" != 'gsed' && continue
 
+    # The L command was removed in GNU sed 4.3
+    test "$file" = "l^.gnu.sed" && continue
+
     test_message "Testing ${file%.sed}"
 
     # Run the debugger and save the results

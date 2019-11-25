@@ -128,7 +128,7 @@ sedcmds = {
     "text": "aci" + "e",  # standard + GNU sed
     "jump": ":bt" + "T",  # standard + GNU sed
     "block": "{}",
-    "int": "qQl",
+    "int": "qQlL",  # standard (q, l), GNU sed (q<n>, l<n>, Q, L)
     "misc": "v",  # GNU sed
 }
 
