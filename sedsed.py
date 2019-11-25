@@ -124,7 +124,7 @@ topopts_regex = r"#!\s*/[^\s]+\s+-([nf]+)"
 sedcmds = {
     "file": "rw" + "RW",  # standard + GNU sed
     "multi": "sy",
-    "solo": "nNdDgGhHxpP=" + "Fz",  # standard + GNU sed
+    "solo": "=dDgGhHnNpPx" + "Fz",  # standard + GNU sed
     "text": "aci" + "e",  # standard + GNU sed
     "jump": ":bt" + "T",  # standard + GNU sed
     "block": "{}",
