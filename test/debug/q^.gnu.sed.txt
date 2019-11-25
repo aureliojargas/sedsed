@@ -1,0 +1,24 @@
+PATT:one$
+HOLD:$
+COMM:[33;1m/not-found/ Q[m
+PATT:one$
+HOLD:$
+COMM:[33;1m3 Q 0[m
+PATT:one$
+HOLD:$
+one
+PATT:two$
+HOLD:$
+COMM:[33;1m/not-found/ Q[m
+PATT:two$
+HOLD:$
+COMM:[33;1m3 Q 0[m
+PATT:two$
+HOLD:$
+two
+PATT:three$
+HOLD:$
+COMM:[33;1m/not-found/ Q[m
+PATT:three$
+HOLD:$
+COMM:[33;1m3 Q 0[m

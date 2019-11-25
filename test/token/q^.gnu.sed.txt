@@ -1,0 +1,32 @@
+    linenr:1
+     addr1:/not-found/
+ addr1flag:
+     addr2:
+ addr2flag:
+  lastaddr:
+  modifier:
+        id:Q
+   content:
+ delimiter:
+   pattern:
+   replace:
+      flag:
+ extrainfo:
+   comment:
+
+    linenr:2
+     addr1:3
+ addr1flag:
+     addr2:
+ addr2flag:
+  lastaddr:
+  modifier:
+        id:Q
+   content:0
+ delimiter:
+   pattern:
+   replace:
+      flag:
+ extrainfo:
+   comment:
+
