@@ -124,10 +124,11 @@ topopts_regex = r"#!\s*/[^\s]+\s+-([nf]+)"
 sedcmds = {
     "file": "rw" + "RW",  # standard + GNU sed
     "multi": "sy",
-    "solo": "nNdDgGhHxpPlq=" + "Fz",  # standard + GNU sed
+    "solo": "nNdDgGhHxpPl=" + "Fz",  # standard + GNU sed
     "text": "aci" + "e",  # standard + GNU sed
     "jump": ":bt" + "T",  # standard + GNU sed
     "block": "{}",
+    "int": "q",
     "misc": "v",  # GNU sed
 }
 
@@ -713,7 +714,7 @@ def compose_sed_command(data):
     else:
         idsep = ""
         # spacer on r,w,b,t,v commands only
-        spaceme = sedcmds["file"] + sedcmds["jump"] + "v"
+        spaceme = sedcmds["file"] + sedcmds["jump"] + sedcmds["int"] + "v"
         spaceme = spaceme.replace(":", "")  # : label (no space!)
         if data["id"] in spaceme and data["content"]:
             idsep = " "
@@ -1118,6 +1119,10 @@ def parse(sedscript):
         elif xx.cmd in sedcmds["file"]:
             cmddict["content"] = xx.x.fname
 
+        elif xx.cmd in sedcmds["int"]:
+            if xx.x.int_arg > -1:
+                cmddict["content"] = str(xx.x.int_arg)
+
         elif xx.cmd in sedcmds["multi"]:  # s/// & y///
             cmddict["delimiter"] = xx.x.cmd_subst.regx.slash
             cmddict["pattern"] = str(xx.x.cmd_subst.regx.pattern)
@@ -1180,7 +1185,12 @@ def fix_partial_comments(commands):
     data = commands[1:]
 
     accept_comment = (
-        sedcmds["solo"] + sedcmds["block"] + sedcmds["jump"] + sedcmds["multi"] + "v"
+        sedcmds["solo"]
+        + sedcmds["block"]
+        + sedcmds["jump"]
+        + sedcmds["multi"]
+        + sedcmds["int"]
+        + "v"
     )
 
     fake = {"linenr": 0}
