@@ -31,21 +31,33 @@ The format is based on [Keep a Changelog].
   [961624b](https://github.com/aureliojargas/sedsed/commit/961624b)
   [82c5d19](https://github.com/aureliojargas/sedsed/commit/82c5d19)
 
+- Now supporting the GNU sed extra commands: `e`, `F`, `L`, `Q`, `R`,
+  `T`, `v`, `W`, `z`.
+  [#14](https://github.com/aureliojargas/sedsed/issues/14)
+  [#20](https://github.com/aureliojargas/sedsed/issues/20)
+  [#33](https://github.com/aureliojargas/sedsed/issues/33)
+
+- GNU sed extension: Now supporting the optional numeric argument for
+  the following commands: `l`, `q`.
+  [#33](https://github.com/aureliojargas/sedsed/issues/33)
+
+- GNU sed extension: Now supporting `~` and `+` in addresses.
+  [#53](https://github.com/aureliojargas/sedsed/issues/53)
+
 - Sedsed can now be imported and used as a Python module.
   [#9](https://github.com/aureliojargas/sedsed/issues/9)
   [#47](https://github.com/aureliojargas/sedsed/issues/47)
   [#55](https://github.com/aureliojargas/sedsed/issues/55)
+  [#58](https://github.com/aureliojargas/sedsed/issues/58)
 
 - Added many new tests to ensure it works as expected.
+  [#60](https://github.com/aureliojargas/sedsed/issues/60)
   [9624d03](https://github.com/aureliojargas/sedsed/commit/9624d03)
   [3665234](https://github.com/aureliojargas/sedsed/commit/3665234)
   [4b07d73](https://github.com/aureliojargas/sedsed/commit/4b07d73)
   [21f6723](https://github.com/aureliojargas/sedsed/commit/21f6723)
   [cc48068](https://github.com/aureliojargas/sedsed/commit/cc48068)
   [dc04d78](https://github.com/aureliojargas/sedsed/commit/dc04d78)
-
-- GNU sed extension: Now supporting `~` and `+` in addresses.
-  [#53](https://github.com/aureliojargas/sedsed/issues/53)
 
 ### Changed
 
@@ -57,6 +69,9 @@ The format is based on [Keep a Changelog].
   [13bd67f](https://github.com/aureliojargas/sedsed/commit/13bd67f)
   [be7d394](https://github.com/aureliojargas/sedsed/commit/be7d394)
   [ed2b881](https://github.com/aureliojargas/sedsed/commit/ed2b881)
+
+- Error messages are now sent to stderr.
+  [#46](https://github.com/aureliojargas/sedsed/issues/46)
 
 ### Removed
 
@@ -100,6 +115,12 @@ The format is based on [Keep a Changelog].
 
 - Bugfix: Detect and show error on incomplete `s` and `y` commands.
   [#48](https://github.com/aureliojargas/sedsed/issues/48)
+
+- Bugfix: The `--silent` option was not working.
+  [#59](https://github.com/aureliojargas/sedsed/issues/59)
+
+- Bugfix: Remove trailing space after some commands.
+  [#62](https://github.com/aureliojargas/sedsed/issues/63)
 
 
 ## [Version 1.1] released in 2019-05-25
