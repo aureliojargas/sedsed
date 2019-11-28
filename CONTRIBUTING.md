@@ -54,6 +54,21 @@ There are also some extra tests for full command lines, using a Markdown file to
 For every new pushed commit, Travis CI runs the code checkers and all the tests, for multiple Python versions. See [.travis.yml](.travis.yml).
 
 
+## Get released versions
+
+Nice command to dump all the released versions into the current directory:
+
+    for tag in $(git tag); do git show $tag:sedsed.py > sedsed-$tag.py; done
+
+It will generate files such as:
+
+- `sedsed-v0.1.py`
+- `sedsed-v0.2.py`
+- `sedsed-v0.3.py`
+- `sedsed-v0.4.py`
+- ...
+
+
 ## New version release checklist
 
 Preparing:
