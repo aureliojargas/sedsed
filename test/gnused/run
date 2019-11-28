@@ -38,7 +38,7 @@ do
             test -n "${TRAVIS:-}" && continue
         ;;
         eval.good)
-            # sedsed doesn't support GNU sed 'e' command
+            # Calls hardcoded "../sed/sed" command
             continue
         ;;
         insert.good)
