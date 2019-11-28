@@ -1001,9 +1001,6 @@ def parse(sedscript):
     Parse the sedscript (a list of strings) and return a sedsed AST (a flat list
     of dictionaries).
     """
-    # TODO handle xx.x.int_arg for QqLl (new) cmddict['content'] = xx.x.int_arg
-    # TODO handle all new GNU sed commands
-
     the_program = []
     ret = []
     ret.append({})  # for header
