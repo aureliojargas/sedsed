@@ -44,6 +44,9 @@ The format is based on [Keep a Changelog].
 - GNU sed extension: Now supporting `~` and `+` in addresses.
   [#53](https://github.com/aureliojargas/sedsed/issues/53)
 
+- GNU sed extension: Now supporting the `M` flag for addresses.
+  [961624b](https://github.com/aureliojargas/sedsed/commit/961624b)
+
 - Sedsed can now be imported and used as a Python module.
   [#9](https://github.com/aureliojargas/sedsed/issues/9)
   [#47](https://github.com/aureliojargas/sedsed/issues/47)
