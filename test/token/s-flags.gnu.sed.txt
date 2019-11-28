@@ -11,7 +11,6 @@
    pattern:e
    replace:E
       flag:g
- extrainfo:
    comment:
 
     linenr:2
@@ -27,7 +26,6 @@
    pattern:E
    replace:3
       flag:2
- extrainfo:
    comment:
 
     linenr:3
@@ -43,7 +41,6 @@
    pattern:x
    replace:X
       flag:p
- extrainfo:
    comment:
 
     linenr:4
@@ -59,7 +56,6 @@
    pattern:i
    replace:1
       flag:1p
- extrainfo:
    comment:
 
     linenr:5
@@ -75,7 +71,6 @@
    pattern:w
    replace:W
       flag:gp
- extrainfo:
    comment:
 
     linenr:6
@@ -91,7 +86,6 @@
    pattern:.
    replace:&
       flag:w
- extrainfo:
    comment:
 
     linenr:8
@@ -107,7 +101,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:# GNU sed extensions
 
     linenr:9
@@ -123,7 +116,6 @@
    pattern:O
    replace:0
       flag:i
- extrainfo:
    comment:
 
     linenr:10
@@ -139,7 +131,6 @@
    pattern:U
    replace:|_|
       flag:I
- extrainfo:
    comment:
 
     linenr:11
@@ -155,7 +146,6 @@
    pattern:tw0
    replace:echo foo
       flag:e
- extrainfo:
    comment:
 
     linenr:12
@@ -171,7 +161,6 @@
    pattern:^t
    replace:T
       flag:M
- extrainfo:
    comment:
 
     linenr:13
@@ -187,7 +176,6 @@
    pattern:^t
    replace:T
       flag:m
- extrainfo:
    comment:
 
     linenr:14
@@ -203,7 +191,6 @@
    pattern:^T
    replace:t
       flag:MmIipgw
- extrainfo:
    comment:
 
     linenr:16
@@ -219,6 +206,5 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:# http://www.gnu.org/software/sed/manual/sed.html -- 3.5 The s Command
 

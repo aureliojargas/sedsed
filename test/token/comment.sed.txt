@@ -11,7 +11,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:### foo
 
     linenr:2
@@ -27,7 +26,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:#foo
 
     linenr:3
@@ -43,7 +41,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:#
 
     linenr:4
@@ -59,7 +56,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:# c1;c1 - allowed without ;
 
     linenr:5
@@ -75,7 +71,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:# foo;bar
 
     linenr:6
@@ -91,7 +86,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:#;
 
     linenr:7
@@ -107,7 +101,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:#p1
 
     linenr:8
@@ -123,7 +116,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:# p2
 
     linenr:9
@@ -139,7 +131,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:### p3
 
     linenr:10
@@ -155,7 +146,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:# p4;p4
 
     linenr:11
@@ -171,7 +161,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:# p5
 
     linenr:12
@@ -187,7 +176,6 @@
    pattern:a
    replace:b
       flag:
- extrainfo:
    comment:#s1
 
     linenr:13
@@ -203,7 +191,6 @@
    pattern:a
    replace:b
       flag:
- extrainfo:
    comment:# s2
 
     linenr:14
@@ -219,7 +206,6 @@
    pattern:a
    replace:b
       flag:gp
- extrainfo:
    comment:#s3
 
     linenr:15
@@ -235,7 +221,6 @@
    pattern:a
    replace:b
       flag:gp
- extrainfo:
    comment:# s4
 
     linenr:16
@@ -251,7 +236,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:#l1
 
     linenr:17
@@ -267,7 +251,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:# l2
 
     linenr:18
@@ -283,7 +266,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:#b1
 
     linenr:19
@@ -299,7 +281,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:# b2
 
     linenr:20
@@ -315,7 +296,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:#b3
 
     linenr:21
@@ -331,7 +311,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:# b4
 
     linenr:22
@@ -347,7 +326,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:# c2
 
     linenr:23
@@ -363,6 +341,5 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:#
 

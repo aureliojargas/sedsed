@@ -53,7 +53,6 @@ html_colors = {
     "pattern":   "#8080ff",
     "replace":   "",
     "flag":      "#00ff00",
-    "extrainfo": "",
     "comment":   "#00ffff",
     "escape":    "#ff6060",
     "special":   "#00ff00",
@@ -147,7 +146,6 @@ cmdfields = [
     "pattern",
     "replace",
     "flag",
-    "extrainfo",
     "comment",
 ]
 
@@ -1018,10 +1016,6 @@ def parse(sedscript):
     # s//foo/ is found, this value will be saved into `cmddict['lastaddr']`.
     lastaddr = ""
 
-    # Save the index position (in `ret`) for the lastest s/// command found.
-    # This is later saved into `cmddict['extrainfo']`.
-    lastsubref = ""
-
     def set_address(gsed_data, sedsed_data, prefix="addr1"):
         if not gsed_data:
             return
@@ -1140,16 +1134,7 @@ def parse(sedscript):
         elif cmddict["delimiter"]:
             cmddict["lastaddr"] = lastaddr
 
-        if xx.cmd == "s":
-            lastsubref = len(ret)  # save s/// position
-
         if xx.cmd in ("t", "T"):
-            # related s/// reference
-            cmddict["extrainfo"] = lastsubref
-            # TODO sedsed bug: lastsubref is an integer saved to a string field
-            # TODO sedsed bug: I'm not sure the previous s in the code is really
-            #     the s that will relate to this t command in run time (see
-            #     issue #15). Maybe just remove this property, it seems useless.
             has_t = 1
 
         ret.append(cmddict)

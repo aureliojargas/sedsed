@@ -11,7 +11,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:# Address with no spaces
 
     linenr:2
@@ -27,7 +26,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:2
@@ -43,7 +41,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:2
@@ -59,7 +56,6 @@
    pattern:.*
    replace:10
       flag:p
- extrainfo:
    comment:
 
     linenr:2
@@ -75,7 +71,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:2
@@ -91,7 +86,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:3
@@ -107,7 +101,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:3
@@ -123,7 +116,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:3
@@ -139,7 +131,6 @@
    pattern:.*
    replace:11
       flag:p
- extrainfo:
    comment:
 
     linenr:3
@@ -155,7 +146,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:3
@@ -171,7 +161,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:4
@@ -187,7 +176,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:4
@@ -203,7 +191,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:4
@@ -219,7 +206,6 @@
    pattern:.*
    replace:12
       flag:p
- extrainfo:
    comment:
 
     linenr:4
@@ -235,7 +221,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:4
@@ -251,7 +236,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:5
@@ -267,7 +251,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:5
@@ -283,7 +266,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:5
@@ -299,7 +281,6 @@
    pattern:.*
    replace:13
       flag:p
- extrainfo:
    comment:
 
     linenr:5
@@ -315,7 +296,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:5
@@ -331,7 +311,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:6
@@ -347,7 +326,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:6
@@ -363,7 +341,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:6
@@ -379,7 +356,6 @@
    pattern:.*
    replace:14
       flag:p
- extrainfo:
    comment:
 
     linenr:6
@@ -395,7 +371,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:6
@@ -411,7 +386,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:7
@@ -427,7 +401,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:7
@@ -443,7 +416,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:7
@@ -459,7 +431,6 @@
    pattern:.*
    replace:15
       flag:p
- extrainfo:
    comment:
 
     linenr:7
@@ -475,7 +446,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:7
@@ -491,7 +461,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:8
@@ -507,7 +476,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:8
@@ -523,7 +491,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:8
@@ -539,7 +506,6 @@
    pattern:.*
    replace:16
       flag:p
- extrainfo:
    comment:
 
     linenr:8
@@ -555,7 +521,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:8
@@ -571,7 +536,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:9
@@ -587,7 +551,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:9
@@ -603,7 +566,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:9
@@ -619,7 +581,6 @@
    pattern:.*
    replace:17
       flag:p
- extrainfo:
    comment:
 
     linenr:9
@@ -635,7 +596,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:9
@@ -651,7 +611,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:10
@@ -667,7 +626,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:10
@@ -683,7 +641,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:10
@@ -699,7 +656,6 @@
    pattern:.*
    replace:18
       flag:p
- extrainfo:
    comment:
 
     linenr:10
@@ -715,7 +671,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:10
@@ -731,7 +686,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:11
@@ -747,7 +701,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:11
@@ -763,7 +716,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:11
@@ -779,7 +731,6 @@
    pattern:.*
    replace:19
       flag:p
- extrainfo:
    comment:
 
     linenr:11
@@ -795,7 +746,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:11
@@ -811,7 +761,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:12
@@ -827,7 +776,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:12
@@ -843,7 +791,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:12
@@ -859,7 +806,6 @@
    pattern:.*
    replace:1A
       flag:p
- extrainfo:
    comment:
 
     linenr:12
@@ -875,7 +821,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:12
@@ -891,7 +836,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:14
@@ -907,7 +851,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:# Address with a different delimiter: \,foo, instead of /foo/
 
     linenr:15
@@ -923,7 +866,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:15
@@ -939,7 +881,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:15
@@ -955,7 +896,6 @@
    pattern:.*
    replace:21
       flag:p
- extrainfo:
    comment:
 
     linenr:15
@@ -971,7 +911,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:15
@@ -987,7 +926,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:16
@@ -1003,7 +941,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:16
@@ -1019,7 +956,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:16
@@ -1035,7 +971,6 @@
    pattern:.*
    replace:22
       flag:p
- extrainfo:
    comment:
 
     linenr:16
@@ -1051,7 +986,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:16
@@ -1067,7 +1001,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:17
@@ -1083,7 +1016,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:17
@@ -1099,7 +1031,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:17
@@ -1115,7 +1046,6 @@
    pattern:.*
    replace:23
       flag:p
- extrainfo:
    comment:
 
     linenr:17
@@ -1131,7 +1061,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:17
@@ -1147,7 +1076,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:18
@@ -1163,7 +1091,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:18
@@ -1179,7 +1106,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:18
@@ -1195,7 +1121,6 @@
    pattern:.*
    replace:24
       flag:p
- extrainfo:
    comment:
 
     linenr:18
@@ -1211,7 +1136,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:18
@@ -1227,7 +1151,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:19
@@ -1243,7 +1166,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:19
@@ -1259,7 +1181,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:19
@@ -1275,7 +1196,6 @@
    pattern:.*
    replace:25
       flag:p
- extrainfo:
    comment:
 
     linenr:19
@@ -1291,7 +1211,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:19
@@ -1307,7 +1226,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:20
@@ -1323,7 +1241,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:20
@@ -1339,7 +1256,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:20
@@ -1355,7 +1271,6 @@
    pattern:.*
    replace:26
       flag:p
- extrainfo:
    comment:
 
     linenr:20
@@ -1371,7 +1286,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:20
@@ -1387,7 +1301,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:21
@@ -1403,7 +1316,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:21
@@ -1419,7 +1331,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:21
@@ -1435,7 +1346,6 @@
    pattern:.*
    replace:27
       flag:p
- extrainfo:
    comment:
 
     linenr:21
@@ -1451,7 +1361,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:21
@@ -1467,7 +1376,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:22
@@ -1483,7 +1391,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:22
@@ -1499,7 +1406,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:22
@@ -1515,7 +1421,6 @@
    pattern:.*
    replace:28
       flag:p
- extrainfo:
    comment:
 
     linenr:22
@@ -1531,7 +1436,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:22
@@ -1547,7 +1451,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:23
@@ -1563,7 +1466,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:23
@@ -1579,7 +1481,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:23
@@ -1595,7 +1496,6 @@
    pattern:.*
    replace:29
       flag:p
- extrainfo:
    comment:
 
     linenr:23
@@ -1611,7 +1511,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:23
@@ -1627,7 +1526,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:24
@@ -1643,7 +1541,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:24
@@ -1659,7 +1556,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:24
@@ -1675,7 +1571,6 @@
    pattern:.*
    replace:2A
       flag:p
- extrainfo:
    comment:
 
     linenr:24
@@ -1691,7 +1586,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:24
@@ -1707,7 +1601,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:26
@@ -1723,7 +1616,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:# Address with spaces and tabs (tabstop=8)
 
     linenr:27
@@ -1739,7 +1631,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:27
@@ -1755,7 +1646,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:27
@@ -1771,7 +1661,6 @@
    pattern:.*
    replace:10s
       flag:p
- extrainfo:
    comment:
 
     linenr:27
@@ -1787,7 +1676,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:27
@@ -1803,7 +1691,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:28
@@ -1819,7 +1706,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:28
@@ -1835,7 +1721,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:28
@@ -1851,7 +1736,6 @@
    pattern:.*
    replace:11s
       flag:p
- extrainfo:
    comment:
 
     linenr:28
@@ -1867,7 +1751,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:28
@@ -1883,7 +1766,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:29
@@ -1899,7 +1781,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:29
@@ -1915,7 +1796,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:29
@@ -1931,7 +1811,6 @@
    pattern:.*
    replace:12s
       flag:p
- extrainfo:
    comment:
 
     linenr:29
@@ -1947,7 +1826,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:29
@@ -1963,7 +1841,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:30
@@ -1979,7 +1856,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:30
@@ -1995,7 +1871,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:30
@@ -2011,7 +1886,6 @@
    pattern:.*
    replace:13s
       flag:p
- extrainfo:
    comment:
 
     linenr:30
@@ -2027,7 +1901,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:30
@@ -2043,7 +1916,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:31
@@ -2059,7 +1931,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:31
@@ -2075,7 +1946,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:31
@@ -2091,7 +1961,6 @@
    pattern:.*
    replace:14s
       flag:p
- extrainfo:
    comment:
 
     linenr:31
@@ -2107,7 +1976,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:31
@@ -2123,7 +1991,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:32
@@ -2139,7 +2006,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:32
@@ -2155,7 +2021,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:32
@@ -2171,7 +2036,6 @@
    pattern:.*
    replace:15s
       flag:p
- extrainfo:
    comment:
 
     linenr:32
@@ -2187,7 +2051,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:32
@@ -2203,7 +2066,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:33
@@ -2219,7 +2081,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:33
@@ -2235,7 +2096,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:33
@@ -2251,7 +2111,6 @@
    pattern:.*
    replace:16s
       flag:p
- extrainfo:
    comment:
 
     linenr:33
@@ -2267,7 +2126,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:33
@@ -2283,7 +2141,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:34
@@ -2299,7 +2156,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:34
@@ -2315,7 +2171,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:34
@@ -2331,7 +2186,6 @@
    pattern:.*
    replace:17s
       flag:p
- extrainfo:
    comment:
 
     linenr:34
@@ -2347,7 +2201,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:34
@@ -2363,7 +2216,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:35
@@ -2379,7 +2231,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:35
@@ -2395,7 +2246,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:35
@@ -2411,7 +2261,6 @@
    pattern:.*
    replace:18s
       flag:p
- extrainfo:
    comment:
 
     linenr:35
@@ -2427,7 +2276,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:35
@@ -2443,7 +2291,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:36
@@ -2459,7 +2306,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:36
@@ -2475,7 +2321,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:36
@@ -2491,7 +2336,6 @@
    pattern:.*
    replace:19s
       flag:p
- extrainfo:
    comment:
 
     linenr:36
@@ -2507,7 +2351,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:36
@@ -2523,7 +2366,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:37
@@ -2539,7 +2381,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:37
@@ -2555,7 +2396,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:37
@@ -2571,7 +2411,6 @@
    pattern:.*
    replace:1As
       flag:p
- extrainfo:
    comment:
 
     linenr:37
@@ -2587,7 +2426,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:37
@@ -2603,7 +2441,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:39
@@ -2619,7 +2456,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:# Address with a different delimiter, spaces and tabs
 
     linenr:40
@@ -2635,7 +2471,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:40
@@ -2651,7 +2486,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:40
@@ -2667,7 +2501,6 @@
    pattern:.*
    replace:21s
       flag:p
- extrainfo:
    comment:
 
     linenr:40
@@ -2683,7 +2516,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:40
@@ -2699,7 +2531,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:41
@@ -2715,7 +2546,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:41
@@ -2731,7 +2561,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:41
@@ -2747,7 +2576,6 @@
    pattern:.*
    replace:22s
       flag:p
- extrainfo:
    comment:
 
     linenr:41
@@ -2763,7 +2591,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:41
@@ -2779,7 +2606,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:42
@@ -2795,7 +2621,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:42
@@ -2811,7 +2636,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:42
@@ -2827,7 +2651,6 @@
    pattern:.*
    replace:23s
       flag:p
- extrainfo:
    comment:
 
     linenr:42
@@ -2843,7 +2666,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:42
@@ -2859,7 +2681,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:43
@@ -2875,7 +2696,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:43
@@ -2891,7 +2711,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:43
@@ -2907,7 +2726,6 @@
    pattern:.*
    replace:24s
       flag:p
- extrainfo:
    comment:
 
     linenr:43
@@ -2923,7 +2741,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:43
@@ -2939,7 +2756,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:44
@@ -2955,7 +2771,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:44
@@ -2971,7 +2786,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:44
@@ -2987,7 +2801,6 @@
    pattern:.*
    replace:25s
       flag:p
- extrainfo:
    comment:
 
     linenr:44
@@ -3003,7 +2816,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:44
@@ -3019,7 +2831,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:45
@@ -3035,7 +2846,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:45
@@ -3051,7 +2861,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:45
@@ -3067,7 +2876,6 @@
    pattern:.*
    replace:26s
       flag:p
- extrainfo:
    comment:
 
     linenr:45
@@ -3083,7 +2891,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:45
@@ -3099,7 +2906,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:46
@@ -3115,7 +2921,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:46
@@ -3131,7 +2936,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:46
@@ -3147,7 +2951,6 @@
    pattern:.*
    replace:27s
       flag:p
- extrainfo:
    comment:
 
     linenr:46
@@ -3163,7 +2966,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:46
@@ -3179,7 +2981,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:47
@@ -3195,7 +2996,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:47
@@ -3211,7 +3011,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:47
@@ -3227,7 +3026,6 @@
    pattern:.*
    replace:28s
       flag:p
- extrainfo:
    comment:
 
     linenr:47
@@ -3243,7 +3041,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:47
@@ -3259,7 +3056,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:48
@@ -3275,7 +3071,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:48
@@ -3291,7 +3086,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:48
@@ -3307,7 +3101,6 @@
    pattern:.*
    replace:29s
       flag:p
- extrainfo:
    comment:
 
     linenr:48
@@ -3323,7 +3116,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:48
@@ -3339,7 +3131,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:49
@@ -3355,7 +3146,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:49
@@ -3371,7 +3161,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:49
@@ -3387,7 +3176,6 @@
    pattern:.*
    replace:2As
       flag:p
- extrainfo:
    comment:
 
     linenr:49
@@ -3403,7 +3191,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:49
@@ -3419,7 +3206,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:52
@@ -3435,7 +3221,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:# Remove the original line
 
     linenr:53
@@ -3451,6 +3236,5 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 

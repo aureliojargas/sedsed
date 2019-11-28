@@ -11,7 +11,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:# GNU sed extras: /address/I and s///i
 
     linenr:2
@@ -27,6 +26,5 @@
    pattern:a
    replace:.
       flag:igpw
- extrainfo:
    comment:
 

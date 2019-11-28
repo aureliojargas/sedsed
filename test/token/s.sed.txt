@@ -11,7 +11,6 @@
    pattern:^\(.\)
    replace:\\\10
       flag:
- extrainfo:
    comment:
 
     linenr:2
@@ -27,7 +26,6 @@
    pattern:.
    replace:(&)
       flag:
- extrainfo:
    comment:
 
     linenr:3
@@ -43,7 +41,6 @@
    pattern:0
    replace:.
       flag:
- extrainfo:
    comment:
 
     linenr:4
@@ -59,7 +56,6 @@
    pattern:$
    replace:$
       flag:
- extrainfo:
    comment:
 
     linenr:5
@@ -75,6 +71,5 @@
    pattern:\/
    replace:\/
       flag:
- extrainfo:
    comment:
 

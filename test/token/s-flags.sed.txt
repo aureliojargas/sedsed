@@ -11,7 +11,6 @@
    pattern:e
    replace:E
       flag:g
- extrainfo:
    comment:
 
     linenr:2
@@ -27,7 +26,6 @@
    pattern:E
    replace:3
       flag:2
- extrainfo:
    comment:
 
     linenr:3
@@ -43,7 +41,6 @@
    pattern:x
    replace:X
       flag:p
- extrainfo:
    comment:
 
     linenr:4
@@ -59,7 +56,6 @@
    pattern:i
    replace:1
       flag:1p
- extrainfo:
    comment:
 
     linenr:5
@@ -75,7 +71,6 @@
    pattern:w
    replace:W
       flag:gp
- extrainfo:
    comment:
 
     linenr:6
@@ -91,6 +86,5 @@
    pattern:.
    replace:&
       flag:w
- extrainfo:
    comment:
 

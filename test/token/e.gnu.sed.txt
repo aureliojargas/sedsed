@@ -11,7 +11,6 @@
    pattern:.*
    replace:echo foo
       flag:
- extrainfo:
    comment:
 
     linenr:2
@@ -27,7 +26,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:3
@@ -43,7 +41,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:4
@@ -59,6 +56,5 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 

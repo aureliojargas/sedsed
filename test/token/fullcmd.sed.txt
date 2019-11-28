@@ -11,6 +11,5 @@
    pattern:a
    replace:.
       flag:gpw
- extrainfo:
    comment:
 

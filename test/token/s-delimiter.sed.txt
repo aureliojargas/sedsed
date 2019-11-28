@@ -11,7 +11,6 @@
    pattern:o
    replace:0
       flag:
- extrainfo:
    comment:
 
     linenr:2
@@ -27,7 +26,6 @@
    pattern:t
    replace:7
       flag:
- extrainfo:
    comment:
 
     linenr:3
@@ -43,7 +41,6 @@
    pattern:r
    replace:4
       flag:
- extrainfo:
    comment:
 
     linenr:4
@@ -59,7 +56,6 @@
    pattern:i
    replace:1
       flag:
- extrainfo:
    comment:
 
     linenr:5
@@ -75,7 +71,6 @@
    pattern:\s
    replace:\sS
       flag:
- extrainfo:
    comment:
 
     linenr:6
@@ -91,7 +86,6 @@
    pattern:S
    replace:
       flag:
- extrainfo:
    comment:
 
     linenr:7
@@ -107,7 +101,6 @@
    pattern:v
    replace:\\/
       flag:
- extrainfo:
    comment:
 
     linenr:8
@@ -123,7 +116,6 @@
    pattern:e
    replace:3
       flag:
- extrainfo:
    comment:
 
     linenr:10
@@ -139,7 +131,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:#s;z;z;
 
     linenr:11
@@ -155,7 +146,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:#s
 
     linenr:12
@@ -171,7 +161,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:#i
 
     linenr:13
@@ -187,7 +176,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:#1
 
     linenr:14
@@ -203,6 +191,5 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:#
 

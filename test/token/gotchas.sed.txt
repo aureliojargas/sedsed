@@ -11,7 +11,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:# Google Code issue #3: https://code.google.com/p/sedsed/issues/detail?id=3
 
     linenr:2
@@ -27,7 +26,6 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:# "I" char removed when appears after "/"
 
     linenr:3
@@ -43,6 +41,5 @@
    pattern:Ione
    replace:FAIL
       flag:
- extrainfo:
    comment:
 

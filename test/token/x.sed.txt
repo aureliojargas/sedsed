@@ -11,6 +11,5 @@
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 

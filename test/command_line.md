@@ -351,7 +351,6 @@ $ sedsed -t '99p'
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
 $ sedsed --tokenize '99p'
@@ -368,7 +367,6 @@ $ sedsed --tokenize '99p'
    pattern:
    replace:
       flag:
- extrainfo:
    comment:
 
 $

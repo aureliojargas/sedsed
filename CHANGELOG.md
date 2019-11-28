@@ -87,6 +87,11 @@ The format is based on [Keep a Changelog].
   [#37](https://github.com/aureliojargas/sedsed/issues/37)
   [4c6ec38](https://github.com/aureliojargas/sedsed/commit/4c6ec38)
 
+- Remove unused `extrainfo` field, that was shown in `--token` output.
+  It was a somewhat imprecise attribute for the `t` command, saving the
+  index for its related `s` command.
+  [#65](https://github.com/aureliojargas/sedsed/issues/65)
+
 ### Fixed
 
 - Bugfix: comment after `{` gets repeated.
