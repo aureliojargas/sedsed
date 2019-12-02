@@ -128,7 +128,10 @@ The format is based on [Keep a Changelog].
   [#59](https://github.com/aureliojargas/sedsed/issues/59)
 
 - Bugfix: Remove trailing space after some commands.
-  [#62](https://github.com/aureliojargas/sedsed/issues/63)
+  [#62](https://github.com/aureliojargas/sedsed/issues/62)
+
+- Bugfix: Command `y` should not save or set `lastaddr`.
+  [#66](https://github.com/aureliojargas/sedsed/issues/66)
 
 
 ## [Version 1.1] released in 2019-05-25

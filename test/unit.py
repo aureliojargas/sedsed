@@ -32,6 +32,30 @@ class TestSedsed(unittest.TestCase):  # pylint: disable=unused-variable
         self.assertTrue(os.path.isfile(temp_file))
         os.remove(temp_file)
 
+    def test_lastaddr_should_be_empty(self):
+        """
+        The "y" command should not save or set lastaddr.
+        """
+        data = [("y/a/x/", "s///"), ("s/a/x/", "y///")]
+        for script in data:
+            result = sedsed.parse(script)
+            self.assertEqual(result[-1]["lastaddr"], "", msg=script)
+
+    def test_lastaddr_should_be_set(self):
+        """
+        Any /.../ or s/...// should trigger the saving of lastaddr.
+        Any empty address // or s//foo should have its lastaddr set.
+        """
+        data = [
+            ("s/foo1/x/", "s///"),
+            ("/foo2/x", "s///"),
+            ("s/foo3/x/", "//p"),
+            ("/foo4/x", "//p"),
+        ]
+        for index, script in enumerate(data, start=1):
+            result = sedsed.parse(script)
+            self.assertEqual(result[-1]["lastaddr"], "/foo%s/" % index, msg=script)
+
 
 if __name__ == "__main__":
     unittest.main()

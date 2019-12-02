@@ -1127,12 +1127,13 @@ def parse(sedscript):
         ## save sedsed specific data
 
         # saving last address content
-        if cmddict["pattern"]:
-            # TODO sedsed bug: y also have pattern defined, but it does not count
-            #     as a real pattern for lastaddr. Here it must be s only.
-            lastaddr = cmddict["delimiter"] + cmddict["pattern"] + cmddict["delimiter"]
-        elif cmddict["delimiter"]:
-            cmddict["lastaddr"] = lastaddr
+        if xx.cmd == "s":
+            if cmddict["pattern"]:
+                lastaddr = (
+                    cmddict["delimiter"] + cmddict["pattern"] + cmddict["delimiter"]
+                )
+            else:
+                cmddict["lastaddr"] = lastaddr
 
         if xx.cmd in ("t", "T"):
             has_t = 1
