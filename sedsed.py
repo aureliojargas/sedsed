@@ -1064,7 +1064,6 @@ def parse(sedscript):
 
         # Set cmddict['lastaddr'] when current address is //
         # Otherwise just update lastaddr holder
-        # TODO sedsed bug: lastaddr must also include the flags
         # TODO sedsed bug: only regex addresses should be saved as lastaddr, but
         #     currently numbers and $ are also saved
         # TODO investigate bug in sedsed if both addresses are regexes, the
@@ -1074,12 +1073,12 @@ def parse(sedscript):
             if xx.a1.addr_regex and not xx.a1.addr_regex.pattern:
                 cmddict["lastaddr"] = lastaddr
             else:
-                lastaddr = cmddict["addr1"]
+                lastaddr = cmddict["addr1"] + cmddict["addr1flag"]
         if xx.a2:
             if xx.a2.addr_regex and not xx.a2.addr_regex.pattern:
                 cmddict["lastaddr"] = lastaddr
             else:
-                lastaddr = cmddict["addr2"]
+                lastaddr = cmddict["addr2"] + cmddict["addr2flag"]
 
         if xx.cmd == "\n":
             cmddict["id"] = ""

@@ -9,7 +9,7 @@
 		x
 		i\
 COMM:\\,addr1,I,// !s/a/./igpw w.out1
-		\,addr1,y/!/!/
+		\,addr1,Iy/!/!/
 #--------------------------------------------------
 \,addr1,I,// !s/a/./igpw w.out1
 		s/^/PATT:/

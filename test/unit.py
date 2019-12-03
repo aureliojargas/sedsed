@@ -37,9 +37,10 @@ class TestSedsed(unittest.TestCase):  # pylint: disable=unused-variable
         The "y" command should not save or set lastaddr.
         """
         data = [("y/a/x/", "s///"), ("s/a/x/", "y///")]
+        expected = ""
         for script in data:
             result = sedsed.parse(script)
-            self.assertEqual(result[-1]["lastaddr"], "", msg=script)
+            self.assertEqual(result[-1]["lastaddr"], expected, msg=script)
 
     def test_lastaddr_should_be_set(self):
         """
@@ -53,8 +54,24 @@ class TestSedsed(unittest.TestCase):  # pylint: disable=unused-variable
             ("/foo4/x", "//p"),
         ]
         for index, script in enumerate(data, start=1):
+            expected = "/foo%s/" % index
             result = sedsed.parse(script)
-            self.assertEqual(result[-1]["lastaddr"], "/foo%s/" % index, msg=script)
+            self.assertEqual(result[-1]["lastaddr"], expected, msg=script)
+
+    def test_lastaddr_should_have_flags(self):
+        """
+        Any address flags should also be set in lastaddr.
+        """
+        data = [
+            ("/foo1/Ix", "s///"),
+            ("/foo2/Mx", "s///"),
+            ("/foo3/MIx", "s///"),
+            ("/foo4/x", "s///"),
+        ]
+        for script in data:
+            result = sedsed.parse(script)
+            expected = script[0][:-1]  # remove "x" command
+            self.assertEqual(result[-1]["lastaddr"], expected, msg=script)
 
 
 if __name__ == "__main__":

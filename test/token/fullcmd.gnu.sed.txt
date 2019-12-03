@@ -18,7 +18,7 @@
  addr1flag:I
      addr2://
  addr2flag:
-  lastaddr:\,addr1,
+  lastaddr:\,addr1,I
   modifier:!
         id:s
    content:w.out1
