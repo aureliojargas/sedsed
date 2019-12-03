@@ -1129,7 +1129,10 @@ def parse(sedscript):
         if xx.cmd == "s":
             if cmddict["pattern"]:
                 lastaddr = (
-                    cmddict["delimiter"] + cmddict["pattern"] + cmddict["delimiter"]
+                    xx.x.cmd_subst.regx.escape()
+                    + cmddict["delimiter"]
+                    + cmddict["pattern"]
+                    + cmddict["delimiter"]
                 )
             else:
                 cmddict["lastaddr"] = lastaddr

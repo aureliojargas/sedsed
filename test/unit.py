@@ -73,6 +73,16 @@ class TestSedsed(unittest.TestCase):  # pylint: disable=unused-variable
             expected = script[0][:-1]  # remove "x" command
             self.assertEqual(result[-1]["lastaddr"], expected, msg=script)
 
+    def test_lastaddr_should_have_escaped_delimiter(self):
+        """
+        If the address delimiter is not the slash, it should be escaped in lastaddr.
+        """
+        data = [("s@foo@x@", "s///"), ("\\@foo@x", "s///")]
+        expected = "\\@foo@"
+        for script in data:
+            result = sedsed.parse(script)
+            self.assertEqual(result[-1]["lastaddr"], expected, msg=script)
+
 
 if __name__ == "__main__":
     unittest.main()

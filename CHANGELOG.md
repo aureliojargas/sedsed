@@ -133,6 +133,9 @@ The format is based on [Keep a Changelog].
 - Bugfix: Command `y` should not save or set `lastaddr`.
   [#66](https://github.com/aureliojargas/sedsed/issues/66)
 
+- Bugfix: `lastaddr` property should escape non standard delimiters.
+  [#67](https://github.com/aureliojargas/sedsed/issues/67)
+
 - Bugfix: `lastaddr` property should also include address flags.
   [#68](https://github.com/aureliojargas/sedsed/issues/68)
 
