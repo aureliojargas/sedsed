@@ -1062,20 +1062,19 @@ def parse(sedscript):
         set_address(xx.a1, cmddict, "addr1")
         set_address(xx.a2, cmddict, "addr2")
 
-        # Set cmddict['lastaddr'] when current address is //
-        # Otherwise just update lastaddr holder
-        # TODO sedsed bug: only regex addresses should be saved as lastaddr, but
-        #     currently numbers and $ are also saved
+        # Special case for regex addresses
+        # Set cmddict['lastaddr'] for the current command when the address is
+        # empty //. Otherwise just update the lastaddr holder.
         # TODO investigate bug in sedsed if both addresses are regexes, the
         #     'reset' address command should involve both addresses again, and
         #     not only `lastaddr`
-        if xx.a1:
-            if xx.a1.addr_regex and not xx.a1.addr_regex.pattern:
+        if xx.a1 and xx.a1.addr_regex:
+            if not xx.a1.addr_regex.pattern:
                 cmddict["lastaddr"] = lastaddr
             else:
                 lastaddr = cmddict["addr1"] + cmddict["addr1flag"]
-        if xx.a2:
-            if xx.a2.addr_regex and not xx.a2.addr_regex.pattern:
+        if xx.a2 and xx.a2.addr_regex:
+            if not xx.a2.addr_regex.pattern:
                 cmddict["lastaddr"] = lastaddr
             else:
                 lastaddr = cmddict["addr2"] + cmddict["addr2flag"]

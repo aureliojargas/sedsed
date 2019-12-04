@@ -139,6 +139,9 @@ The format is based on [Keep a Changelog].
 - Bugfix: `lastaddr` property should also include address flags.
   [#68](https://github.com/aureliojargas/sedsed/issues/68)
 
+- Bugfix: Only regex addresses should be saved as `lastaddr`.
+  [#69](https://github.com/aureliojargas/sedsed/issues/69)
+
 
 ## [Version 1.1] released in 2019-05-25
 

@@ -35,8 +35,18 @@ class TestSedsed(unittest.TestCase):  # pylint: disable=unused-variable
     def test_lastaddr_should_be_empty(self):
         """
         The "y" command should not save or set lastaddr.
+        Numeric or `$` addresses should not save lastaddr.
         """
-        data = [("y/a/x/", "s///"), ("s/a/x/", "y///")]
+        data = [
+            ("y/a/x/", "s///"),
+            ("s/a/x/", "y///"),
+            ("1x", "s///"),
+            ("1,5x", "s///"),
+            ("1~5x", "s///"),
+            ("1,~5x", "s///"),
+            ("1,+5x", "s///"),
+            ("$x", "s///"),
+        ]
         expected = ""
         for script in data:
             result = sedsed.parse(script)
