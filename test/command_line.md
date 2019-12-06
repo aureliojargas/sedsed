@@ -135,9 +135,9 @@ $
 
 ```
 $ sedsed --version | tr -s 0-9 9 | sed 's/-dev//'
-sedsed v9.9
+sedsed v9.9.9
 $ sedsed -V        | tr -s 0-9 9 | sed 's/-dev//'
-sedsed v9.9
+sedsed v9.9.9
 $
 ```
 
