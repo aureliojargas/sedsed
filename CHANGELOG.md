@@ -2,11 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog].
+The format is based on [Keep a Changelog], and this project adheres to
+[Semantic Versioning].
 
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
+[Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
-[Unreleased]: https://github.com/aureliojargas/sedsed/compare/v1.1...HEAD
+[Unreleased]: https://github.com/aureliojargas/sedsed/compare/v2.0.0...HEAD
+[Version 2.0.0]: https://github.com/aureliojargas/sedsed/compare/v1.1...v2.0.0
 [Version 1.1]: https://github.com/aureliojargas/sedsed/compare/v1.0...v1.1
 [Version 1.0]: https://github.com/aureliojargas/sedsed/compare/v0.8...v1.0
 [Version 0.8]: https://github.com/aureliojargas/sedsed/compare/v0.7...v0.8
@@ -19,7 +22,7 @@ The format is based on [Keep a Changelog].
 [Version 0.1]: https://github.com/aureliojargas/sedsed/compare/v0.0...v0.1
 
 
-## [Unreleased]
+## [Version 2.0.0] released in 2019-12-07
 
 ### Added
 
@@ -70,6 +73,9 @@ The format is based on [Keep a Changelog].
 - Sedsed license has changed from MIT to GPLv3. This was necessary
   because `sedparse` is a derivative work from GNU sed GPL'd code.
   [f5775be](https://github.com/aureliojargas/sedsed/commit/f5775be)
+
+- Now using [Semantic Versioning] for sedsed version numbers.
+  [#64](https://github.com/aureliojargas/sedsed/issues/64)
 
 - Source code is now autoformatted by black.
   [13bd67f](https://github.com/aureliojargas/sedsed/commit/13bd67f)

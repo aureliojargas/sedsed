@@ -21,7 +21,7 @@ import tempfile
 # https://github.com/aureliojargas/sedparse
 import sedparse
 
-__version__ = "1.2-dev"
+__version__ = "2.0.0"
 myname = "sedsed"
 myhome = "https://aurelio.net/projects/sedsed/"
 
