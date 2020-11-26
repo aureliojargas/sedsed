@@ -97,6 +97,7 @@ action_modifiers = []  # --hide contents and others
 sedscript = []         # join all scripts found here
 script_file = ""       # last sedscript filename for --htmlize
 quiet_flag = 0         # tell if the #n is needed or not
+E_flag = 0             # pass -E to sedbin (extended RE)
 textfiles = []
 # fmt: on
 
@@ -203,6 +204,7 @@ OPTIONS:
 
      -t, --tokenize      script tokenizer, prints extensive
                          command by command information
+     -E                  pass -E (usually for extended RE) to sed
      -H, --htmlize       converts sed script to a colorful HTML page
 
      -V, --version       prints the program version and exit
@@ -288,10 +290,12 @@ def validate_script_syntax(script_text):
     write_file(tmpfile1, script_text)
     write_file(tmpfile2, "")
 
+    E_opt = '-E' if E_flag else ''
+
     # Note that even when running against an empty file, there could be
     # consequences on the system, such as a 'w' command writing files.
     # sed -f sed_script empty_file
-    ret, _ = system_command("%s -f '%s' '%s'" % (sedbin, tmpfile1, tmpfile2))
+    ret, _ = system_command("%s %s -f '%s' '%s'" % (sedbin, E_opt, tmpfile1, tmpfile2))
     os.remove(tmpfile1)
     os.remove(tmpfile2)
 
@@ -342,6 +346,7 @@ def parse_command_line(arguments=None):
     global indent_prefix
     global newlineshow
     global quiet_flag
+    global E_flag
     global script_file
     global sedscript
     global sedbin
@@ -350,7 +355,7 @@ def parse_command_line(arguments=None):
     arguments = arguments or sys.argv[1:]
 
     # Here's all the valid command line options
-    short_options = "he:f:ditVHn"
+    short_options = "he:f:ditVHEn"
     long_options = [
         # actions
         "debug",
@@ -396,6 +401,9 @@ def parse_command_line(arguments=None):
         elif o[0] in ("-t", "--tokenize"):
             action = "token"
             color = 0
+
+        elif o[0] == "-E":
+            E_flag = 1
 
         elif o[0] in ("-H", "--htmlize"):
             action = "html"
@@ -976,8 +984,9 @@ def do_debug(datalist):
     else:
         tmpfile = tempfile.mktemp()
         write_file(tmpfile, outlist)
+        E_opt = '-E' if E_flag else ''
         os.system(
-            "%s -%s %s %s %s" % (sedbin, cmdlineopts, tmpfile, inputfiles, cmdextra)
+            "%s %s -%s %s %s %s" % (sedbin, E_opt, cmdlineopts, tmpfile, inputfiles, cmdextra)
         )
         os.remove(tmpfile)
 
