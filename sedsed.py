@@ -199,6 +199,7 @@ OPTIONS:
      -i, --indent        script beautifier, prints indented and
                          one-command-per-line output do STDOUT
          --prefix        indent prefix string (default: 4 spaces)
+         --sedbin        specify sed executable (name or full path)
 
      -t, --tokenize      script tokenizer, prints extensive
                          command by command information
@@ -343,6 +344,7 @@ def parse_command_line(arguments=None):
     global quiet_flag
     global script_file
     global sedscript
+    global sedbin
     global textfiles
 
     arguments = arguments or sys.argv[1:]
@@ -367,6 +369,7 @@ def parse_command_line(arguments=None):
         "color",
         "hide=",
         "prefix=",
+        "sedbin=",
         # other
         "dump-debug",
         # admin
@@ -437,6 +440,9 @@ def parse_command_line(arguments=None):
             if re.sub(r"\s", "", o[1]):
                 fatal_error("--prefix: must be spaces and/or TABs")
             indent_prefix = o[1]
+
+        elif o[0] == "--sedbin":
+            sedbin = o[1]
 
         # Undocumented admin options
 
