@@ -116,6 +116,7 @@ OPTIONS:
      -i, --indent        script beautifier, prints indented and
                          one-command-per-line output do STDOUT
          --prefix        indent prefix string (default: 4 spaces)
+         --sedbin        specify sed executable (name or full path)
 
      -t, --tokenize      script tokenizer, prints extensive
                          command by command information
