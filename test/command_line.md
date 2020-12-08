@@ -6,10 +6,17 @@ Use [clitest](https://github.com/aureliojargas/clitest) to run the tests from th
 
 ## Setup
 
+Make sure we use the same sed binary as defined in `test/_include.sh`.
+
+```
+$ sed=$(grep ^sed= test/_include.sh | cut -d = -f 2- | tr -d \')
+$
+```
+
 Make sure we always run the `sedsed` copy from this repository.
 
 ```
-$ sedsed() { python ./sedsed.py --nocolor "$@"; }
+$ sedsed() { python ./sedsed.py --sedbin $sed --nocolor "$@"; }
 $
 ```
 
@@ -77,7 +84,7 @@ $
 Invalid sed script when debugging.
 
 ```
-$ sedsed -d Z 2>&1 | sed 's/file .* line/line/'
+$ sedsed -d Z 2>&1 | sed 's/file .* line/line/' | sed "1s|^$sed|sed|; 2s|$sed$|sed|"
 sed: line 1: unknown command: `Z'
 ERROR: sedsed: 1: Failed validating your script using system's sed: sed
 $

@@ -8,9 +8,7 @@ set -o errexit -o nounset -o pipefail
 sed='gsed'
 
 # shellcheck disable=SC2034
-sedsed='python ../../sedsed.py'
-# sedsed='python2.7 ../../sedsed.py'
-# sedsed='python3   ../../sedsed.py'
+sedsed="python ../../sedsed.py --sedbin $sed"
 
 failed=0
 sed_output='sed-output.txt'
