@@ -32,21 +32,24 @@ The sedsed code is checked by pylint and formatted by [black](https://github.com
 
 Black is used with the default settings (no command line options) and the pylint configuration file is in the root of this repository.
 
+To install the tools in the development environment (venv):
+
+    pip install -r requirements-dev.txt
+
 Just run them over the Python files:
 
-    pylint *.py test/*.py
-    black  *.py test/*.py
+    make check
 
 
 ## Testing
 
-Sedsed has a homemade custom testing solution, comprised of multiple shell scripts and test files. You can read more about it at [test/README.md](test/README.md). To run all the tests, just do:
-
-    ./test/run
+Sedsed has a homemade custom testing solution, comprised of multiple shell scripts and test files. You can read more about it at [test/README.md](test/README.md).
 
 There are also some extra tests for full command lines, using a Markdown file to describe the commands and their expected outputs, and [clitest](https://github.com/aureliojargas/clitest) runs and checks them.
 
-    clitest test/command_line.md
+To run all the tests, just do:
+
+    make test
 
 
 ## Automation (CI)
@@ -107,6 +110,6 @@ To upload the package to TestPyPI index (good for testing) and install it locall
     twine upload --repository-url https://test.pypi.org/legacy/ dist/*
     pip install -i https://test.pypi.org/simple/ sedsed
 
-To upload the package to the offical PyPI index:
+To upload the package to the official PyPI index:
 
     twine upload dist/*
