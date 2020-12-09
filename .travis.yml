@@ -18,24 +18,14 @@ install:
     pip install --quiet -r requirements-dev.txt;;
     esac
 
-  # Download clitest
-  - curl -sOL https://raw.githubusercontent.com/aureliojargas/clitest/master/clitest
-  - chmod +x clitest
-  - mv clitest ~/bin
-
   # Install sedsed itself and its dependency (sedparse)
   - pip install -e .
 
 script:
   - case $TRAVIS_PYTHON_VERSION in 3.6)
-    pylint ./*.py test/*.py;;
+    make check;;
     esac
-  - case $TRAVIS_PYTHON_VERSION in 3.6)
-    black --check ./*.py test/*.py;;
-    esac
-  - find . -name run | xargs shellcheck -x
-  - clitest test/command_line.md
-  - ./test/run
+  - make test
 
 ### Environment
 # Ubuntu 14.04.5 LTS
