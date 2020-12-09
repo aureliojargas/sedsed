@@ -8,9 +8,6 @@ Currently working for GNU sed only.
   - You must have a `gsed` command in your system.
     Create a symlink pointing to the GNU sed executable.
 
-  - You must change the `sedbin` variable to `gsed` in sedsed.py
-    if your default sed is not GNU's.
-
 
 ## Instructions
 
@@ -43,7 +40,7 @@ $
 Or run all at once with the main `test/run` script:
 
 ```console
-$ ./test/run 
+$ ./test/run
 ---- Running html/run...
 Generating anagrams.gnu.sed.html
 Generating bf2c.sed.html
