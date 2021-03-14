@@ -1,8 +1,8 @@
 # Tests for sedsed command line usage
 
-Use [clitest](https://github.com/aureliojargas/clitest) to run the tests from this file.
+Use [doctester](https://github.com/aureliojargas/doctester) to run the tests from this file.
 
-    clitest test/command_line.md
+    doctester test/command_line.md
 
 ## Setup
 

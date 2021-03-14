@@ -1,15 +1,12 @@
-.PHONY: black check clean pylint sedparse shellcheck test
+.PHONY: black check doctester pylint sedparse shellcheck test
 
 # Main targets
 
 check: black pylint shellcheck
 
-test: clitest sedparse
-	bash ./clitest test/command_line.md
+test: doctester sedparse
+	doctester test/command_line.md
 	./test/run
-
-clean:
-	rm -f clitest
 
 # Secondary targets
 
@@ -24,9 +21,9 @@ shellcheck:
 
 # Dependencies
 
-clitest:
-	curl --location --remote-name --silent \
-	https://raw.githubusercontent.com/aureliojargas/clitest/master/clitest
+doctester:
+	@command -v doctester || \
+	pip install doctester
 
 sedparse:
 	@command -v sedparse || \

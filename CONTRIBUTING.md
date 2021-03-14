@@ -45,7 +45,7 @@ Just run them over the Python files:
 
 Sedsed has a homemade custom testing solution, comprised of multiple shell scripts and test files. You can read more about it at [test/README.md](test/README.md).
 
-There are also some extra tests for full command lines, using a Markdown file to describe the commands and their expected outputs, and [clitest](https://github.com/aureliojargas/clitest) runs and checks them.
+There are also some extra tests for full command lines, using a Markdown file to describe the commands and their expected outputs, and [doctester](https://github.com/aureliojargas/doctester) runs and checks them.
 
 To run all the tests, just do:
 
