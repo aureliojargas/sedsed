@@ -6,7 +6,7 @@ python:
   - "3.4"
   - "3.5"
   - "3.6"
-  - "3.7"
+  # - "3.7" -- https://app.travis-ci.com/github/aureliojargas/sedsed/jobs/586655207
   - "3.8"
 
 install:
