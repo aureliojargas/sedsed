@@ -1,6 +1,6 @@
 // https://aka.ms/devcontainer.json
 {
-    "name": "replace dev",
+    "name": "sedsed dev",
     "image": "ghcr.io/aureliojargas/devcontainer",
     "remoteUser": "vscode",
     // Those symlinks are need by the `make test` command
