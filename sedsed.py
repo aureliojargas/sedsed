@@ -2,7 +2,6 @@
 # sedsed - Debugger and code formatter for sed scripts
 # Since 27 November 2001, by Aurelio Jargas
 
-# pylint: disable=bad-whitespace
 # pylint: disable=invalid-name
 # pylint: disable=redefined-outer-name
 # pylint: disable=too-many-branches
@@ -333,7 +332,7 @@ def set_colors():
 
 
 def parse_command_line(arguments=None):
-    # pylint: disable=global-statement
+    # pylint: disable=global-statement, global-variable-not-assigned
     global action
     global action_modifiers
     global color

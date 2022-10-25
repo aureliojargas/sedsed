@@ -7,6 +7,8 @@ disable=
     fixme,
     missing-docstring,
     bad-continuation,  # incompatible with black
+    unspecified-encoding,  # we still support python2
+    consider-using-f-string,  # we still support python2
 
 [VARIABLES]
 allow-global-unused-variables=no
