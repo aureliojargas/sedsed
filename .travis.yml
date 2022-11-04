@@ -23,7 +23,7 @@ install:
 
 script:
   - case $TRAVIS_PYTHON_VERSION in 3.6)
-    make check;;
+    make lint;;
     esac
   - make test
 

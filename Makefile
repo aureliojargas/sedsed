@@ -1,8 +1,8 @@
-.PHONY: black check clean pylint sedparse shellcheck test
+.PHONY: black clean lint pylint sedparse shellcheck test
 
 # Main targets
 
-check: black pylint shellcheck
+lint: black pylint shellcheck
 
 test: clitest sedparse
 	bash ./clitest test/command_line.md
