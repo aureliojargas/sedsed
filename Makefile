@@ -1,4 +1,4 @@
-.PHONY: black clean lint pylint sedparse shellcheck test
+.PHONY: black clean lint pylint requirements sedparse shellcheck test
 
 # Main targets
 
@@ -13,10 +13,10 @@ clean:
 
 # Secondary targets
 
-black:
+black: requirements
 	black --check --diff --quiet ./*.py test/*.py
 
-pylint: sedparse
+pylint: requirements sedparse
 	pylint ./*.py test/*.py
 
 shellcheck:
@@ -31,3 +31,7 @@ clitest:
 sedparse:
 	@command -v sedparse || \
 	pip install `grep -o 'sedparse[ =<>.0-9*]*' setup.py`
+
+requirements:
+	{ command -v black && command -v pylint; } || \
+	pip install --requirement requirements-dev.txt
