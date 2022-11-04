@@ -1,0 +1,49 @@
+# https://docs.github.com/en/actions
+
+name: Check
+on:
+  push:
+  pull_request:
+jobs:
+
+  # For linting, any one Python version is enough
+  lint:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.6.15
+      - run: make lint
+
+  # For testing, we try to use as many versions as possible. Here we're
+  # using the latest patch level available for every major.minor.
+  #
+  # Note that Ubuntu 18.04 has the most Python versions available:
+  # https://github.com/actions/python-versions/blob/main/versions-manifest.json
+  test:
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        python:
+          - 2.7.18  # 18 20
+          - 3.4.10  # 18
+          - 3.5.10  # 18 20
+          - 3.6.15  # 18 20
+          - 3.7.15  # 18 20 22
+          - 3.8.14  # 18 20 22
+          - 3.9.15  # 18 20 22
+          - 3.10.8  # 18 20 22
+          - 3.11.0  # 18 20 22
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Symlink a gsed command (required by the test suite)
+        run: |
+          mkdir -p ~/.local/bin
+          ln -s /bin/sed ~/.local/bin/gsed
+
+      - run: make test
