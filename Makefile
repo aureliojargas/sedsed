@@ -26,7 +26,7 @@ shellcheck:
 
 clitest:
 	curl --location --remote-name --silent \
-	https://raw.githubusercontent.com/aureliojargas/clitest/master/clitest
+	https://raw.githubusercontent.com/aureliojargas/clitest/main/clitest
 
 sedparse:
 	@command -v sedparse || \

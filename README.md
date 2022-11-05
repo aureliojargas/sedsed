@@ -14,9 +14,9 @@ Sedsed is available as a pip package, just install it:
 - Compatible with Python 2.7 and Python 3.x
 - License: GPLv3
 - [Released versions](https://github.com/aureliojargas/sedsed/releases)
-- [CHANGELOG.md](https://github.com/aureliojargas/sedsed/blob/master/CHANGELOG.md) for the list of changes in each version
+- [CHANGELOG.md](https://github.com/aureliojargas/sedsed/blob/main/CHANGELOG.md) for the list of changes in each version
 
-> Alternative: sedsed is a single file application, so you can also just download and run [sedsed.py](https://raw.githubusercontent.com/aureliojargas/sedsed/master/sedsed.py). Note that you'll also need to download its only external requirement, [sedparse.py](https://raw.githubusercontent.com/aureliojargas/sedparse/master/sedparse.py).
+> Alternative: sedsed is a single file application, so you can also just download and run [sedsed.py](https://raw.githubusercontent.com/aureliojargas/sedsed/main/sedsed.py). Note that you'll also need to download its only external requirement, [sedparse.py](https://raw.githubusercontent.com/aureliojargas/sedparse/main/sedparse.py).
 
 
 ## Code formatting for sed scripts
