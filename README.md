@@ -158,3 +158,65 @@ CBA
 In those examples the sed script was informed as an argument using the `-e` option. Sedsed also supports the `-f` option to inform a sed script file, and the traditional `-n` option to run in quiet mode.
 
 Enjoy!
+
+## See also: sed --debug (available in GNU sed)
+
+GNU sed finally added the `--debug` option in version 4.6 (19 Dec 2018) 🎉
+
+If you already use GNU sed, you may not even need sedsed.
+
+An example from [the manual](https://www.gnu.org/software/sed/manual/sed.html#index-_002d_002ddebug):
+
+```console
+$ echo 1 | sed '\%1%s21232'
+3
+
+$ echo 1 | sed --debug '\%1%s21232'
+SED PROGRAM:
+  /1/ s/1/3/
+INPUT:   'STDIN' line 1
+PATTERN: 1
+COMMAND: /1/ s/1/3/
+PATTERN: 3
+END-OF-CYCLE:
+3
+```
+
+Another example, from [the original commit](http://git.savannah.gnu.org/cgit/sed.git/commit/?id=3ac640c) that introduced the new feature:
+
+```console
+$ seq 3 | sed --debug -e 's/./--&--/ ; 2d'
+SED PROGRAM:
+  s/./--&--/
+  2 d
+INPUT:   'STDIN' line 1
+PATTERN: 1
+COMMAND: s/./--&--/
+MATCHED REGEX REGISTERS
+  regex[0] = 0-1 '1'
+PATTERN: --1--
+COMMAND: 2 d
+END-OF-CYCLE:
+--1--
+INPUT:   'STDIN' line 2
+PATTERN: 2
+COMMAND: s/./--&--/
+MATCHED REGEX REGISTERS
+  regex[0] = 0-1 '2'
+PATTERN: --2--
+COMMAND: 2 d
+END-OF-CYCLE:
+INPUT:   'STDIN' line 3
+PATTERN: 3
+COMMAND: s/./--&--/
+MATCHED REGEX REGISTERS
+  regex[0] = 0-1 '3'
+PATTERN: --3--
+COMMAND: 2 d
+END-OF-CYCLE:
+--3--
+```
+
+GNU sed with `--debug` is showing more information than sedsed (such as the matched regex registers) and clearly states when a cycle ends and when a new line is read from the input. Very useful! It also opted to only show the contents of pattern or hold spaces when a command that can change them is executed (sedsed by default shows both after every command).
+
+> Note: I created sedsed in 2001, because I needed a debugger to help me out in my sed adventures. Just "imagining" the contents of pattern and hold space after every command was no easy task in complex sed scripts. If GNU sed had `--debug` back then, sedsed would never have been created :)
