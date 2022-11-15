@@ -1101,6 +1101,10 @@ def parse(sedscript):
             pass  # nothing else to collect
 
         elif xx.cmd in sedcmds["text"]:
+            print(f"DEBUG: {xx.x}")
+            print(f"DEBUG: {repr(xx.x.cmd_txt)}")
+            print(f"DEBUG: {repr(str(xx.x.cmd_txt))}")
+            print(f"DEBUG: {xx.x.cmd_txt}")
             if str(xx.x.cmd_txt):  # command "e" is allowed to be empty
                 cmddict["content"] = "\\%s%s" % (
                     linesep,
